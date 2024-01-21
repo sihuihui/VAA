@@ -1,0 +1,721 @@
+---
+title: "Take-home Exercise 1"
+author: "Goh Si Hui"
+date: 2024/01/14
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+# About this Exercise
+
+Programme for International Student Assessment (PISA) is a study conducted by the Organisation for Economic Co-operation and Development (OECD) that measures 15-year-olds' ability to use their reading, mathematics and science knowledge and skills to meet real life challenges. It was first performed in 2000 and then repeated every three years. The results of the 2022 PISA were released in December 2023.
+
+In this take-home exercise, I will be using appropriate Exploratory Data Analysis (EDA) methods and ggplot2 functions to reveal:
+
+-   the distribution of Singapore students' performance in mathematics, reading and science, and
+
+-   the relationship between Singapore students' performance with students' schools, gender and socioeconomic status.
+
+## About PISA Data Files
+
+We can download the PISA 2022 dataset with the full set of responses from individual students, school principals, teachers and parents from [PISA 2022 Database](https://www.oecd.org/pisa/data/2022database/).
+
+The main data files for 2022 PISA are:
+
+-   student-questionnaire data file (which also includes estimates of student performance and parent-questionnaire data);
+-   school-questionnaire data file;
+-   teacher-questionnaire data file;
+-   cognitive item data file; and
+-   questionnaire timing data.
+
+These data files are in SAS and SPSS formats. For the purpose of this exercise, I will be using thestudent-questionnaire data file only.
+
+# Getting Started
+
+First, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
+
+## Loading R packages
+
+For this in-class exercise, we will be using the following two packages:
+
+-   [**tidyverse**](https://www.tidyverse.org/) : to load the core tidyverse packages, which includes ggplot2 and dplyr.
+
+-   [**haven**](https://haven.tidyverse.org/) : to read and write various data formats used by other statistical packages by wrapping the ReadStat C library. It is part of the tidyverse family too! **haven** currently supports SAS, SPSS and Stata. We will need **haven** to import the PISA 2022's student questionnaire data file because it is in SAS file type.
+
+-   [**patchwork**](https://patchwork.data-imaginist.com/): to create composition of ggplot2 plots using arithmetic operators.
+
+-   [**ggrepel**:](https://ggrepel.slowkow.com/) to repel overlapping text labels away from each other.
+
+-   [**ggdist**](https://mjskay.github.io/ggdist/): provides stats and geoms for visualising distributions and uncertainty.
+
+-   [**ggridges**](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html): provides geoms to plot ridgeline plots, which are partially overlapping line plots that create the impression of a mountain range.
+
+-   [**knitr**](https://github.com/yihui/knitr): provides a general-purpose tool for dynamic report generation in R. We will use this to mainly help us generate simple tables.
+
+The code chunk below uses `p_load()` of [**pacman**](https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html) package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+pacman::p_load(tidyverse, haven, patchwork, ggrepel, ggdist, ggridges, knitr)
+```
+
+## Importing the Data into R
+
+For this in-class exercise, we are using [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/)'s student questionnaire data file. As the data file is in SAS file format, we will use **haven**'s [`read_sas()`](https://haven.tidyverse.org/reference/read_sas.html) function to import the data into R environment. Then we will filter the data to those data from Singapore since this exercise is only focusing on responses from Singapore students.
+
+::: panel-tabset
+## Import the Data (All Countries)
+
+```{r}
+#| eval: false
+
+stu_qqq <- read_sas("data/cy08msp_stu_qqq.sas7bdat")
+```
+
+## Filter the Imported Data (Singapore only)
+
+```{r}
+#| eval: false
+
+stu_qqq_SG <- stu_qqq %>% 
+  filter(CNT == "SGP")
+```
+:::
+
+## Saving `stu_qqq_SG` into RDS format
+
+Let us save the filtered data into an R data format (RDS) so that we can easily retrieve in future without importing the `stu_qqq` dataset again because the entire `stu_qqq` file is very big (more than 3GB)!
+
+```{r}
+#| eval: false
+#| code-fold: true
+#| code-summary: "Show the code"
+
+write_rds(stu_qqq_SG, "data/stu_qqq_SG.rds")
+
+```
+
+We will read the `stu_qqq_SG.rds`using the following code chunk.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+stu_qqq_SG <- read_rds("data/stu_qqq_SG.rds")
+
+```
+
+# Data Wrangling
+
+Let us take a look at the `stu_qqq_SG` data using `head()` to see the first 10 rows of stu_qqq_SG then we will use `glimpse()` to check the datatype and structure of the dataframe because `glimpse()` allows us to see every column in a dataframe.
+
+::: panel-tabset
+## First 10 rows
+
+From the output, we see that there are many columns in this dataset and there are a lot of 'NA' values. We will check the datatype and structure of the dataframe in the next tab!
+
+```{r}
+kable(head(stu_qqq_SG))
+
+```
+
+## Structure
+
+From the output generated from `glimpse()` we see that there are 1,279 columns in this dataframe and 6,606 rows. Again, we noted that there were quite a number of columns with 'NA' values.
+
+```{r}
+glimpse(stu_qqq_SG)
+
+```
+:::
+
+## Filtering the columns for this exercise
+
+There are a lot of columns in `stu_qqq_SG` so let us filter out the columns in stu_qqq_SG that we want to explore for this exercise. We selected columns that were related to the students demographics (such as school, gender, age), indices related to socio-economic status and the columns containing PV values for Maths, Reading and Science.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+stu2 <- stu_qqq_SG %>% 
+  select(CNTSTUID,CNTSCHID, ST004D01T, PROGN, AGE, ST003D02T, ST003D03T, ESCS, PAREDINT, HISEI, HOMEPOS,MISCED,FISCED,HISCED,LEARRES, SCHSUST,FAMSUP, WORKHOME,WORKPAY, STUDYHMW, EXERPRAC, LANGN, PQSCHOOL, ICTOUT, ICTAVHOM,	ICTHOME, ICTAVSCH, ICTSCH, ICTRES, COBN_S,COBN_M, COBN_F, OCOD1, OCOD2, PA042Q01TA, PA194Q01JA, PA195Q01JA, PA041Q01TA,  ends_with("MATH"), ends_with("READ"), ends_with("SCIE"), )
+
+glimpse(stu2)
+```
+
+From the above output, we see that there are some rows with missing values. As PISA is an international survey, there could be some columns (i.e. questions) which are not applicable to Singapore and the entire column would be NA. Let us find out which are the columns that have the entire column filled with NA values in `stu2` dataframe using the following code chunk.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+names(which(colSums(is.na(stu2))== nrow(stu2)))
+
+```
+
+From the above output, we see that there are 7 columns which contain all NA values. A quick check with the codebook showed these columns are:
+
+-   **LEARRES**: Types of learning resources used while school was closed (WLE)
+
+-   **SCHSUST**: School actions/activities to sustain learning (WLE)
+
+-   **PQSCHOOL**: School quality (WLE)
+
+-   **PA042Q01TA**: What is your annual household income?
+
+-   **PA194Q01JA**: How many \[digital devices\] with screens are there in your home?
+
+-   **PA195Q01JA**: How many books are there in your home?
+
+-   **PA041Q01TA**: In the last twelve months, about how much would you have paid to educational providers for services?
+
+Let us remove these columns from the `stu2` dataframe. From the output we see that the number of columns dropped from 68 to 61, which is slightly more manageable than the earlier dataframe. The number of rows remained the same.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+stu2 <- stu2[, (colSums(is.na(stu2))<nrow(stu2))]
+glimpse(stu2)
+```
+
+## Checking for missing values
+
+We use the following code chunk to check for missing value(s) and drop rows where there are missing value(s).
+
+::: panel-tabset
+## Columns with Missing Value(s)
+
+```{r}
+missingv <- stu2 %>% 
+  map(is.na) %>%
+  map(sum) 
+  
+missingv <- as_tibble(missingv)
+
+kable(missingv)
+
+```
+
+## Dropping Rows with Missing Value(s)
+
+For the purpose of this exercise, we will use the following code chunk to drop rows with missing value(s).
+
+```{r}
+stu2 <- stu2 %>%
+  drop_na()
+
+glimpse(stu2)
+
+```
+:::
+
+After dropping the rows with missing value(s), we saw that the number of rows dropped from 6,606 to 6,094.
+
+## Checking data type
+
+From the above output, we also noted that some variables are in character data type. Since these columns contain levels (e.g. survey scales) or they actually take on a limited number of different values (e.g. student ID, school ID), we convert them into factor data type using `as.factor()`.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+stu2 <- stu2 %>%
+  mutate_at(c('CNTSTUID', 'CNTSCHID', 'ST004D01T', 'PROGN','ST003D02T','ST003D03T','MISCED','FISCED','HISCED', 
+              'WORKHOME','WORKPAY', 'STUDYHMW','EXERPRAC','LANGN','ICTAVHOM','ICTHOME','ICTAVSCH','ICTSCH',
+              'COBN_S','COBN_M','COBN_F','OCOD1','OCOD2'), as.factor) 
+
+glimpse(stu2)
+```
+
+## Renaming Variable Names
+
+Let us rename the gender and school variable name to make it more intuitive, and change the gender's code 1 to female and 2 to male using the following code chunk.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+stu2 <- stu2 %>% 
+  rename(GENDER = ST004D01T) %>%
+  mutate(GENDER = ifelse(GENDER == 1, 'FEMALE', 'MALE'))
+
+stu2 <- stu2 %>% 
+  rename(SCHOOL = CNTSCHID) 
+
+kable(head(stu2)) 
+```
+
+## Checking the number of unique students, their age and schools
+
+Let us check number of unique students, their age and the schools the students were in using the following code chunk.
+
+::: panel-tabset
+## Number of Unique Students
+
+```{r}
+n_distinct(stu2$CNTSTUID)
+```
+
+From the output, we noted that there are 6,094 unique students and the `stu2` dataframe has 6094 observations, meaning that each observation is a unique student.
+
+## Students' Age
+
+```{r}
+summary(stu2$AGE)
+```
+
+From the above output we noted that there was a maximum age of 16.33 years old.
+
+Let us check the students' birth year to ensure that all of them are born in 2006 (i.e. 15 years old).
+
+```{r}
+unique(stu2$ST003D03T)
+```
+
+From the above output, we noted that all students were born in 2006 so we will retain those students who were older than 15 years old for now, until we have more information on how this age being derived.
+
+## Number of Unique Schools
+
+```{r}
+unique(stu2$SCHOOL)
+```
+
+From the above output, we noted that there were 164 schools in this dataset.
+:::
+
+## Computing Mean PV Scores for each student
+
+Currently there are 10 PV Scores for each subject (i.e., Maths, Reading and Science). We will calculate each student's mean PV scores for each subject using the following code chunk.
+
+::: panel-tabset
+## Codes
+
+```{r}
+
+stu2$AVG_PVMATH <- rowMeans(stu2[,c("PV1MATH", "PV2MATH", "PV3MATH", "PV4MATH", "PV5MATH", 
+                             "PV6MATH", "PV7MATH", "PV8MATH", "PV9MATH", "PV10MATH")])
+
+stu2$AVG_PVREAD <- rowMeans(stu2[,c("PV1READ", "PV2READ", "PV3READ", "PV4READ", "PV5READ", 
+                             "PV6READ", "PV7READ", "PV8READ", "PV9READ", "PV10READ")])
+
+stu2$AVG_PVSCI <- rowMeans(stu2[,c("PV1SCIE", "PV2SCIE", "PV3SCIE", "PV4SCIE", "PV5SCIE", 
+                             "PV6SCIE", "PV7SCIE", "PV8SCIE", "PV9SCIE", "PV10SCIE")])
+
+```
+
+## Output
+
+```{r}
+kable(head(stu2))
+```
+:::
+
+::: callout-note
+Note: For the purpose of this exercise, we calculated the individual students' subject scores. PISA advised that students' scores should not be interpreted at the individual level. For more details, please refer to this [website](https://www.oecd.org/pisa/data/httpoecdorgpisadatabase-instructions.htm).
+:::
+
+# Exploratory Data Analysis
+
+## Distribution of Students' Scores for Maths, Reading and Science
+
+Let us take a look at the distribution of the Students' Scores for the three subjects: Maths, Reading and Science using ridgeplot.
+
+::: panel-tabset
+## Preparing the Data
+
+As the current dataframe is large, we will create another dataframe that only contain the student ID and the average subject scores, then pivot longer the table.
+
+```{r}
+
+stu2s <- stu2 %>%
+  select(CNTSTUID, AVG_PVMATH, AVG_PVREAD, AVG_PVSCI) %>%
+  pivot_longer(-CNTSTUID) %>%
+  rename(subj = name, scores = value)
+
+med_math <- round(median(stu2$AVG_PVMATH), 0)
+med_read <- round(median(stu2$AVG_PVREAD), 0)
+med_sci <- round(median(stu2$AVG_PVSCI), 0)
+
+```
+
+## Plot
+
+```{r}
+
+ggplot(stu2s, 
+       aes(x = scores,
+           y = subj,
+           fill = factor(stat(quantile)))) + 
+  #geom_text(aes(label = med_math), color = "black") + 
+  stat_density_ridges(geom = "density_ridges_gradient",
+                      calc_ecdf = TRUE,
+                      quantiles = c(0.025, 0.975)) +
+  scale_fill_manual(name = "Probability",
+    values = c("#FF0000A0", "#A0A0A0A0", "#0000FFA0"),
+    labels = c("(0, 0.025]", "(0.025, 0.975]", "(0.975, 1]")) + 
+  theme_ridges()+
+  labs(title = "Distribution of Average Subject Scores", caption = "Data from PISA 2022",
+       x= "Scores", y = "Subjects") + theme_minimal()
+
+```
+:::
+
+::: {.callout-note appearance="simple"}
+## Observations
+
+From the above plot, despite the median scores for each subject being relatively similar to other subjects, we see that there was a wide range of scores for each subject. This means that for a particular subject, some students could score as low as 300 points while some students can score as high as 750 points.
+
+Let us explore further in the subsequent plots!
+:::
+
+## Distribution of Scores By Gender
+
+Let us take a look if there is any difference in scores by gender using ggdist's raincloud plots. However, as there are a large number of data points, we would not be plotting the dots because the dots would end up become very small. There are other suggestions at the [ggdist website](https://mjskay.github.io/ggdist/articles/dotsinterval.html#on-large-samples) on handling data with large samples.
+
+We will first prepare one plot for each subject using the following code chunks.
+
+::: panel-tabset
+## Maths Scores Between Gender
+
+```{r}
+g1 <- ggplot(stu2, aes(x = GENDER, y = AVG_PVMATH, fill = GENDER)) +
+  stat_halfeye(adjust = 0.5,
+               width = 0.3, 
+               justification = -0.1,
+               point_color = NA,
+               scale = 1.5) +
+  geom_boxplot(width = 0.05,
+               outlier.shape = NA) + coord_flip() +
+   stat_summary(fun = median, geom = "text", aes(label = round(after_stat(y), )),
+               position = position_nudge(x = 0.05), vjust = -0.5,size=3) +  
+  labs(title = "Distribution of Maths Scores",
+       y = "Scores", x = "Gender") +
+  theme_minimal() + scale_y_continuous(limits = c(100,900)) + theme(plot.title = element_text(size = 10))
+
+ggsave("g1.png", plot = g1)
+g1
+```
+
+## Reading Scores Between Gender
+
+```{r}
+g2 <- ggplot(stu2, aes(x = GENDER, y = AVG_PVREAD, fill = GENDER)) +
+  stat_halfeye(adjust = 0.5,
+               width = 0.3, 
+               justification = -0.1,
+               point_color = NA,
+               scale = 1.5) +
+  geom_boxplot(width = 0.05,
+               outlier.shape = NA) + coord_flip() +
+   stat_summary(fun = median, geom = "text", aes(label = round(after_stat(y), )),
+               position = position_nudge(x = 0.05), vjust = -0.5,size=3) +  
+ labs(title = "Distribution of Reading Scores",
+       y = "Scores", x = "Gender") + theme_minimal()+
+  scale_y_continuous(limits = c(100,900)) + theme(plot.title = element_text(size = 10))
+
+
+g2
+```
+
+## Science Scores Between Gender
+
+```{r}
+g3 <- ggplot(stu2, aes(x = GENDER, y = AVG_PVSCI, fill=GENDER)) +
+  stat_halfeye(adjust = 0.5,
+               width = 0.3, 
+               justification = -0.1,
+               point_color = NA,
+               scale = 1.5) +
+  geom_boxplot(width = 0.05,
+               outlier.shape = NA) +coord_flip() +
+ stat_summary(fun = median, geom = "text", aes(label = round(after_stat(y), )),
+               position = position_nudge(x = 0.05), vjust = -0.5,size=3) +  
+ labs(title = "Distribution of Science Scores",
+       y = "Scores", x = "Gender") + theme_minimal() + 
+  scale_y_continuous(limits = c(100,900)) + theme(plot.title = element_text(size = 10))
+
+g3
+```
+:::
+
+We will use patchwork to combine these three plots into one with the following code chunk.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+patch1 <- g1 /  g2 / g3
+patch1+ plot_layout(guides = "collect") 
+
+```
+
+::: {.callout-note appearance="simple"}
+## Observations
+
+The difference in median scores between Male and Female Students ranges from: Math: 19 points with male students scoring slightly higher than female students Reading: 12 points difference with females students scoring slightly higher than male students Science: 8 points difference with male students scoring slightly higher than female students.
+
+For further investigations, we could also test if the difference between gender is statistically significant.
+:::
+
+## Differences in Subject Scores Among Schools
+
+As there are more than 160 schools in this dataset, we will focus only on the differences in Scores among the top 10% and bottom 10% of schools for each subject.
+
+First, for each subject score, we use the following code chunk to find the minimum and maximum subject scores for each school using `group_by` and `summarise` functions.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+math_sch <- stu2 %>%
+  group_by(SCHOOL) %>%
+  summarise_at(vars(AVG_PVMATH), 
+               list(minscore = min, maxscore = max)) %>%
+  mutate(difference = maxscore - minscore)
+
+read_sch <- stu2 %>%
+  group_by(SCHOOL) %>%
+  summarise_at(vars(AVG_PVREAD), 
+               list(minscore = min, maxscore = max)) %>%
+  mutate(difference = maxscore - minscore)
+
+sci_sch <- stu2 %>%
+  group_by(SCHOOL) %>%
+  summarise_at(vars(AVG_PVSCI), 
+               list(minscore = min, maxscore = max)) %>%
+  mutate(difference = maxscore - minscore)
+
+```
+
+Then, we will use the the follow code chunks to (i) get the top 5% schools for each subject using `slice_max`, (ii) create a table with the top 5% schools' minimum score of the subject, (iii) create a table with the top 5% schools' maximum score of the subject then pivot the table using `pivot_longer`.
+
+::: panel-tabset
+## Maths
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+math_sch_high5 <- math_sch %>% slice_max(maxscore, prop = 0.05)
+
+
+math_sch_min <- math_sch_high5 %>%
+  select(-maxscore)
+
+
+math_sch_max <- math_sch_high5%>%
+  select(-minscore)
+
+
+math_long <- math_sch_high5%>% 
+  select(-difference)%>%
+  pivot_longer(-SCHOOL) 
+
+
+h1 <- ggplot(math_long) +
+  geom_segment(data = math_sch_min,
+               aes(x = minscore, y = SCHOOL,
+                   yend = math_sch_max$SCHOOL, xend=math_sch_max$maxscore),
+               color= "#aeb6bf",
+               size = 4,
+               alpha = 0.5) +
+  geom_point(aes(x = value, y = SCHOOL, color = name), size = 4, show.legend = TRUE) + 
+  labs(title = "Differences in Students Scores for Top 5% Schools in Maths", x = "Maths Scores", y = "School", color = "Min/Max Scores") +
+  geom_text(data = math_sch_min,
+            aes(label= paste("Diff: ", difference), x= minscore+100, y= SCHOOL),
+             color = "black",
+             size = 2.5)+ theme_minimal()+
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.minor.x = element_blank(), 
+        axis.ticks.x = element_line(color = "#4a4e4d"),
+        axis.text.y = element_text(size = 8),
+        axis.title.y = element_text(size = 8), 
+        axis.text.x = element_text(size = 8),
+        axis.title.x = element_text(size = 8))
+
+h1 
+```
+
+## Reading
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+read_sch_high5 <- read_sch %>% slice_max(maxscore, prop = 0.05)
+
+read_sch_min <- read_sch_high5 %>%
+  select(-maxscore)
+
+read_sch_max <- read_sch_high5%>%
+  select(-minscore)
+
+read_long <- read_sch_high5%>% 
+  select(-difference)%>%
+  pivot_longer(-SCHOOL) 
+
+h2 <- ggplot(read_long) +
+  geom_segment(data = read_sch_min,
+               aes(x = minscore, y = SCHOOL,
+                   yend = read_sch_max$SCHOOL, xend=read_sch_max$maxscore),
+               color= "#aeb6bf",
+               size = 4,
+               alpha = 0.5) +
+  geom_point(aes(x = value, y = SCHOOL, color = name), size = 4, show.legend = TRUE) + 
+  labs(title = "Differences in Students Scores for Top 5% Schools in Reading", x = "Reading Scores", y = "School", color = "Min/Max Scores") +
+  geom_text(data = read_sch_min,
+            aes(label= paste("Diff: ", difference), x= minscore+100, y= SCHOOL),
+             color = "black",
+             size = 2.5)+ theme_minimal()+
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.minor.x = element_blank(), 
+        axis.ticks.x = element_line(color = "#4a4e4d"),
+        axis.text.y = element_text(size = 8),
+        axis.title.y = element_text(size = 8), 
+        axis.text.x = element_text(size = 8),
+        axis.title.x = element_text(size = 8))
+h2
+```
+
+## Science
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+sci_sch_high5 <- sci_sch %>% slice_max(maxscore, prop = 0.05)
+
+sci_sch_min <- sci_sch_high5 %>%
+  select(-maxscore)
+
+sci_sch_max <- sci_sch_high5%>%
+  select(-minscore)
+
+sci_long <- sci_sch_high5%>% 
+  select(-difference)%>%
+  pivot_longer(-SCHOOL) 
+
+h3 <- ggplot(sci_long) +
+  geom_segment(data = sci_sch_min,
+               aes(x = minscore, y = SCHOOL,
+                   yend = sci_sch_max$SCHOOL, xend=sci_sch_max$maxscore),
+               color= "#aeb6bf",
+               size = 4,
+               alpha = 0.5) +
+  geom_point(aes(x = value, y = SCHOOL, color = name), size = 4, show.legend = TRUE) + 
+  labs(title = "Differences in Students Scores for Top 5% Schools in Science", caption = "Data from PISA 2022 Study", x = "Science Scores", y = "School", color = "Min/Max Scores") +
+  geom_text(data = sci_sch_min,
+            aes(label= paste("Diff: ", difference), x= minscore+100, y= SCHOOL),
+             color = "black",
+             size = 2.5) + theme_minimal()+
+  theme(panel.grid.minor.y = element_blank(),
+        panel.grid.minor.x = element_blank(), 
+        axis.ticks.x = element_line(color = "#4a4e4d"), 
+        axis.text.y = element_text(size = 8),
+        axis.title.y = element_text(size = 8), 
+        axis.text.x = element_text(size = 8),
+        axis.title.x = element_text(size = 8))
+
+h3
+```
+:::
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+
+
+h1+ h2 + h3 + plot_layout(nrow = 3, guides = "collect")
+```
+
+::: {.callout-note appearance="simple"}
+## Observations
+
+Amongst the schools that scored the top 5% for each subject, the difference between their top scorers and low scorers ranges from 161 marks (school 70200003 for Science) to 458 marks (school 70200068 for Reading). In addition, we noted that there were five schools which had top 5% of the scores for at least two subjects: - For Science, Reading and Maths: 70200155, 70200101,70200003, 70200001 - For Reading and Maths: 70200062
+
+We can do further exploration with the schools questionnaire data provided by PISA to find out about these schools. For further investigations, we could also test if the difference between the top and low scorers is statistically significant.
+:::
+
+## Students' Scores and Socioeconomic Factors
+
+We will now explore the students' scores and the PISA index of economic, social and cultural status [(ESCS](https://www.oecd-ilibrary.org/sites/1e412e2e-en/index.html?itemId=/content/component/1e412e2e-en#section-d1e19206-71ac67bf62)) using the following code chunks.
+
+::: panel-tabset
+## Maths Scores and ESCS
+
+```{r}
+
+z1 <- ggplot(stu2, 
+       aes(x = AVG_PVMATH, y = ESCS)) +
+  geom_point() + 
+  geom_smooth(method = "lm", size=0.5, fill = "blue")+ 
+   coord_cartesian(xlim=c(150,850),
+                  ylim=c(-3,3)) + theme_minimal()+
+      theme(legend.position="none") + 
+  labs(title = "Relationship between Maths Scores and ESCS", 
+       x = 'Maths Scores', y = "ESCS")
+
+z1
+```
+
+## Reading and ESCS
+
+```{r}
+
+z2 <- ggplot(stu2, 
+       aes(x = AVG_PVREAD, y = ESCS)) +
+  geom_point()+
+  geom_smooth(method = "lm", size=0.5, fill = "blue")+ 
+   coord_cartesian(xlim=c(150,850),
+                  ylim=c(-3,3)) + theme_minimal()+
+      theme(legend.position="none") +   
+  labs(title = "Relationship between Reading Scores and ESCS", 
+       x = 'Reading Scores', y = "ESCS")
+
+
+z2
+```
+
+## Science Scores and ESCS
+
+```{r}
+z3 <- ggplot(stu2, 
+       aes(x = AVG_PVSCI, y = ESCS)) +
+  geom_point() + 
+    geom_smooth(method = "lm", size=0.5, fill = "blue")+ 
+   coord_cartesian(xlim=c(150,850),
+                  ylim=c(-3,3)) + theme_minimal()+
+      theme(legend.position="none") + 
+  labs(title = "Relationship between Science Scores and ESCS", 
+       caption = "Data from PISA 2022", 
+       x = 'Science Scores', y = "ESCS")
+z3
+```
+:::
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+patch3 <- z1 +  z2 + z3
+patch3 + plot_layout(nrow = 3)
+```
+
+::: {.callout-note appearance="simple"}
+## Observations
+
+Based on the above plot, across all three subjects, it seems that scores seem to have a positive relationship with ESCS. In future analysis, we should investigate the relationship between students' scores with indices that make up ESCS. We can also explore how scores are related to other PISA items, such as whether the student has to work after school hours (i.e. WORKPAY), and whether the student has to assist in housework or assist in taking care of family members (i.e.WORKHOME).
+:::
+
+# References
+
+-   PISA - Programme for International Student Assessment. (2023). \[Dataset\]. OCED. \[https://www.oecd.org/pisa/\]<https://www.oecd.org/pisa/>
+
+-   Kam, T. S. (2023). *R for Visual Analytics* \[Web-book\]. <https://r4va.netlify.app/>.
