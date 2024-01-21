@@ -1,0 +1,13 @@
+---
+title: "In-class Exercise 2"
+author: "Goh Si Hui"
+date: 2024/01/13
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---

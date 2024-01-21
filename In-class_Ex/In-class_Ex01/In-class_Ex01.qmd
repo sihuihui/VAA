@@ -1,0 +1,85 @@
+---
+title: "In-class Exercise 1: Now You See it!"
+author: "Goh Si Hui"
+date: 2024/01/12
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+![](images/coding_penguin3.gif){fig-align="center" width="250"}
+
+# Getting Started
+
+First, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
+
+## Loading R packages
+
+For this in-class exercise, we will be using the following two packages:
+
+-   [**tidyverse**](https://www.tidyverse.org/) : to load the core tidyverse packages, which includes ggplot2.
+
+-   [**haven**](https://haven.tidyverse.org/) : to read and write various data formats used by other statistical packages by wrapping the ReadStat C library. It is part of the tidyverse family too! **haven** currently supports SAS, SPSS and Stata. We will need **haven** to import the PISA 2022's student questionnaire data file because it is in SAS file type.
+
+The code chunk below uses `p_load()` of [**pacman**](https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html) package to check if **tidyverse** packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
+
+```{r}
+pacman::p_load(tidyverse, haven)
+```
+
+## Importing the Data into R
+
+For this in-class exercise, we are using [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/)'s student questionnaire data file. As the data file is in SAS file format, we will use **haven**'s [`read_sas()`](https://haven.tidyverse.org/reference/read_sas.html) function to import the data into R environment. Then we will filter the data to those data from Singapore.
+
+::: panel-tabset
+## Import the Data
+
+```{r}
+#| eval: false
+
+stu_qqq <- read_sas("data/cy08msp_stu_qqq.sas7bdat")
+```
+
+## Filter the Imported Data
+
+```{r}
+#| eval: false
+
+stu_qqq_SG <- stu_qqq %>% 
+  filter(CNT == "SGP")
+```
+:::
+
+## Saving the data into RDS format
+
+Let us save the filtered data into an R data format (RDS) so that we can easily retrieve in future without importing the `stu_qqq` dataset again (Note: this dataset is more than 3GB!)
+
+```{r}
+#| eval: false
+
+write_rds(stu_qqq_SG, "data/stu_qqq_SG.rds")
+
+```
+
+## Reading the RDS data
+
+We will read the filtered data using the following code.
+
+```{r}
+
+stu_qqq_SG <- read_rds("data/stu_qqq_SG.rds")
+
+```
+
+Let us check the RDS data using `glimpse()` of **dplyr** to learn about the associated attribute information in the dataframe.
+
+```{r}
+
+glimpse(stu_qqq_SG)
+
+```
