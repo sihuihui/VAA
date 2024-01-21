@@ -1,0 +1,60 @@
+---
+title: "SiHui Learns Visual Analytics!"
+format: 
+  html: 
+    css: styles.css
+page-layout: full
+listing:
+  - id: hands-on
+    contents:
+    - "Hands-on_Ex/Hands-on_Ex01/*.qmd"
+    - "Hands-on_Ex/Hands-on_Ex02/*.qmd" 
+    type: grid 
+
+  - id: in-class
+    contents:
+    - "In-class_Ex/In-class_Ex01/*.qmd"
+    type: grid
+    
+  - id: take-home
+    contents:
+    - "Take-home_Ex/Take-home_Ex01/*.qmd"
+    type: grid
+  
+  - id: extra
+    contents:
+    - "Extra/Post-Lesson_01/*.qmd"
+    type: grid 
+
+toc: false 
+sidebar: false 
+number-sections: false
+---
+
+[![](images/surfing_penguin-02.gif){fig-align="center"}](https://giphy.com/gifs/pudgypenguins-surf-surfing-surfboard-ybvZgzU23o0YsN5wIl)
+
+Welcome to **SiHui Learns Visual Analytics**! This website documents my learning journey for ISSS608 Visual Analytics and Applications course. Hopefully I can surf through this course smoothly like this penguin!
+
+------------------------------------------------------------------------
+
+## Hands-On Exercises
+
+::: {#hands-on}
+:::
+
+## In-Class Exercises
+
+::: {#in-class}
+:::
+
+## Take-Home Exercises
+
+::: {#take-home}
+:::
+
+## Experiments
+
+Additional practices and experiments can be found here!
+
+::: {#extra}
+:::

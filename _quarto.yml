@@ -1,0 +1,81 @@
+project:
+  type: website
+
+website:
+  favicon: "sihuilearns_logo_h.png"
+  navbar:
+    logo: "sihuilearns_logo_h.png"
+    background: "#293040"
+    left:
+    - text: Hands-on Exercises
+      menu:
+        - text: Hands-on Exercise 1
+          href: "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.qmd"
+        - text: Hands-on Exercise 2
+          href: "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.qmd"
+
+    - text: In-class Exercises
+      menu:
+        - text: In-class Exercise 1
+          href: "In-class_Ex/In-class_Ex01/In-class_Ex01.qmd"
+        - text: In-class Exercise 2 - Coming soon! 
+
+
+    - text: Take-home Exercises
+      menu: 
+        - text: Take-home Exercise 1
+          href: "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.qmd"
+
+    - text: Extra Stuff
+      menu: 
+        - text: Post-Lesson Thoughts 1
+          href: "Extra/Post-Lesson_01/Post-Lesson_01.qmd"
+    right:
+      - icon: linkedin 
+        href: https://www.linkedin.com/in/gohsihui/ 
+        aria-label: LinkedIn
+
+
+  sidebar: 
+    style: "floating"
+    search: true
+    contents: 
+      - section: "Hands-on Exercises"
+        contents: 
+          - Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.qmd
+          - Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.qmd
+      - section: "In-class Exercises"
+        contents:
+          - In-class_Ex/In-class_Ex01/In-class_Ex01.qmd 
+      - section: "Take-home Exercises"
+        contents:
+          - Take-home_Ex/Take-home_Ex01/Take-home_Ex01.qmd
+      - section: "Extra Stuff"
+        contents: 
+          - Extra/Post-Lesson_01/Post-Lesson_01.qmd
+
+  page-footer:
+    background: light
+    left: 
+      - href: https://quarto.org/
+        text: "Published with Quarto |"
+      - href: https://www.netlify.com/
+        text: "Hosted by Netlify"
+
+format:
+  html:
+    grid: 
+      body-width: 900px
+    theme: 
+    - journal
+    monfont: courier new
+    css: styles.css
+    toc: true
+    toc-title: "On this page"
+    number-sections: true
+    toc-expand: 3
+    toc-depth: 3
+
+
+editor: visual
+
