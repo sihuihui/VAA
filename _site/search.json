@@ -1,0 +1,79 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "SiHui Learns Visual Analytics!",
+    "section": "",
+    "text": "Welcome to SiHui Learns Visual Analytics! This website documents my learning journey for ISSS608 Visual Analytics and Applications course. Hopefully I can surf through this course smoothly like this penguin!"
+  },
+  {
+    "objectID": "index.html#hands-on-exercises",
+    "href": "index.html#hands-on-exercises",
+    "title": "SiHui Learns Visual Analytics!",
+    "section": "Hands-On Exercises",
+    "text": "Hands-On Exercises\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html#in-class-exercises",
+    "href": "index.html#in-class-exercises",
+    "title": "SiHui Learns Visual Analytics!",
+    "section": "In-Class Exercises",
+    "text": "In-Class Exercises\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html#take-home-exercises",
+    "href": "index.html#take-home-exercises",
+    "title": "SiHui Learns Visual Analytics!",
+    "section": "Take-Home Exercises",
+    "text": "Take-Home Exercises\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html#experiments",
+    "href": "index.html#experiments",
+    "title": "SiHui Learns Visual Analytics!",
+    "section": "Experiments",
+    "text": "Experiments\nAdditional practices and experiments can be found here!\n\n\n\n\n\n\n\n\nPost-Lesson Thoughts 1: Annotations\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "Extra/Post-Lesson_01/Post-Lesson_01.html",
+    "href": "Extra/Post-Lesson_01/Post-Lesson_01.html",
+    "title": "Post-Lesson Thoughts 1: Annotations",
+    "section": "",
+    "text": "[Updated with references on 16 Jan 2024]"
+  },
+  {
+    "objectID": "Extra/Post-Lesson_01/Post-Lesson_01.html#import-packages",
+    "href": "Extra/Post-Lesson_01/Post-Lesson_01.html#import-packages",
+    "title": "Post-Lesson Thoughts 1: Annotations",
+    "section": "2.1 Import Packages",
+    "text": "2.1 Import Packages\n\npacman::p_load(tidyverse)"
+  },
+  {
+    "objectID": "Extra/Post-Lesson_01/Post-Lesson_01.html#import-data",
+    "href": "Extra/Post-Lesson_01/Post-Lesson_01.html#import-data",
+    "title": "Post-Lesson Thoughts 1: Annotations",
+    "section": "2.2 Import Data",
+    "text": "2.2 Import Data\n\nexam_data &lt;- read_csv(\"data/Exam_data.csv\")"
+  },
+  {
+    "objectID": "Extra/Post-Lesson_01/Post-Lesson_01.html#using-geom_text",
+    "href": "Extra/Post-Lesson_01/Post-Lesson_01.html#using-geom_text",
+    "title": "Post-Lesson Thoughts 1: Annotations",
+    "section": "3.1 Using geom_text()",
+    "text": "3.1 Using geom_text()\nFor example, we want to find out how the students did overall for math as compared to the mean Math score. So we will first calculate the mean Math score.\n\nmean_MATHS &lt;- round(mean(exam_data$MATHS),1)\n\n\nggplot(exam_data, aes(x = MATHS)) +\n  geom_histogram() + \n  geom_text(x = mean_MATHS, y = 20, \n            label = paste(\"mean\\n\", mean_MATHS),\n            color = \"blue\")\n\n\n\n\nNow we realised that the number is just floating around, so let us draw a line using geom_segment.\n\nggplot(exam_data, aes(x = MATHS)) +\n  geom_histogram() + \n  geom_text(x = mean_MATHS, y = 20, \n            label = paste(\"mean\\n\", mean_MATHS),\n            color = \"blue\") + \n  geom_segment(x = mean_MATHS, xend = mean_MATHS,\n               y = 0, yend = 18, color= \"blue\")"
+  },
+  {
+    "objectID": "Extra/Post-Lesson_01/Post-Lesson_01.html#using-geom_label",
+    "href": "Extra/Post-Lesson_01/Post-Lesson_01.html#using-geom_label",
+    "title": "Post-Lesson Thoughts 1: Annotations",
+    "section": "3.2 Using geom_label()",
+    "text": "3.2 Using geom_label()\n\nggplot(exam_data, aes(x = MATHS)) +\n  geom_histogram() + \n  geom_label(x = mean_MATHS, y = 20, \n            label = paste(\"mean=\", mean_MATHS),\n            color = \"blue\", fill = \"lightblue\") + \n  geom_segment(x = mean_MATHS, xend = mean_MATHS,\n               y = 0, yend = 18, color= \"blue\")\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nCurrently geom_label() does not support the check_overlap argument or the angle aesthetic. Also, it is considerably slower than geom_text(). The fill aesthetic controls the background colour of the label."
+  }
+]

@@ -1,0 +1,185 @@
+---
+title: "Post-Lesson Thoughts 1: Annotations"
+author: "Goh Si Hui"
+date: 2024/01/13
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+*\[Updated with references on 16 Jan 2024\]*
+
+# Oh no I forgot about Annotations!
+
+After attending my first visual analytics class and taking a peek at Lesson 2's Hands-on Exercise, I realised I did not annotate my charts!
+
+::: column-margin
+I will update Hands-on Exercise 1 with annotations soon!
+:::
+
+::: {callout-note}
+Why is annotation important? Annotation is a crucial component of good data visualisation. It can help to conveny information and grab viewer's attention. Using keywords, shapes, colours and other visuals help them go straight to the point.
+:::
+
+Now that we have an idea how to create charts using ggplot, let us talk about how to annotate our ggplot2 charts.
+
+Based on what I read, we can add annotations using the following methods:
+
+-   Adding text with `geom_text()` or `geom_label()`
+
+-   Adding shapes, text with `annotate()`
+
+-   Adding ablines with `geom_hline()` and `geom_vline()`
+
+I will share more about each method in the following sections.
+
+# Getting Started
+
+First, let us import the relevant packages and data.
+
+## Import Packages
+
+```{r}
+
+pacman::p_load(tidyverse)
+```
+
+## Import Data
+
+```{r}
+exam_data <- read_csv("data/Exam_data.csv")
+```
+
+# Adding text to charts using geom_text() and geom_label()
+
+Text (words or numerical values) is the most common kind of annotation. It can provide more important on the important parts of the chart. Using **ggplot2**, the 2 main functions for text annotation are: `geom_text` to add a simple piece of text `geom_label` to add a label: framed text
+
+::: {callout-note}
+Note that the `annotate()` function is a good alternative and we will cover more about this function in the following section. The `annotate()` function reduces code length for simple cases.
+:::
+
+## Using geom_text()
+
+For example, we want to find out how the students did overall for math as compared to the mean Math score. So we will first calculate the mean Math score.
+
+```{r}
+mean_MATHS <- round(mean(exam_data$MATHS),1)
+
+```
+
+```{r}
+ggplot(exam_data, aes(x = MATHS)) +
+  geom_histogram() + 
+  geom_text(x = mean_MATHS, y = 20, 
+            label = paste("mean\n", mean_MATHS),
+            color = "blue")
+```
+
+Now we realised that the number is just floating around, so let us draw a line using `geom_segment`.
+
+```{r}
+ggplot(exam_data, aes(x = MATHS)) +
+  geom_histogram() + 
+  geom_text(x = mean_MATHS, y = 20, 
+            label = paste("mean\n", mean_MATHS),
+            color = "blue") + 
+  geom_segment(x = mean_MATHS, xend = mean_MATHS,
+               y = 0, yend = 18, color= "blue")
+```
+
+## Using geom_label()
+
+```{r}
+ggplot(exam_data, aes(x = MATHS)) +
+  geom_histogram() + 
+  geom_label(x = mean_MATHS, y = 20, 
+            label = paste("mean=", mean_MATHS),
+            color = "blue", fill = "lightblue") + 
+  geom_segment(x = mean_MATHS, xend = mean_MATHS,
+               y = 0, yend = 18, color= "blue")
+```
+
+::: callout-note
+Currently `geom_label()` does not support the `check_overlap` argument or the `angle` aesthetic. Also, it is considerably slower than `geom_text()`. The `fill` aesthetic controls the background colour of the label.
+:::
+
+# Adding Shapes and Texts Using annotate()
+
+The `annotate()` function allows us to add text and shapes on a ggplot2 chart. The first argument allow us to specify if we want to add text or a specific kind of shape. The following examples shows how to add text, line (segment) and a pointrange.
+
+```{r}
+ggplot(exam_data, aes(x = MATHS)) +
+  geom_histogram() + 
+  annotate("text",
+           x= mean_MATHS, y = 20, 
+           label = paste("mean=", mean_MATHS),
+           color = "blue") + 
+  annotate("segment", 
+           x= mean_MATHS, xend = mean_MATHS,
+           y = 0, yend = 18, color= "blue")
+```
+
+Using annotate() to box out an area by drawing a rectangle.
+
+```{r}
+ggplot(exam_data, aes(x = MATHS)) +
+  geom_histogram() + 
+  annotate("rect",
+           xmin = 0, xmax=27, 
+           ymin = 0, ymax = 10,
+           color = "red", fill = "pink", alpha=.2) 
+
+```
+
+Using annotate to draw a point range (i.e. a point and a segment to define the range)
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS,
+           y = ENGLISH)) +
+  geom_point() + 
+  annotate("pointrange", x = 50, y =50, ymin= 30, ymax=70, color= "orange", size = 1)
+```
+
+::: {callout-note}
+Due to their special nature, reference line geoms geom_abline(), geom_hline(), and geom_vline() can't be used with annotate(). You can use these geoms directory for annotations.
+:::
+
+# Adding abline with geom_hline and geom_vline
+
+An abline is a segment that goes from 1 chart extremity to the other. `ggplot2` offers the `geom_hline()` and `geom_vline()` functions to draw hortizonal and vertical ablines.
+
+```{r}
+ggplot(data = exam_data,
+       aes(x = MATHS,
+           y = ENGLISH)) +
+  geom_point() + 
+  #hortizonal 
+  geom_hline(yintercept = 50, color="orange", size = 1) +
+  #vertical 
+  geom_vline(xintercept = 50, color="orange", size = 1)
+
+```
+
+# Takeaways
+
+After exploring these methods, I realised that there are actually a lot more to learn about annotations. These examples are just scratching the surface. There are so many ways to annotate, and customise the annotations in ways which I have not thought of previously.
+
+Watch out for my future exercises as I attempt to practise my annotation skills!
+
+# References
+
+-   Holtz, Y. (n.d.-a). Annotation is Crucial for Your Dataviz. From Data to Viz. Retrieved January 14, 2024, from <https://www.data-to-viz.com/caveat/annotation.html>
+-   Holtz, Y. (n.d.-b). How to annotate a plot in ggplot2. <https://r-graph-gallery.com/233-add-annotations-on-ggplot2-chart.html>
+-   How to Compute Summary Statistics by Group in R (3 Examples). (2022, March 18). Statistics Globe. Retrieved January 14, 2024, from <https://statisticsglobe.com/summary-statistics-by-group-in-r>
+-   Johnson, A. L. (n.d.). 6 Summary Statistics \| R Training for SSDS. <https://bookdown.org/ajohnso6/r_training_public/summary-statistics.html>
+-   Kam, T. S. (2023). R for Visual Analytics \[Web-book\]. <https://r4va.netlify.app/>
+-   Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., & Dunnington, D. (n.d.-a). Create an annotation layer — annotate. Ggplot2. Retrieved January 14, 2024, from <https://ggplot2.tidyverse.org/reference/annotate.html>
+-   Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., & Dunnington, D. (n.d.-b). Reference lines: Horizontal, vertical, and diagonal. Ggplot2. Retrieved January 14, 2024, from <https://ggplot2.tidyverse.org/reference/geom_abline.html>
+-   Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., & Dunnington, D. (n.d.-c). Text. Ggplot2. Retrieved January 14, 2024, from <https://ggplot2.tidyverse.org/reference/geom_text.html>
+-   Wickham, H., Navarro, D., & Pedersen, T. L. (n.d.). Annotations \[Web-book\]. In ggplot2: Elegant Graphics for Data Analysis (3rd ed.). <https://ggplot2-book.org/annotations>
