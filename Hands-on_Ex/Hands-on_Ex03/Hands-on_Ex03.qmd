@@ -77,3 +77,209 @@ From the above output, we note that:
 -   Three of these attributes are continuous data: `MATHS`, `ENGLISH` and `SCIENCE`.
 
 # Interactive Data Visualisation - ggiraph methods
+
+ggiraph is an html widget and ggplot2 extension. It allows ggplot graphics to be interactive by exploring them as SVG documents and using special attributes on the various elements.
+
+ggiraph allows us to add tooltips, hover effects, add JavaScript actions to the graphics, and make selection of graphical elements when used in Shiny applications.
+
+Interactivity is added to ggplot geometries, legends and theme elements via the following aesthetics:
+
+-   `tooltip`: tooltips to be displayed when we mouse over elements
+
+-   `onclick`: JavaScript function to be executed when elements are clicked.
+
+-   `data_id`: id to be associated with elements (used for hover and click actions).
+
+# Making use of Tooltips
+
+Let us introduce ggiraph by creating a graph with tooltip effect. The following code chunk consists two parts: (i) a ggplot object will be created using `geom_dotplot_interactive()`, (ii) `girafe()` of ggiraph will be used to create an interactive svg object.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+p1 <- ggplot(data = exam_data, aes(x = MATHS)) + 
+  geom_dotplot_interactive(aes(tooltip = ID),
+                           stackgroups = TRUE, 
+                           binwidth = 1,
+                           method = "histodot") +
+  scale_y_continuous(NULL, breaks = NULL)
+
+girafe(ggobj = p1, 
+       width_svg = 6,
+       height_svg = 6 * 0.618)
+
+```
+
+::: {.callout-note appearance="simple"}
+## About the arguments used
+
+-   tooltip: this is the interactive parameter provided by ggiraph. if this argument is used, a tooltip is shown when the element is hovered. There are other interactive parameters such as onclick, hover_css and selected_css that we will explore later on! In the above code chunk, we want the tooltip to show the student ID, so `tooltip = ID` is used.
+
+-   stackgroups: this is a geom_dotplot argument from ggplot2. if `TRUE`, dots would be stacked across groups.
+
+-   binwidth: this is a geom_dotplot argument from ggplot2. When method is "dotdensity", this specifies maximum bin width. When method is "histodot", this specifies bin width.
+
+-   method: this is a geom_dotplot argument from ggplot2. "dotdensity" (default) for dot-density binning, or "histodot" for fixed bin widths (like stat_bin).
+
+-   width_svg and height_svg: this argument specify the width and height of the graphics region in inches. The default values are 6 and 5 inches. This will define the aspect ratio of the graphic as it will be used to define viewbox attribute of the SVG result.
+:::
+
+## Displaying Multiple Information on Tooltip
+
+In the above example, we only displayed student ID using tooltip. We can make use of tooltip to display more than 1 piece of information.
+
+The following code chunk is an example. First, we will create a new column in exam_data to contain the information we want the tooltip to display. Then we will plot the graph using ggplot and make it interactive using ggiraph (as seen in the earlier code chunk).
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+exam_data$tooltip <- c(paste0("Name = ", exam_data$ID, 
+                              "\n Class = ", exam_data$CLASS))
+
+p2 <- ggplot(data = exam_data, 
+            aes(x = MATHS)) + 
+  geom_dotplot_interactive(
+    aes(tooltip = exam_data$tooltip),
+    stackgroups = TRUE, 
+    binwidth = 1.2, 
+    method = "histodot") + 
+  scale_y_continuous(NULL, breaks = NULL) 
+
+girafe(ggobj = p2, 
+       width_svg = 8, 
+       height_svg = 8 * 0.618)
+```
+
+By hovering the mouse pointer on an data point of interest, the student’s ID and Class will be displayed.
+
+## Customising Tooltip Style
+
+We can also customise the tooltip (e.g. fonts, the color of the tooltip) using opts_tooltip() of ggiraph. This function customises tooltip rendering by adding css declarations.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+tooltip_css <- "background-color:white; #<< font-style:bold; color:black;"#<<
+
+exam_data$tooltip <- c(paste0("Name = ", exam_data$ID, 
+                              "\n Class = ", exam_data$CLASS))
+
+p2 <- ggplot(data = exam_data, 
+            aes(x = MATHS)) + 
+  geom_dotplot_interactive(
+    aes(tooltip = exam_data$tooltip),
+    stackgroups = TRUE, 
+    binwidth = 1.2, 
+    method = "histodot") + 
+  scale_y_continuous(NULL, breaks = NULL) + 
+  theme_minimal(base_family = "Open Sans")
+
+girafe(ggobj = p2, 
+       width_svg = 8, 
+       height_svg = 8 * 0.618, 
+       options = list(  #<<
+         opts_tooltip(  #<<
+           css = tooltip_css)) #<< 
+       )
+
+```
+
+## Displaying Statistics on Tooltip
+
+We can also use tooltip to display statistics. In the following code chunk, a function is used to compute 90% confidence interval of the mean. The derived statistics is then displayed on the tooltip.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+tooltip_stat <- function(y, ymax, accuracy = .01) {
+  mean <- scales::number(y, accuracy = accuracy)
+  sem <- scales:: number(ymax-y, accuracy = accuracy)
+  paste("Mean Maths Scores: ", mean, "+/-", sem)
+}
+
+p3 <- ggplot(data = exam_data,
+             aes(x = RACE),) + 
+               stat_summary(aes(y = MATHS, tooltip = after_stat(tooltip_stat(y, ymax))),
+                                           fun.data = "mean_se",
+                                           geom = GeomInteractiveCol,
+                                           fill = "pink") + 
+               stat_summary(aes(y = MATHS),
+                            fun.data = mean_se, 
+                            geom = "errorbar", width = 0.2, linewidth = 0.2)
+
+girafe( ggobj = p3,
+        width_svg = 8,
+        height_svg = 8 * 0.618)
+```
+
+# Making Use of Hover Effect
+
+The code chunk below shows the second interactive feature of ggiraph: `data_id`. By making use the `data_id` parameter, we can specify the effect when we mouse over the various graph components.For example, in the following chart, when we mouse over dots, we see other dots (i.e. students) from the same class being highlighted.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+p4 <- ggplot(data=exam_data, 
+             aes(x = MATHS)) + 
+  geom_dotplot_interactive(
+    aes(data_id = CLASS, 
+        tooltip = exam_data$tooltip), 
+    stackgroups = TRUE, 
+    binwidth = 1, 
+    method = "histodot") + 
+  scale_y_continuous(NULL, breaks = NULL)+ theme_minimal()
+
+girafe(ggobj = p4,
+       width_svg = 6,
+       height_svg = 6*0.618)
+
+```
+
+::: callout-note
+-   The default value of the hover css is hover_css = "fill:orange;"
+
+-   I also added the tooltip function in the above chart, just to show that we can have both tooltip and hover effect together!
+:::
+
+
+## Styling Hover Effect
+
+We can also style the hover effect. For example, in the following code chunk, css codes are used to change the highlighting effect by specifying the `options` argument in `girafe()`. 
+
+```{r}
+
+#| code-fold: true
+#| code-summary: "Show the code"
+
+p4 <- ggplot(data=exam_data, 
+             aes(x = MATHS)) + 
+  geom_dotplot_interactive(
+    aes(data_id = CLASS, 
+        tooltip = exam_data$CLASS), 
+    stackgroups = TRUE, 
+    binwidth = 1, 
+    method = "histodot") + 
+  scale_y_continuous(NULL, breaks = NULL)+ theme_minimal()
+
+girafe(ggobj = p4,
+       width_svg = 6,
+       height_svg = 6*0.618,
+       options = list(
+         opts_hover(css = "fill:#FF33A2;"),
+         opts_hover_inv(css = "opacity:0.2;")
+       ))
+
+```
+
+:::{.callout-note}
+
+Different from the tooltip customisation, in the above example, the css customisation requests are encoded directly.
+
+:::
+
+# Making Use of Click Effect 
