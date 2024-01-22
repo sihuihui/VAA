@@ -389,7 +389,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html",
     "title": "Hands-On Exercise 3a: Programming Interactive Data Visualisation with R",
     "section": "",
-    "text": "In this exercise, we will learn how to create interactive data visualisation using functions provided by ggiraph, plotlyr and crosstalk.\n\n\n\n\n\n\n\nWhy is interactivity important in data visualisation?\n\n\n\nIt might seem that making content and data interactive is more about keeping up with trends, but actually adding interactivity to your visualizations is profoundly powerful.\n– SAGE Campus"
+    "text": "In this exercise, we will learn how to create interactive data visualisation using functions provided by ggiraph, plotlyr and crosstalk.\n\n\n\n\n\n\nWhy is interactivity important in data visualisation?\n\n\n\nIt might seem that making content and data interactive is more about keeping up with trends, but actually adding interactivity to your visualizations is profoundly powerful.\n– SAGE Campus"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#installing-and-launching-r-packages",
@@ -403,6 +403,6 @@
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-the-data",
     "title": "Hands-On Exercise 3a: Programming Interactive Data Visualisation with R",
     "section": "2.2 Importing the Data",
-    "text": "2.2 Importing the Data\nFor this exercise, we will be using the Exam_data provided by the course instructor and we have used it in Hands-on Exercises 1 and 2. It consists of year end examination grades of a cohort of primary 3 students from a local school. It is in csv file format.\nWe use read_csv() function of readr to import the Exam_data csv file into R and save it as a tibble data frame called exam_data. Then we will use datatable() of DT to have an overview of the imported data.\n\n\nShow the code\n#import the data into R\nexam_data &lt;- read_csv(\"data/Exam_data.csv\")\n\n#to display the imported data\ndatatable(exam_data, caption = \"Table 1: Exam Data of Primary 3 Students\")\n\n\n\n\n\n\n\n:::\nFrom the above output, we note that:\n\nThere are a total of seven attributes in the exam_data tibble data frame.\nFour of these attributes are categorical data: ID, CLASS, GENDER and RACE .\nThree of these attributes are continuous data: MATHS, ENGLISH and SCIENCE."
+    "text": "2.2 Importing the Data\nFor this exercise, we will be using the Exam_data provided by the course instructor and we have used it in Hands-on Exercises 1 and 2. It consists of year end examination grades of a cohort of primary 3 students from a local school. It is in csv file format.\nWe use read_csv() function of readr to import the Exam_data csv file into R and save it as a tibble data frame called exam_data. Then we will use datatable() of DT to have an overview of the imported data.\n\n\nShow the code\n#import the data into R\nexam_data &lt;- read_csv(\"data/Exam_data.csv\")\n\n#to display the imported data\ndatatable(exam_data, caption = \"Table 1: Exam Data of Primary 3 Students\")\n\n\n\n\n\n\n\n:::\nFrom the above output, we note that:\n\nThere are a total of seven attributes in the exam_data tibble data frame.\nFour of these attributes are categorical data: ID, CLASS, GENDER and RACE.\nThree of these attributes are continuous data: MATHS, ENGLISH and SCIENCE."
   }
 ]
