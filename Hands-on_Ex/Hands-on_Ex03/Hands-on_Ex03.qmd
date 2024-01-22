@@ -14,7 +14,15 @@ editor: visual
 
 # About this Exercise
 
-In this exercise, we will learn how to create interactive data visualisation using functions provided by ggiraph and plotlyr packages.
+In this exercise, we will learn how to create interactive data visualisation using functions provided by ggiraph, plotlyr and crosstalk.
+
+::: {.callout-note appearance="simple"}
+## Why is interactivity important in data visualisation?
+
+*It might seem that making content and data interactive is more about keeping up with trends, but actually adding interactivity to your visualizations is profoundly powerful.*
+
+-- [SAGE Campus](https://researchmethodscommunity.sagepub.com/blog/three-benefits-interactive-visualization)
+:::
 
 # Getting Started
 
@@ -30,7 +38,7 @@ For this exercise, other than tidyverse, we will use the following packages:
 
 -   DT: to create interactive tables using the JavaScript library DataTables
 
--   patchwork: to combine multiple ggplot2 graphs into one figure [Note: We have introduced patchwork in Hands-on Lesson 2!]
+-   patchwork: to combine multiple ggplot2 graphs into one figure \[Note: We have introduced patchwork in Hands-on Lesson 2!\]
 
 The code chunk below uses `p_load()` of **pacman** package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
 
@@ -41,4 +49,31 @@ The code chunk below uses `p_load()` of **pacman** package to check if the above
 pacman::p_load(tidyverse, ggiraph, plotly, DT, patchwork)
 ```
 
+## Importing the Data
 
+For this exercise, we will be using the Exam_data provided by the course instructor and we have used it in Hands-on Exercises 1 and 2. It consists of year end examination grades of a cohort of primary 3 students from a local school. It is in csv file format.
+
+We use `read_csv()` function of **readr** to import the Exam_data csv file into R and save it as a tibble data frame called `exam_data`. Then we will use `datatable()` of **DT** to have an overview of the imported data.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+#import the data into R
+exam_data <- read_csv("data/Exam_data.csv")
+
+#to display the imported data
+datatable(exam_data, caption = "Table 1: Exam Data of Primary 3 Students")
+```
+
+:::
+
+From the above output, we note that:
+
+-   There are a total of seven attributes in the `exam_data` tibble data frame.
+
+-   Four of these attributes are categorical data: `ID`, `CLASS`, `GENDER` and `RACE`.
+
+-   Three of these attributes are continuous data: `MATHS`, `ENGLISH` and `SCIENCE`.
+
+# Interactive Data Visualisation - ggiraph methods

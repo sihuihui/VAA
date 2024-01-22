@@ -8,7 +8,8 @@ listing:
   - id: hands-on
     contents:
     - "Hands-on_Ex/Hands-on_Ex01/*.qmd"
-    - "Hands-on_Ex/Hands-on_Ex02/*.qmd" 
+    - "Hands-on_Ex/Hands-on_Ex02/*.qmd"
+    - "Hands-on_Ex/Hands-on_Ex03/*.qmd"
     type: grid 
 
   - id: in-class
