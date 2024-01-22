@@ -1,0 +1,44 @@
+---
+title: "Hands-On Exercise 3a: Programming Interactive Data Visualisation with R"
+author: "Goh Si Hui"
+date: 2024/01/22
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+# About this Exercise
+
+In this exercise, we will learn how to create interactive data visualisation using functions provided by ggiraph and plotlyr packages.
+
+# Getting Started
+
+Before we start, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
+
+## Installing and Launching R packages
+
+For this exercise, other than tidyverse, we will use the following packages:
+
+-   ggiraph: to make interactive ggplot2 plots
+
+-   plotly: to plot interactive statistical graphs
+
+-   DT: to create interactive tables using the JavaScript library DataTables
+
+-   patchwork: to combine multiple ggplot2 graphs into one figure [Note: We have introduced patchwork in Hands-on Lesson 2!]
+
+The code chunk below uses `p_load()` of **pacman** package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+pacman::p_load(tidyverse, ggiraph, plotly, DT, patchwork)
+```
+
+
