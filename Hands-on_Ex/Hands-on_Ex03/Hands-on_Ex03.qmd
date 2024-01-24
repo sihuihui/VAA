@@ -253,7 +253,6 @@ girafe(ggobj = p4,
 We can also style the hover effect. For example, in the following code chunk, css codes are used to change the highlighting effect by specifying the `options` argument in `girafe()`.
 
 ```{r}
-
 #| code-fold: true
 #| code-summary: "Show the code"
 
@@ -287,7 +286,8 @@ Different from the tooltip customisation, in the above example, the css customis
 The `onclick` argument of **ggiraph** provides hotlink interactivity on the web. The following code chunk is an example of `onclick`. We would add a column `onclick` in the `exam_data` dataset first, then plot the chart and `onclick =` was assigned to the `exam_data$onlick`.
 
 ```{r}
-
+#| code-fold: true
+#| code-summary: "Show the code"
 exam_data$onclick <- sprintf("window.open(\"%s%s\")",
                              "https://www.moe.gov.sg/schoolfinder?journey=Primary%20school", 
                              as.character(exam_data$ID))
@@ -316,7 +316,8 @@ We can also use **ggiraph** to coordinate the views when we have multiple plots.
 To build a coordinated multiple views, we will: 1. Use the appropriate interactive functions of ggiraph to create the multiple views 2. Use patchwork inside `girafe()` function to create interactive coordinate mutliple views.
 
 ```{r}
-
+#| code-fold: true
+#| code-summary: "Show the code"
 
 p6 <- p4 + coord_cartesian(xlim = c(0,100)) + theme(panel.grid.major.x = element_blank(),
   panel.grid.minor.x = element_blank())
@@ -438,7 +439,8 @@ Click on a data point of one of the scatterplot and see how the corresponding po
 The following is an example of displaying `exam_data` using **DT** package.
 
 ```{r}
-
+#| code-fold: true
+#| code-summary: "Show the code"
 datatable(exam_data, class="compact")
 
 ```

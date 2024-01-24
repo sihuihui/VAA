@@ -1,0 +1,17 @@
+---
+title: "Hands-On Exercise 3b"
+author: "Goh Si Hui"
+date: 2024/01/24
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+# About this Exercise
+
+In this exercise, we will learn how to
