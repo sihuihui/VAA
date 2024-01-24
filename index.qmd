@@ -10,22 +10,26 @@ listing:
     - "Hands-on_Ex/Hands-on_Ex01/*.qmd"
     - "Hands-on_Ex/Hands-on_Ex02/*.qmd"
     - "Hands-on_Ex/Hands-on_Ex03/*.qmd"
-    type: grid 
+    type: grid
+    sort: "date"
 
   - id: in-class
     contents:
     - "In-class_Ex/In-class_Ex01/*.qmd"
     type: grid
+    sort: "date"
     
   - id: take-home
     contents:
     - "Take-home_Ex/Take-home_Ex01/*.qmd"
     type: grid
+    sort: "date"
   
   - id: extra
     contents:
     - "Extra/Post-Lesson_01/*.qmd"
-    type: grid 
+    type: grid
+    sort: "date"
 
 toc: false 
 sidebar: false 

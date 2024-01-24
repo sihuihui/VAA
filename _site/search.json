@@ -11,7 +11,7 @@
     "href": "index.html#hands-on-exercises",
     "title": "SiHui Learns Visual Analytics!",
     "section": "Hands-On Exercises",
-    "text": "Hands-On Exercises\n\n\n\n\n\n\n\n\nHands-On Exercise 2 - Beyond ggplot2 Fundamentals\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3a: Programming Interactive Data Visualisation with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3b\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 24, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 1 - A Layered Grammar of Graphics: ggplot2 methods\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 11, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Hands-On Exercises\n\n\n\n\n\n\n\n\nHands-on Exercise 1 - A Layered Grammar of Graphics: ggplot2 methods\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 11, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 2 - Beyond ggplot2 Fundamentals\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3a: Programming Interactive Data Visualisation with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3b: Programming Animated Statistical Graphics with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 24, 2024\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html#in-class-exercises",
@@ -506,8 +506,29 @@
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html",
     "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html",
-    "title": "Hands-On Exercise 3b",
+    "title": "Hands-On Exercise 3b: Programming Animated Statistical Graphics with R",
     "section": "",
-    "text": "1 About this Exercise\nIn this exercise, we will learn how to"
+    "text": "In this exercise, we will learn how to create animated data visualisation by using gganimate and plotly r packages. At the same time, we will also learn how to (i) reshape data by using tidyr package, and (ii) process, wrangle and transform data by using dplyr package."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html#when-should-we-use-animated-graphs",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html#when-should-we-use-animated-graphs",
+    "title": "Hands-On Exercise 3b: Programming Animated Statistical Graphics with R",
+    "section": "2.1 When should we use animated graphs?",
+    "text": "2.1 When should we use animated graphs?\nBefore you start making animated graphs, we should first ask ourselves: Does it makes sense to go through the effort?\nAn animated graphic may not be worth the time investment for exploratory data analysis. However, it might be more useful if it is meant for presentation because a few well-placed animated graphs can help audience connect with the presentation topic better than static graphs.\n:::"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html#installing-and-launching-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html#installing-and-launching-r-packages",
+    "title": "Hands-On Exercise 3b: Programming Animated Statistical Graphics with R",
+    "section": "3.1 Installing and Launching R packages",
+    "text": "3.1 Installing and Launching R packages\nFor this exercise, other than tidyverse, we will use the following packages:\n\nplotly: an R library for plotting interactive statistical graphs\ngganimate: an ggplot extension for creating animated statistical graphs\ngifski: converts video frames to GIF animations using pngquant’s fancy features for efficient crossframe palettes and temporal dithering. It produces animated GIFs that use thousands of colours per frame.\ngapminder: an excerpt of the data available at Gapminder.org. We want to use its country_colors scheme for this exercise.\n\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\n\nShow the code\npacman::p_load(readxl, gifski, gapminder, plotly, gganimate, tidyverse)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html#importing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html#importing-the-data",
+    "title": "Hands-On Exercise 3b: Programming Animated Statistical Graphics with R",
+    "section": "3.2 Importing the Data",
+    "text": "3.2 Importing the Data\nIn this hands-on exercise, the Data worksheet from GlobalPopulation Excel workbook will be used.We will first use read_xls() of readxl package to import the excel sheet, then use mutate_each_() of dplyr package to convert all character data type into factor, then we will use mutate() to convert data values of the Year field into integer.\n\nUsing mutate_each_()Using mutate_at()Using across()\n\n\n\ncol &lt;- c(\"Country\", \"Continent\")\n\nglobalpop &lt;- read_xls(\"data/GlobalPopulation.xls\",\n                      sheet = \"Data\") %&gt;%\n  mutate_each_(funs(factor(.)), col) %&gt;%\n  mutate(Year = as.integer(Year))\n\n\n\nUnfortunately, mutate_each_() was deprecated in dplyr 0.7.0. and funs()was deprecated in dplyr 0.8.0. In view of this, we will re-write the code by using mutate_at() as shown in the code chunk below.\n\ncol &lt;- c(\"Country\", \"Continent\")\n\nglobalpop &lt;- read_xls(\"data/GlobalPopulation.xls\",\n                      sheet = \"Data\") %&gt;%\n  mutate_at(col, as.factor) %&gt;%\n  mutate(Year = as.integer(Year))\n\n\n\nWe can also use across() instead of mutate_at() to derive the same output.\n\ncol &lt;- c(\"Country\", \"Continent\")\n\nglobalpop &lt;- read_xls(\"data/GlobalPopulation.xls\",\n                      sheet = \"Data\") %&gt;%\n  mutate(across(col, as.factor)) %&gt;%\n  mutate(Year = as.integer(Year))"
   }
 ]

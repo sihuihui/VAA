@@ -9,7 +9,7 @@
 <meta name="author" content="Goh Si Hui">
 <meta name="dcterms.date" content="2024-01-24">
 
-<title>Hands-On Exercise 3b</title>
+<title>Hands-On Exercise 3b: Programming Animated Statistical Graphics with R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -159,7 +193,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html">Hands-on Exercises</a></li><li class="breadcrumb-item"><a href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html">Hands-On Exercise 3b</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html">Hands-on Exercises</a></li><li class="breadcrumb-item"><a href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html">Hands-On Exercise 3b: Programming Animated Statistical Graphics with R</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -209,7 +243,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Hands-On Exercise 3b</span></a>
+ <span class="menu-text">Hands-On Exercise 3b: Programming Animated Statistical Graphics with R</span></a>
   </div>
 </li>
       </ul>
@@ -276,6 +310,15 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#about-this-exercise" id="toc-about-this-exercise" class="nav-link active" data-scroll-target="#about-this-exercise"><span class="header-section-number">1</span> About this Exercise</a></li>
+  <li><a href="#how-does-animated-data-visualisation-work" id="toc-how-does-animated-data-visualisation-work" class="nav-link" data-scroll-target="#how-does-animated-data-visualisation-work"><span class="header-section-number">2</span> How does animated data visualisation work?</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">3</span> Getting Started</a>
+  <ul class="collapse">
+  <li><a href="#installing-and-launching-r-packages" id="toc-installing-and-launching-r-packages" class="nav-link" data-scroll-target="#installing-and-launching-r-packages"><span class="header-section-number">3.1</span> Installing and Launching R packages</a></li>
+  <li><a href="#importing-the-data" id="toc-importing-the-data" class="nav-link" data-scroll-target="#importing-the-data"><span class="header-section-number">3.2</span> Importing the Data</a></li>
+  </ul></li>
+  <li><a href="#animated-data-visualisation-gganimate-methods" id="toc-animated-data-visualisation-gganimate-methods" class="nav-link" data-scroll-target="#animated-data-visualisation-gganimate-methods"><span class="header-section-number">4</span> Animated Data Visualisation: gganimate methods</a></li>
+  <li><a href="#animated-data-visualisation-plotly-methods" id="toc-animated-data-visualisation-plotly-methods" class="nav-link" data-scroll-target="#animated-data-visualisation-plotly-methods"><span class="header-section-number">5</span> Animated Data Visualisation: plotly methods</a></li>
+  <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference"><span class="header-section-number">6</span> Reference</a></li>
   </ul>
 </nav>
     </div>
@@ -284,7 +327,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hands-On Exercise 3b</h1>
+<h1 class="title">Hands-On Exercise 3b: Programming Animated Statistical Graphics with R</h1>
 </div>
 
 
@@ -319,7 +362,153 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="about-this-exercise" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> About this Exercise</h1>
-<p>In this exercise, we will learn how to</p>
+<p>In this exercise, we will learn how to create animated data visualisation by using <strong>gganimate</strong> and <strong>plotly r</strong> packages. At the same time, we will also learn how to (i) reshape data by using <strong>tidyr</strong> package, and (ii) process, wrangle and transform data by using <strong>dplyr</strong> package.</p>
+</section>
+<section id="how-does-animated-data-visualisation-work" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> How does animated data visualisation work?</h1>
+<p>Animated data visualisations are actually made of up several individual plots built and stitched together as movie frames, just like an old-school flip book or cartoon. Each frame is a different plot when conveying motion, which is built using some relevant subset of the aggregated data.</p>
+<p>Before we dive into the steps for creating an animated statistical graph, it’s important to understand some of the key concepts and terminology related to this type of visualization.</p>
+<ul>
+<li><p>Frame: In an animated line graph, each frame represents a different point in time or a different category. When the frame changes, the data points on the graph are updated to reflect the new data.</p></li>
+<li><p>Animation Attributes: The animation attributes are the settings that control how the animation behaves. For example, we can specify the duration of each frame, the easing function used to transition between frames, and whether to start the animation from the current frame or from the beginning.</p></li>
+</ul>
+<div class="callout callout-style-simple callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+When should we use animated graphs?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before you start making animated graphs, we should first ask ourselves: Does it makes sense to go through the effort?</p>
+<p>An animated graphic may not be worth the time investment for exploratory data analysis. However, it might be more useful if it is meant for presentation because a few well-placed animated graphs can help audience connect with the presentation topic better than static graphs.</p>
+</div>
+</div>
+</section>
+<section id="getting-started" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Getting Started</h1>
+<p>Before we start, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.</p>
+<section id="installing-and-launching-r-packages" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="installing-and-launching-r-packages"><span class="header-section-number">3.1</span> Installing and Launching R packages</h2>
+<p>For this exercise, other than tidyverse, we will use the following packages:</p>
+<ul>
+<li><p>plotly: an R library for plotting interactive statistical graphs</p></li>
+<li><p>gganimate: an ggplot extension for creating animated statistical graphs</p></li>
+<li><p>gifski: converts video frames to GIF animations using pngquant’s fancy features for efficient crossframe palettes and temporal dithering. It produces animated GIFs that use thousands of colours per frame.</p></li>
+<li><p>gapminder: an excerpt of the data available at Gapminder.org. We want to use its country_colors scheme for this exercise.</p></li>
+</ul>
+<p>The code chunk below uses <code>p_load()</code> of <strong>pacman</strong> package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, <strong>pacman</strong> will install the relevant packages before launching them.</p>
+<div class="cell">
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(readxl, gifski, gapminder, plotly, gganimate, tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="importing-the-data" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="importing-the-data"><span class="header-section-number">3.2</span> Importing the Data</h2>
+<p>In this hands-on exercise, the <code>Data</code> worksheet from <code>GlobalPopulation</code> Excel workbook will be used.We will first use <code>read_xls()</code> of <strong>readxl</strong> package to import the excel sheet, then use <code>mutate_each_()</code> of <strong>dplyr</strong> package to convert all character data type into factor, then we will use <code>mutate()</code> to convert data values of the <code>Year</code> field into integer.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Using mutate_each_()</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Using mutate_at()</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Using across()</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>col <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Country"</span>, <span class="st">"Continent"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>globalpop <span class="ot">&lt;-</span> <span class="fu">read_xls</span>(<span class="st">"data/GlobalPopulation.xls"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sheet =</span> <span class="st">"Data"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_each_</span>(<span class="fu">funs</span>(<span class="fu">factor</span>(.)), col) <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">as.integer</span>(Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Unfortunately, <code>mutate_each_()</code> was deprecated in dplyr 0.7.0. and <code>funs()</code>was deprecated in dplyr 0.8.0. In view of this, we will re-write the code by using <code>mutate_at()</code> as shown in the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>col <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Country"</span>, <span class="st">"Continent"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>globalpop <span class="ot">&lt;-</span> <span class="fu">read_xls</span>(<span class="st">"data/GlobalPopulation.xls"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sheet =</span> <span class="st">"Data"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(col, as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">as.integer</span>(Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>We can also use <code>across()</code> instead of <code>mutate_at()</code> to derive the same output.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>col <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Country"</span>, <span class="st">"Continent"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>globalpop <span class="ot">&lt;-</span> <span class="fu">read_xls</span>(<span class="st">"data/GlobalPopulation.xls"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">sheet =</span> <span class="st">"Data"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(col, as.factor)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">as.integer</span>(Year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="animated-data-visualisation-gganimate-methods" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Animated Data Visualisation: gganimate methods</h1>
+<p>gganimate extends the grammar of graphics implemented by ggplot2 by including animation. It does this by providing a range of new grammar classes that can be added to the plot object in order to customise how it should change with time.</p>
+<ul>
+<li>transition_*(): defines how the data should be spread out and how it relates itself across time</li>
+<li>view_*(): defines how the positonal scales should change along the animation</li>
+<li>shadow_*(): defines how data from other points in time should be presented in the given point in time</li>
+<li>enter_<em>()/ exit_</em>(): defines how new data should appear and how old data should disappear during the course of the animation.</li>
+<li>ease_aes(): defines how different aesthetics should be eased during transitions.</li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Static Bubble Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Animated Bubble Plot</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>In the following code chunk, we plot a static bubble plot using the basic ggplot2 functions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> globalpop, <span class="fu">aes</span>(<span class="at">x =</span> Old, <span class="at">y =</span> Young, <span class="at">size =</span> Population, <span class="at">color =</span> Country)) <span class="sc">+</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> country_colors) <span class="sc">+</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">12</span>)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Year: {frame_time}"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"% Aged"</span>, </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"% Young"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex03b_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>To create an animated bubble plot from the static bubble plot, we add the following functions to the code chunk in the previous tab:</p>
+<ul>
+<li><code>transition_time()</code>: to create transition through distinct states in time (in this case, it is year)</li>
+<li><code>ease_aes()</code>: to control easing of aesthetics. The default is linear, Other methods are: quadratic, cubic, quartic, quintic, sine, circular, exponential, elastic, back, and bounce.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> globalpop, <span class="fu">aes</span>(<span class="at">x =</span> Old, <span class="at">y =</span> Young, <span class="at">size =</span> Population, <span class="at">color =</span> Country)) <span class="sc">+</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> country_colors) <span class="sc">+</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">12</span>)) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Year: {frame_time}"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"% Aged"</span>, </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"% Young"</span>) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_time</span>(Year) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ease_aes</span>(<span class="st">"linear"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Hands-on_Ex03b_files/figure-html/unnamed-chunk-6-1.gif" class="img-fluid"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="animated-data-visualisation-plotly-methods" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Animated Data Visualisation: plotly methods</h1>
+</section>
+<section id="reference" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Reference</h1>
+<ul>
+<li>Kam, T. S. (2023). <em>R for Visual Analytics</em> [Web-book]. <a href="https://r4va.netlify.app/" class="uri">https://r4va.netlify.app/</a>.</li>
+</ul>
 
 
 </section>
