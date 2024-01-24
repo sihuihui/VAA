@@ -160,6 +160,60 @@ ggplot(data = globalpop, aes(x = Old, y = Young, size = Population, color = Coun
 
 # Animated Data Visualisation: plotly methods 
 
+In Plotly R package, both `ggplotly() `and `plot_ly()` support key frame animations through the frame argument/aesthetic. They also support an `ids` argument/aesthetic to ensure smooth transitions between objects with the same id (which helps to facilitate object constancy).
+
+:::{.panel-tabset}
+
+## `ggplotly()` method
+
+First, we will use the appropriate ggplotly2 functions to create a static bubble plot and save it as an R object called `gg`. Then we use `ggplotly()` to convert the R graphic object into an animated svg object. 
+
+```{r}
+
+gg <- ggplot(globalpop, 
+             aes(x = Old, 
+                 y = Young,
+                 size = Population,
+                 color = Country)) +
+  geom_point(aes(size= Population, 
+                 frame = Year), 
+             alpha = 0.7,
+             show.legend = FALSE) + 
+  scale_color_manual(values = country_colors) +
+  scale_size(range = c(2,12)) +
+  labs(x = "% Aged",
+       y = "% Young") + 
+  theme(legend.position = 'none')  #to completely remove the legend 
+
+ggplotly(gg)
+
+
+```
+
+## `plot_ly()` method
+
+```{r}
+bp <- globalpop %>%
+  plot_ly(x = ~Old,
+          y = ~Young,
+          size = ~Population, 
+          color = ~Continent,
+          sizes = c(2, 100),
+          frame = ~Year,
+          text = ~Country,
+          hoverinfo = "text",
+          type = "scatter",
+          mode = "markers") %>%
+  layout(showlegend = FALSE)
+
+bp
+
+
+```
+
+::: 
+
+
 # Reference 
 
 -   Kam, T. S. (2023). *R for Visual Analytics* \[Web-book\]. <https://r4va.netlify.app/>.
