@@ -56,7 +56,7 @@ website:
       - section: "Take-home Exercises"
         contents:
           - Take-home_Ex/Take-home_Ex01/Take-home_Ex01.qmd
-      - section: "Extra Stuff"
+      - section: "Experiments"
         contents: 
           - Extra/Post-Lesson_01/Post-Lesson_01.qmd
 
