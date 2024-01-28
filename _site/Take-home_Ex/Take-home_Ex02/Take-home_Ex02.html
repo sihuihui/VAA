@@ -353,7 +353,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#makeover-design-3" id="toc-makeover-design-3" class="nav-link" data-scroll-target="#makeover-design-3"><span class="header-section-number">4.4.3</span> Makeover Design</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">5</span> Conclusion</a></li>
+  <li><a href="#my-takeaways" id="toc-my-takeaways" class="nav-link" data-scroll-target="#my-takeaways"><span class="header-section-number">5</span> My Takeaways</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">6</span> References</a></li>
   </ul>
 </nav>
@@ -387,7 +387,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">January 27, 2024</p>
+      <p class="date-modified">January 28, 2024</p>
     </div>
   </div>
     
@@ -435,7 +435,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data-preparation" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Data Preparation</h1>
-<p>Before I can critque and remake my peer’s charts, I followed the data preparation steps taken by my peer.</p>
+<p>Before I can critique and remake my peer’s charts, I followed the following data preparation steps taken by my peer.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -457,7 +457,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNTSCHID =</span> <span class="fu">as.character</span>(CNTSCHID))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>As the charts that we will be re-creating only uses the selected columns, we will also drop the columns that we will not be using for this exercise.</p>
+<p>As the charts that we will be re-creating only uses the selected columns, I also drop the columns that we will not be using for this exercise using the following code chunk.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -478,10 +478,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="critique" class="level3" data-number="4.1.1">
 <h3 data-number="4.1.1" class="anchored" data-anchor-id="critique"><span class="header-section-number">4.1.1</span> Critique</h3>
+<p><strong><em>What the message is</em></strong></p>
 <ul>
-<li><p>The author used a notched box plot, which gave a summary of the minimum, maximum, median and interquartile range of Math, Reading and Science scores for Singapore students. The box plots also indicated “outliers” with those black dots at the end but I wondered if there was a need to show outliers since it seemed that the author wanted to find out if there was any difference in median scores between subjects. If the message was not on the outliers, we can choose to remove these outliers. If the message was more on the differences in scores between subjects, we can consider plots like ridgeplots.</p></li>
-<li><p>In the presented charts, the notches of the box plots were not very obvious, possibly due to the size of the boxplots being very wide. Also, these charts were in different tabs, making it hard for readers to see if there was a difference in scores between subjects. It might be easier for readers to compare if these plots were placed side by side.</p></li>
-<li><p>There was a red dot for the mean scores of each subject but it would be more useful if it has text annotation so that readers can easily read off the mean value.</p></li>
+<li><p>Before I critique, I shall attempt to deduce the author’s message for this chart so that we can make recommendations to improve the chart based on the intended message.</p></li>
+<li><p>I think the author was trying to find out if there was any difference in student scores between subjects since a notched box plot was plotted for each subject’s scores.</p></li>
+</ul>
+<p><strong><em>Aesthetics</em></strong></p>
+<ul>
+<li><p>The title could be more informative. We can also add a subtitle to provide more information on the sample size.</p></li>
+<li><p>We can put the 3 boxplots side by side for easy comparison.</p></li>
+</ul>
+<p><strong><em>Clarity</em></strong></p>
+<ul>
+<li><p>The author used notched box plots to give a summary of the minimum, maximum, median and interquartile range of Math, Reading and Science scores for Singapore students. The box plots also indicated “outliers” with those black dots at the end. However, since the message was on the difference in scores and not on the outliers, we can choose to remove these outliers to reduce ink.</p></li>
+<li><p>In the original chart the notches of the box plots were not very obvious. This could be due to the size of the boxplots being very wide, making it hard to see the notches. Also, these charts were placed in different tabs, making it hard for readers to see if there was a difference in scores between subjects. It might be easier for readers to compare if these plots were placed side by side.</p></li>
+<li><p>In the original chart, there was a red dot for the mean scores of each subject. However, there was no text labels so the readers have to try to interpret and gauge the mean value based on the y-axis. It would be more useful if it has text annotation so that readers can easily read off the mean value.</p></li>
 <li><p>One of the pitfalls of box plot is that it does not show the distribution of the data well. It hides multimodality and other features of distributions. Hence, we can also consider alternatives such as violin plot.</p></li>
 </ul>
 </section>
@@ -497,18 +508,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <figcaption class="figure-caption">Suggestions for Chart 1</figcaption>
 </figure>
 </div>
-<p>Firstly, for all the options, I proposed to put the scores for all 3 subjects side by side. Also, rather that stitching 3 different plots together (i.e.&nbsp;1 plot for 1 subject), I suggested to put all three plots together so that they can be on the same axes and easier for comparison.</p>
+<p>Firstly, for all the options, I proposed to put the scores for all 3 subjects side by side. Also, rather that stitching 3 different plots together (i.e.&nbsp;1 plot for 1 subject) using patchwork, I suggested to put all three plots together so that they can be on the same axes and easier for comparison.</p>
 <p>There are pros and cons for the above 3 options:</p>
 <ul>
 <li><p>Violin plot: shows the distribution and summary stats of the data. However, certain parts of it are a bit redundant because half of the violin would already reveal the distribution. So a violin plot might not be that efficient use of space.</p></li>
 <li><p>Ridge plot: This brings us to ridge plot, which uses “half” of the violin plot and we rotated the “half-violin” to be horizontal, giving us the image of “ridges”. Ridge plot also can show distribution of the data and makes good use of the space. We can add annotations (e.g.&nbsp;lines and texts) to show the median and mean. However, ridge plot might be better for situations where we have medium to high number of groups to represent. In this case, we have less than 5 groups, so we might want to consider other distribution plots.</p></li>
 <li><p>Raincloud plot: We can further enhance the ridge plot and make it into a raincloud plot by adding boxplot and dotplot. This will also show us the distribution and summary statistics of the data.</p></li>
 </ul>
+<p>After weighing the above pros and cons, I decided to change the box plots to raincloud plot. Below is how I imagined the plot to look like with a title and subtitle:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/Picture2.png" class="img-fluid figure-img" width="543"></p>
+<figcaption class="figure-caption">Shortlisted Chart for Original Chart 1</figcaption>
+</figure>
+</div>
 </section>
 <section id="makeover-design" class="level3" data-number="4.1.3">
 <h3 data-number="4.1.3" class="anchored" data-anchor-id="makeover-design"><span class="header-section-number">4.1.3</span> Makeover Design</h3>
-<p>After weighing the above pros and cons, I decided to change the box plots to raincloud plot.</p>
-<p>Before that let us prepare the data for this chart.</p>
+<p>We will first prepare the data by selecting the columns we need (i.e., student ID, Math, Reading and Science scores) then pivot the table longer using <code>pivot_longer()</code> so that we can have all three subjects in 1 chart.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -517,6 +534,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">!</span>CNTSTUID, <span class="at">names_to =</span> <span class="st">"Subject"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>Using the data prepared <code>stu1</code>, we will plot the raincloud plot using the following code chunk.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -536,11 +554,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">dotsize =</span> <span class="dv">2</span>) <span class="sc">+</span> </span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span> <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> median, <span class="at">geom =</span> <span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"median:"</span>, <span class="fu">round</span>(<span class="fu">after_stat</span>(y), <span class="dv">0</span>))),</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x=</span><span class="fl">0.05</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>)<span class="sc">+</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun=</span>mean, <span class="at">geom =</span><span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(<span class="fu">after_stat</span>(y), <span class="dv">0</span>)), <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> <span class="fl">0.15</span>), <span class="at">vjust =</span> <span class="dv">4</span>, <span class="at">color=</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">3</span>)<span class="sc">+</span> </span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">shape =</span> <span class="dv">16</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"red"</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x=</span><span class="fl">0.05</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">color =</span> <span class="st">"black"</span>)<span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun=</span>mean, <span class="at">geom =</span><span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"mean: "</span>, <span class="fu">round</span>(<span class="fu">after_stat</span>(y), <span class="dv">0</span>))), <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> <span class="fl">0.25</span>), <span class="at">vjust =</span> <span class="dv">4</span>, <span class="at">color=</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">2.5</span>)<span class="sc">+</span> </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">shape =</span> <span class="dv">16</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>,</span>
 <span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> <span class="fl">0.0</span>)) <span class="sc">+</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"There is slight difference in student scores between subjects.</span><span class="sc">\n</span><span class="st"> However, student scores for each subject has a wide range."</span>, <span class="at">subtitle =</span> <span class="st">"Maximum score for a subject is 900"</span>, <span class="at">caption =</span> <span class="st">"Data from PISA 2022"</span>, <span class="at">ylab =</span> <span class="st">"Scores"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_summary</span>(<span class="at">fun =</span> min, <span class="at">geom =</span> <span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="fu">round</span>(<span class="fu">after_stat</span>(y), <span class="dv">0</span>))),</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y=</span><span class="sc">-</span><span class="fl">0.25</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"grey40"</span>)<span class="sc">+</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> max, <span class="at">geom =</span> <span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="fu">round</span>(<span class="fu">after_stat</span>(y), <span class="dv">0</span>))),</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y=</span><span class="sc">-</span><span class="fl">0.25</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"grey40"</span>)<span class="sc">+</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scores varied widely for each subject.</span><span class="sc">\n</span><span class="st">The difference in median scores between were small."</span>, <span class="at">subtitle =</span> <span class="st">"Number of observations: 6606"</span>, <span class="at">caption =</span> <span class="st">"Data from PISA 2022"</span>) <span class="sc">+</span> </span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SUBJECT"</span>) <span class="sc">+</span> </span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"SCORES"</span>) <span class="sc">+</span> </span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ipsum_rc</span>(<span class="at">plot_title_size =</span> <span class="dv">15</span>, <span class="at">plot_title_margin=</span><span class="dv">4</span>, <span class="at">subtitle_size=</span><span class="dv">12</span>, <span class="at">subtitle_margin=</span><span class="dv">4</span>, <span class="at">axis_text_size=</span><span class="dv">8</span>, <span class="at">axis_title_face=</span> <span class="st">"bold"</span>, <span class="at">plot_margin =</span> <span class="fu">margin</span>(<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>)) <span class="sc">+</span> </span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
@@ -558,34 +584,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="critique-1" class="level3" data-number="4.2.1">
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="critique-1"><span class="header-section-number">4.2.1</span> Critique</h3>
+<p><strong><em>What the message is</em></strong></p>
 <ul>
-<li><p>The original author seems to want to see if there are any differences in subject scores between gender. Again, notched boxplots were used and there was a red dot to indicate the mean.</p></li>
-<li><p>Similar to the first chart, the notches of the box plots were not very obvious, possibly due to the size of the boxplots being very wide. Also, these charts were in different tabs, making it hard for readers to see if there was a difference in subject scores between genders. It might be easier for readers to compare if these plots were placed side by side.</p></li>
+<li>The original author seems to want to see if there are any differences in subject scores between gender.</li>
+</ul>
+<p><strong><em>Aesthetics</em></strong></p>
+<ul>
+<li><p>The title could be more informative. We can also add a subtitle to provide information on the sample size.</p></li>
+<li><p>We can put the 3 boxplots side by side for easy comparison.</p></li>
+</ul>
+<p><strong><em>Clarity</em></strong></p>
+<ul>
+<li><p>Notched boxplots were also used to display the difference in subject scores between gender.</p></li>
+<li><p>Similar to the first chart, the notches of the box plots were not obvious, possibly due to the size of the boxplots being very wide. Also, these charts were in different tabs, making it hard for readers to see if there was a difference in subject scores between genders. It would be easier for readers to compare if these plots were placed side by side.</p></li>
 <li><p>There was a red dot on each boxplot to indicate the mean scores of each subject and gender but it would be more useful if it has text annotation so that readers can easily read off the mean value.</p></li>
 </ul>
 </section>
 <section id="proposed-sketch-1" class="level3" data-number="4.2.2">
 <h3 data-number="4.2.2" class="anchored" data-anchor-id="proposed-sketch-1"><span class="header-section-number">4.2.2</span> Proposed Sketch</h3>
+<p>There are several options to display if there was any difference in scores. I thought we can use either:</p>
+<ul>
+<li><p>Option 1: use ridge plot to plot all the subject scores for both gender plotted on 1 chart,</p></li>
+<li><p>Option 2: use ridge plot and box plot (i.e.&nbsp;raincloud plot without the “rain”) to display the scores between genders for each subject in separate charts, then make use of patchwork to combine the 3 charts into 1 for ease of comparison.</p></li>
+</ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/Suggestion2.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Suggestions for Chart 2</figcaption>
 </figure>
 </div>
-<p>Since the message is to show if there was any differences between genders and their subject scores, I proposed to:</p>
-<ul>
-<li><p>Option 1: use ridge plot to plot all the subject scores for both gender plotted on 1 chart,</p></li>
-<li><p>Option 2: use ridge plot and box plot to display the scores between genders for each subject in separate charts, then make use of patchwork to combine the 3 charts into 1 for ease of comparison.</p></li>
-<li><p>I did not propose a raincloud plot for this because if we plot all six distributions into 1,</p></li>
-</ul>
+<p>I suggested ridge plot and put all 6 subject scores (i.e.&nbsp;3 subjects for each gender) into 1 plot so that we can easily compare differences between gender and also within gender. This chart would easily allow us to know which gender performed well for each subject. However, ridge plot does not have information on the summary statistics so I came up with option 2 (i.e.&nbsp;ridge plot and box plot) since ggridges allow us to have such plots too.</p>
+<p>For option 2, I separated the charts by subjects to test out if it can display the same message effectively. I realised that having a separate chart for each subject helps us to know which gender does well for a particular subject, but it does not allow us to have an “overview” which gender performed better overall.</p>
+<p>I did not suggest raincloud plot because if there are 6 subject scores in 1 plot, it might be too messy to have so many dots on the plot.</p>
 <p>There are pros and cons for each option.</p>
-<p>For option 1, having the scores for all subjects and gender in 1 plot means that we will have 6 distributions in 1 plot. It might be easy to pick out any obvious outliers or differences. However it might be too overwhelming since there are 6 “ridges” to look and compare at 1 shot, or some readers might not know where to start. So if we use option 1, we would have to have clear annotations and titles to guide the readers.</p>
+<p>For option 1, having the scores for all subjects and gender in 1 plot means that we will have 6 distributions in 1 plot. It might be easy to pick out any obvious differences. However it might be too overwhelming since there are 6 “ridges” to look and compare at 1 shot, or some readers might not know where to start. So if we use option 1, we would have to have clear annotations and titles to guide the readers.</p>
 <p>For option 2, it splits the plots by subject so that we can see if there are any differences in scores between gender for each subject. However, we might not be able easily compare differences in scores between subject for each gender (e.g.&nbsp;to find out if female students performed better in Reading as opposed to Maths).</p>
+<p>After weighing the above pros and cons, I decided to change the box plots to combine option 1 and 2 ideas. So we will plot ridge plots and box plots for gender and subjects into 1 plot. This is how it looks like:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/finalised2.png" class="img-fluid figure-img" width="460"></p>
+<figcaption class="figure-caption">Finalised Chart for Chart 2</figcaption>
+</figure>
+</div>
 </section>
 <section id="makeover-design-1" class="level3" data-number="4.2.3">
 <h3 data-number="4.2.3" class="anchored" data-anchor-id="makeover-design-1"><span class="header-section-number">4.2.3</span> Makeover Design</h3>
-<p>After weighing the above pros and cons, I decided to change the box plots to combine option 1 and 2 ideas. So we will plot ridge plots and box plots for gender and subjects into 1 plot.</p>
-<p>Before that let us prepare the data for this chart.</p>
+<p>Let us prepare the data for this chart. We will first select the columns that we want, then <code>pivot_longer()</code> so that we can plot all the subjects scores for both gender into 1 plot.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -599,7 +643,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>stu3 <span class="ot">&lt;-</span> stu2 <span class="sc">%&gt;%</span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GENDER =</span> Gender) <span class="sc">%&gt;%</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(Gen_Sub, <span class="fu">c</span>(Gender, Subject))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(Gen_Sub, <span class="fu">c</span>(Gender, Subject))</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>stu3<span class="sc">$</span>GENDER <span class="ot">&lt;-</span> <span class="fu">factor</span>(stu3<span class="sc">$</span>GENDER, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -609,13 +655,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Scores, </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> Gen_Sub, </span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> GENDER)) <span class="sc">+</span> </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a> <span class="fu">stat_dotsinterval</span>(<span class="at">slab_shape =</span> <span class="dv">15</span>, <span class="at">quantiles =</span> <span class="dv">500</span>) <span class="sc">+</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_color_distiller</span>(<span class="at">aesthetics =</span> <span class="st">"slab_color"</span>, <span class="at">guide =</span> <span class="st">"colorbar2"</span>)<span class="sc">+</span> <span class="fu">stat_summary</span>(<span class="at">fun =</span> median, <span class="at">geom =</span> <span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"median:"</span>, <span class="fu">round</span>(<span class="fu">after_stat</span>(x), <span class="dv">0</span>))),</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y=</span><span class="sc">-</span><span class="fl">0.25</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"black"</span>)<span class="sc">+</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> min, <span class="at">geom =</span> <span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="fu">round</span>(<span class="fu">after_stat</span>(x), <span class="dv">0</span>))),</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y=</span><span class="sc">-</span><span class="fl">0.25</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"grey"</span>)<span class="sc">+</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> max, <span class="at">geom =</span> <span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="fu">round</span>(<span class="fu">after_stat</span>(x), <span class="dv">0</span>))),</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y=</span><span class="sc">-</span><span class="fl">0.25</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"grey"</span>)<span class="sc">+</span><span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_halfeye</span>(<span class="at">expand =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> median, <span class="at">geom =</span> <span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"median:"</span>, <span class="fu">round</span>(<span class="fu">after_stat</span>(x), <span class="dv">0</span>))),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y=</span><span class="fl">0.15</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">2.3</span>, <span class="at">color =</span> <span class="st">"black"</span>)<span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun=</span>mean, <span class="at">geom =</span><span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"mean: "</span>, <span class="fu">round</span>(<span class="fu">after_stat</span>(x), <span class="dv">0</span>))), </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y =</span><span class="sc">-</span><span class="fl">0.2</span>), <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">color=</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">2.3</span>)<span class="sc">+</span> </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">shape =</span> <span class="dv">16</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">x =</span> <span class="fl">0.0</span>)) <span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> min, <span class="at">geom =</span> <span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="fu">round</span>(<span class="fu">after_stat</span>(x), <span class="dv">0</span>))),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y=</span><span class="sc">-</span><span class="fl">0.25</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"grey60"</span>)<span class="sc">+</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> max, <span class="at">geom =</span> <span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="fu">round</span>(<span class="fu">after_stat</span>(x), <span class="dv">0</span>))),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y=</span><span class="sc">-</span><span class="fl">0.25</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"grey60"</span>)<span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scores varied widely for each gender across subjects.</span><span class="sc">\n</span><span class="st">Top performers for each subject came from male students."</span>, <span class="at">subtitle =</span> <span class="st">"Number of observations: 6606"</span>, <span class="at">caption =</span> <span class="st">"Data from PISA 2022"</span>) <span class="sc">+</span> </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"GENDER &amp; SUBJECT"</span>) <span class="sc">+</span> </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SCORES"</span>) <span class="sc">+</span> </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ipsum_rc</span>(<span class="at">plot_title_size =</span> <span class="dv">15</span>, <span class="at">plot_title_margin=</span><span class="dv">4</span>, <span class="at">subtitle_size=</span><span class="dv">10</span>, <span class="at">subtitle_margin=</span><span class="dv">4</span>, <span class="at">axis_text_size=</span><span class="dv">8</span>, <span class="at">axis_title_face=</span> <span class="st">"bold"</span>, <span class="at">grid_col=</span> <span class="st">"grey"</span>, <span class="at">plot_margin =</span> <span class="fu">margin</span>(<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
@@ -633,8 +687,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="critique-2" class="level3" data-number="4.3.1">
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="critique-2"><span class="header-section-number">4.3.1</span> Critique</h3>
+<p><strong><em>What the message is</em></strong></p>
 <ul>
-<li><p>The students’ scores were averaged to determine the school’s score but averages are affected by extreme values. Based on the original author’s interpretation, it seemed that the derived school’s score was So even if a school’s score was within the box plot and was not an outlier, it does not mean that the school does not have underperforming students. This is because the school might have some students with very high scores to make up for the underperforming students.</p></li>
+<li>The original author seems to want to see if there are any differences in subject scores between schools.</li>
+</ul>
+<p><strong><em>Aesthetics</em></strong></p>
+<ul>
+<li><p>The title could be more informative. We can also add a subtitle to provide information on the sample size.</p></li>
+<li><p>We can put the 3 boxplots side by side for easy comparison.</p></li>
+</ul>
+<p><strong>Clarity</strong></p>
+<ul>
+<li><p>In the original work, the students’ scores were averaged to determine the school’s score but averages are affected by extreme values.</p></li>
+<li><p>Based on the original author’s interpretation, it seemed that the derived school’s score was So even if a school’s score was within the box plot and was not an outlier, it does not mean that the school does not have underperforming students. This is because the school might have some students with very high scores to make up for the underperforming students.</p></li>
 <li><p>As such, I suggest to find out the difference between the top score and bottom score for each school. By doing so we get the range of the students’ scores for each school. Then we will compare each school’s range to determine if the school is doing “well”.</p></li>
 <li><p>In addition, the author chose notched box plots to compare the schools’ scores for different subjects. These plots were also in different tabs, making it hard to compare across subjects.</p></li>
 <li><p>There was a red dot for the average school score but it would be more useful if it has text annotation so that readers can easily read off the value.</p></li>
@@ -747,13 +812,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">1</span>)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SchoolID"</span>) <span class="sc">+</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Difference in Math Scores"</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>()</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SchoolID"</span>) <span class="sc">+</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Difference in Math Scores"</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>()</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="384"></p>
@@ -807,42 +871,59 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="4.4" class="anchored" data-anchor-id="chart-4-comparison-of-scores-and-students-socioeconomic-status"><span class="header-section-number">4.4</span> Chart 4: Comparison of Scores and Students’ Socioeconomic Status</h2>
 <section id="critique-3" class="level3" data-number="4.4.1">
 <h3 data-number="4.4.1" class="anchored" data-anchor-id="critique-3"><span class="header-section-number">4.4.1</span> Critique</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/Chart4.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Chart 4 by Original Author</figcaption>
+</figure>
+</div>
+<ul>
+<li>The author used scatter plot to show the relationship between socioeconomic status (ESCS) and subject scores. Added a line of best fit to show the relationship between ESCS and subject scores, which was useful to illustrate the relationship.</li>
+<li>However, because there are many data points (we have more than 6000 observations), the scatter plots were too dense to interpret.</li>
+<li></li>
+</ul>
 </section>
 <section id="proposed-sketch-3" class="level3" data-number="4.4.2">
 <h3 data-number="4.4.2" class="anchored" data-anchor-id="proposed-sketch-3"><span class="header-section-number">4.4.2</span> Proposed Sketch</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/Suggestion4.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Suggestions for Chart 4</figcaption>
+</figure>
+</div>
+<p>We can consider plotting a hexbin plot to show the density of points, can help to identify patterns and outliers in the data.</p>
+<p>binning makes it easier to identify data clusters and depict patterns.</p>
+<p>We can also change the scores from numerical to categorical by binning the scores into the various proficiency levels.</p>
 </section>
 <section id="makeover-design-3" class="level3" data-number="4.4.3">
 <h3 data-number="4.4.3" class="anchored" data-anchor-id="makeover-design-3"><span class="header-section-number">4.4.3</span> Makeover Design</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(MATH, ESCS)) <span class="sc">+</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(READ, ESCS)) <span class="sc">+</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(SCI, ESCS)) <span class="sc">+</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
-</div>
+<details>
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>h1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(MATH, ESCS)) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>h2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(READ, ESCS)) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>h3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(SCI, ESCS)) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 </section>
 </section>
 </section>
-<section id="conclusion" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Conclusion</h1>
-<p>the message that we want to convey is important starting point for me different visualisations to show the message</p>
+<section id="my-takeaways" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> My Takeaways</h1>
+<p>By reworking my peer’s visualisation made me reflect and think of ways to improve my own take-home exercise 1. I find that determining the message that we want to convey is an important starting point to figure out and “shortlist” which charts to use. After shortlisting the possible charts to use, I find that I struggled to choose the best chart because each chart has its pros and cons and I learnt that there are different ways to show the same message. I managed to finally decide on the chart to use by plotting the “shortlisted” charts out and see which one works best in my opinion. I also learnt that adding annotations and thinking how to make the chart “prettier” are very time consuming but important steps. People often took for granted that visually appealling and efficient charts need a lot of thought and time spent into it.</p>
 </section>
 <section id="references" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> References</h1>
+<ul>
+<li><p>Kam, T. S. (2023). <em>R for Visual Analytics</em> [Web-book]. <a href="https://r4va.netlify.app/" class="uri">https://r4va.netlify.app/</a>.</p></li>
+<li><p>Kay M (2024). “ggdist: Visualizations of Distributions and Uncertainty in the Grammar of Graphics.”&nbsp;<em>IEEE Transactions on Visualization and Computer Graphics</em>, 1–11.&nbsp;<a href="https://doi.org/10.1109/TVCG.2023.3327195">doi:10.1109/TVCG.2023.3327195</a>.</p></li>
+<li><p>Wickham, H., Navarro, D., &amp; Pedersen, T. L. (2024). <em>ggplot2: Elegant Graphics for Data Analysis</em> (3rd ed.). <a href="https://ggplot2-book.org/" class="uri">https://ggplot2-book.org/</a>.</p></li>
+</ul>
 
 
 </section>
