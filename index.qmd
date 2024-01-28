@@ -22,6 +22,7 @@ listing:
   - id: take-home
     contents:
     - "Take-home_Ex/Take-home_Ex01/*.qmd"
+    - "Take-home_Ex/Take-home_Ex02/*.qmd"
     type: grid
     sort: "date"
   
