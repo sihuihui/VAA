@@ -77,7 +77,7 @@ format:
       body-width: 1200px
       margin-width: 250px
       sidebar-width: 250px
-      gutter-width: 1.5em
+      gutter-width: 4em
     theme: 
     - journal
     monfont: courier new

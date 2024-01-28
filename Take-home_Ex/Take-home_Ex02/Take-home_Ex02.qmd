@@ -526,7 +526,7 @@ First, we will prepare the data by:
 
 1.  binning the subject scores into various proficiency levels; and
 
-2.   defining the factor levels for the subject's proficiency levels.
+2.  defining the factor levels for the subject's proficiency levels.
 
 ```{r}
 #| code-fold: true
