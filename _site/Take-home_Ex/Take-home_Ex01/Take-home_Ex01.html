@@ -135,6 +135,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html" rel="" target="">
  <span class="dropdown-text">Hands-on Exercise 3a</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html" rel="" target="">
+ <span class="dropdown-text">Hands-on Exercise 3b</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -236,6 +240,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Hands-On Exercise 3a: Programming Interactive Data Visualisation with R</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-On Exercise 3b: Programming Animated Statistical Graphics with R</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -275,7 +285,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
- <span class="menu-text">Extra Stuff</span></a>
+ <span class="menu-text">Experiments</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -358,7 +368,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">January 21, 2024</p>
+      <p class="date-modified">January 25, 2024</p>
     </div>
   </div>
     
@@ -391,10 +401,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="getting-started" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Getting Started</h1>
-<p>First, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.</p>
+<p>First, let us ensure that the required R packages have been installed and import the relevant data for this exercise.</p>
 <section id="loading-r-packages" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="loading-r-packages"><span class="header-section-number">2.1</span> Loading R packages</h2>
-<p>For this in-class exercise, we will be using the following two packages:</p>
+<p>For this exercise, we will be using the following packages:</p>
 <ul>
 <li><p><a href="https://www.tidyverse.org/"><strong>tidyverse</strong></a> : to load the core tidyverse packages, which includes ggplot2 and dplyr.</p></li>
 <li><p><a href="https://haven.tidyverse.org/"><strong>haven</strong></a> : to read and write various data formats used by other statistical packages by wrapping the ReadStat C library. It is part of the tidyverse family too! <strong>haven</strong> currently supports SAS, SPSS and Stata. We will need <strong>haven</strong> to import the PISA 2022’s student questionnaire data file because it is in SAS file type.</p></li>
@@ -414,7 +424,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="importing-the-data-into-r" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="importing-the-data-into-r"><span class="header-section-number">2.2</span> Importing the Data into R</h2>
-<p>For this in-class exercise, we are using <a href="https://www.oecd.org/pisa/data/2022database/">PISA 2022 database</a>’s student questionnaire data file. As the data file is in SAS file format, we will use <strong>haven</strong>’s <a href="https://haven.tidyverse.org/reference/read_sas.html"><code>read_sas()</code></a> function to import the data into R environment. Then we will filter the data to those data from Singapore since this exercise is only focusing on responses from Singapore students.</p>
+<p>For this exercise, we are using <a href="https://www.oecd.org/pisa/data/2022database/">PISA 2022 database</a>’s student questionnaire data file. As the data file is in SAS file format, we will use <strong>haven</strong>’s <a href="https://haven.tidyverse.org/reference/read_sas.html"><code>read_sas()</code></a> function to import the data into R environment. Then we will filter the data to those data from Singapore since this exercise is only focusing on responses from Singapore students.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Import the Data (All Countries)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Filter the Imported Data (Singapore only)</a></li></ul>
 <div class="tab-content">

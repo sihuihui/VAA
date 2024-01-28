@@ -99,6 +99,8 @@ stu <- stu_qqq_SG_filtered %>%
 
 ## Chart 1: Comparison of Scores Amongst Students
 
+The following charts were from the original submission.
+
 ![Chart 1 from Original Author](images/Chart1.png){fig-align="center"}
 
 ### Critique
@@ -145,7 +147,7 @@ There are pros and cons for the above 3 options:
 
 After weighing the above pros and cons, I decided to change the box plots to raincloud plot. Below is how I imagined the plot to look like with a title and subtitle:
 
-![Shortlisted Chart for Original Chart 1](images/Picture2.png){fig-align="center" width="543"}
+![Finalised Chart for Chart 1](images/finalised1.png){fig-align="center" width="344"}
 
 ### Makeover Design
 
@@ -188,7 +190,7 @@ ggplot(stu1,
                position = position_nudge(y=-0.25), vjust=-0.5, size = 2, color = "grey40")+
   stat_summary(fun = max, geom = "text", aes(label = paste(round(after_stat(y), 0))),
                position = position_nudge(y=-0.25), vjust=-0.5, size = 2, color = "grey40")+
-  labs(title = "Scores varied widely for each subject.\nThe difference in median scores between were small.", subtitle = "Number of observations: 6606", caption = "Data from PISA 2022") + 
+  labs(title = "Although the scores varied widely for each subject, \nthe difference in median and mean scores were small.", subtitle = "Number of observations: 6606", caption = "Data from PISA 2022") + 
   xlab("SUBJECT") + 
   ylab("SCORES") + 
   theme_ipsum_rc(plot_title_size = 15, plot_title_margin=4, subtitle_size=12, subtitle_margin=4, axis_text_size=8, axis_title_face= "bold", plot_margin = margin(10,10,10,10)) + 
@@ -197,6 +199,8 @@ ggplot(stu1,
 ```
 
 ## Chart 2: Comparison of Scores Between Gender
+
+The following charts were from the original submission.
 
 ![Chart 2 from Original Author](images/Chart2.png){fig-align="center"}
 
@@ -214,7 +218,7 @@ ggplot(stu1,
 
 ***Clarity***
 
--   Notched boxplots were also used to display the difference in subject scores between gender.
+-   Notched boxplots were used to display the difference in subject scores between gender.
 
 -   Similar to the first chart, the notches of the box plots were not obvious, possibly due to the size of the boxplots being very wide. Also, these charts were in different tabs, making it hard for readers to see if there was a difference in subject scores between genders. It would be easier for readers to compare if these plots were placed side by side.
 
@@ -228,7 +232,7 @@ There are several options to display if there was any difference in scores. I th
 
 -   Option 2: use ridge plot and box plot (i.e. raincloud plot without the "rain") to display the scores between genders for each subject in separate charts, then make use of patchwork to combine the 3 charts into 1 for ease of comparison.
 
-![Suggestions for Chart 2](images/Suggestion2.png){fig-align="center"}
+![Suggestions for Chart 2](images/Suggestion2.png){fig-align="center" width="1065"}
 
 I suggested ridge plot and put all 6 subject scores (i.e. 3 subjects for each gender) into 1 plot so that we can easily compare differences between gender and also within gender. This chart would easily allow us to know which gender performed well for each subject. However, ridge plot does not have information on the summary statistics so I came up with option 2 (i.e. ridge plot and box plot) since ggridges allow us to have such plots too.
 
@@ -248,7 +252,7 @@ After weighing the above pros and cons, I decided to change the box plots to com
 
 ### Makeover Design
 
-Let us prepare the data for this chart. We will first select the columns that we want, then `pivot_longer()` so that we can plot all the subjects scores for both gender into 1 plot.
+Let us prepare the data for this chart. We will first select the columns that we want, then `pivot_longer()` so that we can plot all the subjects scores for both gender into 1 plot. We then concatenated the Gender and Subject columns into 1 column so that we can use this new column `Gen_Sub` to lcreate a chart for each Gender's Subject.
 
 ```{r}
 #| code-fold: true
@@ -268,6 +272,8 @@ stu3 <- stu2 %>%
 
 stu3$GENDER <- factor(stu3$GENDER, levels = c("Male", "Female"))
 ```
+
+The following code chunk plots out the
 
 ```{r}
 #| code-fold: true
@@ -290,7 +296,9 @@ ggplot(stu3,
   labs(title = "Scores varied widely for each gender across subjects.\nTop performers for each subject came from male students.", subtitle = "Number of observations: 6606", caption = "Data from PISA 2022") + 
   ylab("GENDER & SUBJECT") + 
   xlab("SCORES") + 
-  theme_ipsum_rc(plot_title_size = 15, plot_title_margin=4, subtitle_size=10, subtitle_margin=4, axis_text_size=8, axis_title_face= "bold", grid_col= "grey", plot_margin = margin(10,10,10,10))
+  theme_ipsum_rc(plot_title_size = 15, plot_title_margin=4, subtitle_size=10, subtitle_margin=4, axis_text_size=8, axis_title_face= "bold", grid_col= "grey", plot_margin = margin(10,10,10,10))  +
+    scale_color_manual(breaks = c("Male", "Female"),
+                    values=c("mediumblue", "violetred1"))
   
   
    
@@ -298,27 +306,31 @@ ggplot(stu3,
 
 ## Chart 3: Comparison of Scores Between Schools
 
+The following charts were from the original submission.
+
 ![Chart 3 by Original Author](images/Chart3.png){fig-align="center"}
 
 ### Critique
 
 ***What the message is***
 
--   The original author seems to want to see if there are any differences in subject scores between schools.
+-   The original author seemed to want to see if there are any differences in subject scores between schools.
 
 ***Aesthetics***
 
--   The title could be more informative. We can also add a subtitle to provide information on the sample size.
+-   Similarly, the title could be more informative. We can also add a subtitle to provide information on the number of schools. .
 
 -   We can put the 3 boxplots side by side for easy comparison.
 
 **Clarity**
 
--   In the original work, the students' scores were averaged to determine the school's score but averages are affected by extreme values.
+-   In the original work, the students' scores were averaged to determine the school's score.
 
--   Based on the original author's interpretation, it seemed that the derived school's score was So even if a school's score was within the box plot and was not an outlier, it does not mean that the school does not have underperforming students. This is because the school might have some students with very high scores to make up for the underperforming students.
+-   Based on the original author's interpretation, it seemed that if a school's score was within the box plot and not an outlier, the author interpreted the school as not having a wide disparity between students.
 
--   As such, I suggest to find out the difference between the top score and bottom score for each school. By doing so we get the range of the students' scores for each school. Then we will compare each school's range to determine if the school is doing "well".
+-   However, we cannot interpret this way due to how the school's score was being calculated. Since the school score was derived by averaging the students' scores and arithmethic averages were affected by extreme values, a school with non-outlier scores does not mean that all its students performed well. This is because the school might have some students with very high scores to make up for the underperforming students.
+
+-   As such, I suggest to find out the difference between the top score and bottom score for each school. By doing so we get the range of the students' scores for each school. Then we will compare each school's range to determine if the school is doing "well". A wider range means the school's students had a wider disparity which could warrant further exploration.
 
 -   In addition, the author chose notched box plots to compare the schools' scores for different subjects. These plots were also in different tabs, making it hard to compare across subjects.
 
@@ -326,21 +338,21 @@ ggplot(stu3,
 
 ### Proposed Sketch
 
+Since the message that I wanted this chart to show was each school's range of scores for each subject, I have the following suggestions.
+
 ![Suggestions for Chart 3](images/Suggestion3.png){fig-align="center"}
 
--   For this chart, I think the tricky bit is that there are many schools (\~165 schools) to plot out.
+-   For this chart, I think the tricky bit is that there are many schools (\~164 schools) to plot out. Initially, I wanted to do a dumbbell plot (option 1) for each school. So each dot would show to top score and bottom score for each school and the line would show the difference between the top scores and bottom scores. But I realised that it would be quite messy and too much information in the chart when there are more than 160 schools to plot out.
 
--   Initially, I wanted to do a dumbbell plot for each school. So each dot would show to top score and bottom score for each school and the line would show the difference between the top scores and bottom scores. But I realised that I would be difficult when there are more than 160 schools to plot out.
-
--   Hence, I came up with Options 2 and 3. The height of the bar or 'lollipop' would show the difference in the top and bottom scores for each school. We can also add a threshold so that we know which schools have a wide range and which schools have students performing at similar levels.
+-   Hence, I came up with Options 2 and 3. In options 2 and 3, we can use the height of the bar or 'lollipop' would show the difference in the top and bottom scores for each school. We can also add a threshold so that we know which schools have a wide range and which schools have students performing at similar levels.
 
 -   The difference between barplot and lollipop plot is that lollipop plot uses less ink so people can focus on the height of the "dot".
 
+After considering the various strengths and weaknesses of the various plots, I decided to remake the original chart into a lollipop plot.
+
 ### Makeover Design
 
-After considering the various strengths and weaknesses of the various plots, we decided to plot a lollipop plot.
-
-Let us first prepare the data.
+Let us first prepare the data for each subject.
 
 ```{r}
 #| code-fold: true
@@ -365,12 +377,8 @@ stu_math$CNTSCHID <- substr(stu_math$CNTSCHID, 6, 8)
 stu_math <- stu_math %>% 
   mutate(mycolor = ifelse(diff>250, "red", "blue"))%>%
    arrange(diff) %>%    
-  mutate(CNTSCHID=factor(CNTSCHID, levels=CNTSCHID))  
-```
+  mutate(CNTSCHID=factor(CNTSCHID, levels=CNTSCHID)) 
 
-```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
 stu_read_min <- stu %>%
   group_by(CNTSCHID) %>%
   summarise_at(vars(READ),
@@ -391,12 +399,8 @@ stu_read$CNTSCHID <- substr(stu_read$CNTSCHID, 6, 8)
 stu_read <- stu_read %>% 
   mutate(mycolor = ifelse(diff>250, "red", "blue"))%>%
    arrange(diff) %>%    
-  mutate(CNTSCHID=factor(CNTSCHID, levels=CNTSCHID))  
-```
+  mutate(CNTSCHID=factor(CNTSCHID, levels=CNTSCHID)) 
 
-```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
 stu_sci_min <- stu %>%
   group_by(CNTSCHID) %>%
   summarise_at(vars(SCI),
@@ -420,63 +424,59 @@ stu_sci <- stu_sci %>%
   mutate(CNTSCHID=factor(CNTSCHID, levels=CNTSCHID))  
 ```
 
-```{r fig.width=4, fig.height=20}
+
+The following code chunk plots out the individual charts for each subject. We will save each subject's chart as a variable so that we can stitch them together later. 
+
+```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 p1 <- ggplot(stu_math, aes(x=CNTSCHID, y = diff)) +
   geom_segment(aes(x=CNTSCHID, xend=CNTSCHID, y = 250, yend=diff), color = "grey") +
   geom_point(color=stu_math$mycolor, size = 2) +
-  theme_minimal()+
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.border = element_blank(),
-    axis.ticks.x = element_blank()
-  ) +
+  geom_hline(yintercept = 250, color="orange",linewidth = 0.6)+
   xlab("SchoolID") +
-  ylab("Difference in Math Scores") + coord_flip()
+  ylab("Difference in Math Scores") + coord_flip()+
+  theme(panel.background = element_rect(fill = "white", colour = "grey80"))
 
-p1
-```
 
-```{r fig.width=4, fig.height=20}
-#| code-fold: true
-#| code-summary: "Show the code"
 p2 <- ggplot(stu_read, aes(x=CNTSCHID, y = diff)) +
   geom_segment(aes(x=CNTSCHID, xend=CNTSCHID, y = 250, yend=diff), color = "grey") +
   geom_point(color=stu_read$mycolor, size = 2) +
-  theme_minimal()+
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.border = element_blank(),
-    axis.ticks.x = element_blank()
-  ) +
+  geom_hline(yintercept = 250, color="orange",linewidth = 0.6)+
   xlab("SchoolID") +
-  ylab("Difference in Reading Scores") + coord_flip()
+  ylab("Difference in Reading Scores") + coord_flip() +
+  theme(panel.background = element_rect(fill = "white", colour = "grey80"))
 
-p2
-```
-
-```{r fig.width=4, fig.height=20}
-#| code-fold: true
-#| code-summary: "Show the code"
 p3 <- ggplot(stu_sci, aes(x=CNTSCHID, y = diff)) +
   geom_segment(aes(x=CNTSCHID, xend=CNTSCHID, y = 250, yend=diff), color = "grey") +
   geom_point(color=stu_sci$mycolor, size = 2) +
-  theme_minimal()+
-  theme(
-    panel.grid.major.x = element_blank(),
-    panel.border = element_blank(),
-    axis.ticks.x = element_blank()
-  ) +
+  geom_hline(yintercept = 250, color="orange",linewidth = 0.6)+
   xlab("SchoolID") +
-  ylab("Difference in Science Scores") + coord_flip()
+  ylab("Difference in Science Scores") + coord_flip() + 
+  theme(panel.background = element_rect(fill = "white", colour = "grey80"))
 
-p3
+```
+
+
+We will stitch the individual charts together using patchwork. 
+
+```{r fig.width=9, fig.height=20}
+
+patch1 <- p1 + p2 + p3 
+
+patch1 + plot_annotation(
+  title = "Most of the schools had a wide disparity between their top scorers and bottom scorers.",
+  subtitle = "164 Schools participated in study. The threshold for difference in top and bottom score was 250.",
+  caption = "Data from PISA 2022", theme = theme_ipsum_rc()) 
+
+
 ```
 
 ## Chart 4: Comparison of Scores and Students' Socioeconomic Status
 
 ### Critique
+
+The following charts were from the original submission.
 
 ![Chart 4 by Original Author](images/Chart4.png){fig-align="center"}
 

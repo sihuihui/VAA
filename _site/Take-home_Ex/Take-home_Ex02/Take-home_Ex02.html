@@ -470,6 +470,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 data-number="4"><span class="header-section-number">4</span> Data Visualisation Critique</h1>
 <section id="chart-1-comparison-of-scores-amongst-students" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="chart-1-comparison-of-scores-amongst-students"><span class="header-section-number">4.1</span> Chart 1: Comparison of Scores Amongst Students</h2>
+<p>The following charts were from the original submission.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/Chart1.png" class="img-fluid figure-img"></p>
@@ -518,8 +519,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>After weighing the above pros and cons, I decided to change the box plots to raincloud plot. Below is how I imagined the plot to look like with a title and subtitle:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/Picture2.png" class="img-fluid figure-img" width="543"></p>
-<figcaption class="figure-caption">Shortlisted Chart for Original Chart 1</figcaption>
+<p><img src="images/finalised1.png" class="img-fluid figure-img" width="344"></p>
+<figcaption class="figure-caption">Finalised Chart for Chart 1</figcaption>
 </figure>
 </div>
 </section>
@@ -562,7 +563,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y=</span><span class="sc">-</span><span class="fl">0.25</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"grey40"</span>)<span class="sc">+</span></span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> max, <span class="at">geom =</span> <span class="st">"text"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste</span>(<span class="fu">round</span>(<span class="fu">after_stat</span>(y), <span class="dv">0</span>))),</span>
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y=</span><span class="sc">-</span><span class="fl">0.25</span>), <span class="at">vjust=</span><span class="sc">-</span><span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"grey40"</span>)<span class="sc">+</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scores varied widely for each subject.</span><span class="sc">\n</span><span class="st">The difference in median scores between were small."</span>, <span class="at">subtitle =</span> <span class="st">"Number of observations: 6606"</span>, <span class="at">caption =</span> <span class="st">"Data from PISA 2022"</span>) <span class="sc">+</span> </span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Although the scores varied widely for each subject, </span><span class="sc">\n</span><span class="st">the difference in median and mean scores were small."</span>, <span class="at">subtitle =</span> <span class="st">"Number of observations: 6606"</span>, <span class="at">caption =</span> <span class="st">"Data from PISA 2022"</span>) <span class="sc">+</span> </span>
 <span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SUBJECT"</span>) <span class="sc">+</span> </span>
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"SCORES"</span>) <span class="sc">+</span> </span>
 <span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ipsum_rc</span>(<span class="at">plot_title_size =</span> <span class="dv">15</span>, <span class="at">plot_title_margin=</span><span class="dv">4</span>, <span class="at">subtitle_size=</span><span class="dv">12</span>, <span class="at">subtitle_margin=</span><span class="dv">4</span>, <span class="at">axis_text_size=</span><span class="dv">8</span>, <span class="at">axis_title_face=</span> <span class="st">"bold"</span>, <span class="at">plot_margin =</span> <span class="fu">margin</span>(<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>)) <span class="sc">+</span> </span>
@@ -576,6 +577,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="chart-2-comparison-of-scores-between-gender" class="level2" data-number="4.2">
 <h2 data-number="4.2" class="anchored" data-anchor-id="chart-2-comparison-of-scores-between-gender"><span class="header-section-number">4.2</span> Chart 2: Comparison of Scores Between Gender</h2>
+<p>The following charts were from the original submission.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/Chart2.png" class="img-fluid figure-img"></p>
@@ -595,7 +597,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p><strong><em>Clarity</em></strong></p>
 <ul>
-<li><p>Notched boxplots were also used to display the difference in subject scores between gender.</p></li>
+<li><p>Notched boxplots were used to display the difference in subject scores between gender.</p></li>
 <li><p>Similar to the first chart, the notches of the box plots were not obvious, possibly due to the size of the boxplots being very wide. Also, these charts were in different tabs, making it hard for readers to see if there was a difference in subject scores between genders. It would be easier for readers to compare if these plots were placed side by side.</p></li>
 <li><p>There was a red dot on each boxplot to indicate the mean scores of each subject and gender but it would be more useful if it has text annotation so that readers can easily read off the mean value.</p></li>
 </ul>
@@ -609,7 +611,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="images/Suggestion2.png" class="img-fluid figure-img"></p>
+<p><img src="images/Suggestion2.png" class="img-fluid figure-img" width="1065"></p>
 <figcaption class="figure-caption">Suggestions for Chart 2</figcaption>
 </figure>
 </div>
@@ -629,7 +631,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="makeover-design-1" class="level3" data-number="4.2.3">
 <h3 data-number="4.2.3" class="anchored" data-anchor-id="makeover-design-1"><span class="header-section-number">4.2.3</span> Makeover Design</h3>
-<p>Let us prepare the data for this chart. We will first select the columns that we want, then <code>pivot_longer()</code> so that we can plot all the subjects scores for both gender into 1 plot.</p>
+<p>Let us prepare the data for this chart. We will first select the columns that we want, then <code>pivot_longer()</code> so that we can plot all the subjects scores for both gender into 1 plot. We then concatenated the Gender and Subject columns into 1 column so that we can use this new column <code>Gen_Sub</code> to lcreate a chart for each Gender’s Subject.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -648,6 +650,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>stu3<span class="sc">$</span>GENDER <span class="ot">&lt;-</span> <span class="fu">factor</span>(stu3<span class="sc">$</span>GENDER, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>The following code chunk plots out the</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -669,7 +672,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scores varied widely for each gender across subjects.</span><span class="sc">\n</span><span class="st">Top performers for each subject came from male students."</span>, <span class="at">subtitle =</span> <span class="st">"Number of observations: 6606"</span>, <span class="at">caption =</span> <span class="st">"Data from PISA 2022"</span>) <span class="sc">+</span> </span>
 <span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"GENDER &amp; SUBJECT"</span>) <span class="sc">+</span> </span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SCORES"</span>) <span class="sc">+</span> </span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ipsum_rc</span>(<span class="at">plot_title_size =</span> <span class="dv">15</span>, <span class="at">plot_title_margin=</span><span class="dv">4</span>, <span class="at">subtitle_size=</span><span class="dv">10</span>, <span class="at">subtitle_margin=</span><span class="dv">4</span>, <span class="at">axis_text_size=</span><span class="dv">8</span>, <span class="at">axis_title_face=</span> <span class="st">"bold"</span>, <span class="at">grid_col=</span> <span class="st">"grey"</span>, <span class="at">plot_margin =</span> <span class="fu">margin</span>(<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ipsum_rc</span>(<span class="at">plot_title_size =</span> <span class="dv">15</span>, <span class="at">plot_title_margin=</span><span class="dv">4</span>, <span class="at">subtitle_size=</span><span class="dv">10</span>, <span class="at">subtitle_margin=</span><span class="dv">4</span>, <span class="at">axis_text_size=</span><span class="dv">8</span>, <span class="at">axis_title_face=</span> <span class="st">"bold"</span>, <span class="at">grid_col=</span> <span class="st">"grey"</span>, <span class="at">plot_margin =</span> <span class="fu">margin</span>(<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>,<span class="dv">10</span>))  <span class="sc">+</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">values=</span><span class="fu">c</span>(<span class="st">"mediumblue"</span>, <span class="st">"violetred1"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
@@ -679,6 +684,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="chart-3-comparison-of-scores-between-schools" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="chart-3-comparison-of-scores-between-schools"><span class="header-section-number">4.3</span> Chart 3: Comparison of Scores Between Schools</h2>
+<p>The following charts were from the original submission.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/Chart3.png" class="img-fluid figure-img"></p>
@@ -689,24 +695,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="4.3.1" class="anchored" data-anchor-id="critique-2"><span class="header-section-number">4.3.1</span> Critique</h3>
 <p><strong><em>What the message is</em></strong></p>
 <ul>
-<li>The original author seems to want to see if there are any differences in subject scores between schools.</li>
+<li>The original author seemed to want to see if there are any differences in subject scores between schools.</li>
 </ul>
 <p><strong><em>Aesthetics</em></strong></p>
 <ul>
-<li><p>The title could be more informative. We can also add a subtitle to provide information on the sample size.</p></li>
+<li><p>Similarly, the title could be more informative. We can also add a subtitle to provide information on the number of schools. .</p></li>
 <li><p>We can put the 3 boxplots side by side for easy comparison.</p></li>
 </ul>
 <p><strong>Clarity</strong></p>
 <ul>
-<li><p>In the original work, the students’ scores were averaged to determine the school’s score but averages are affected by extreme values.</p></li>
-<li><p>Based on the original author’s interpretation, it seemed that the derived school’s score was So even if a school’s score was within the box plot and was not an outlier, it does not mean that the school does not have underperforming students. This is because the school might have some students with very high scores to make up for the underperforming students.</p></li>
-<li><p>As such, I suggest to find out the difference between the top score and bottom score for each school. By doing so we get the range of the students’ scores for each school. Then we will compare each school’s range to determine if the school is doing “well”.</p></li>
+<li><p>In the original work, the students’ scores were averaged to determine the school’s score.</p></li>
+<li><p>Based on the original author’s interpretation, it seemed that if a school’s score was within the box plot and not an outlier, the author interpreted the school as not having a wide disparity between students.</p></li>
+<li><p>However, we cannot interpret this way due to how the school’s score was being calculated. Since the school score was derived by averaging the students’ scores and arithmethic averages were affected by extreme values, a school with non-outlier scores does not mean that all its students performed well. This is because the school might have some students with very high scores to make up for the underperforming students.</p></li>
+<li><p>As such, I suggest to find out the difference between the top score and bottom score for each school. By doing so we get the range of the students’ scores for each school. Then we will compare each school’s range to determine if the school is doing “well”. A wider range means the school’s students had a wider disparity which could warrant further exploration.</p></li>
 <li><p>In addition, the author chose notched box plots to compare the schools’ scores for different subjects. These plots were also in different tabs, making it hard to compare across subjects.</p></li>
 <li><p>There was a red dot for the average school score but it would be more useful if it has text annotation so that readers can easily read off the value.</p></li>
 </ul>
 </section>
 <section id="proposed-sketch-2" class="level3" data-number="4.3.2">
 <h3 data-number="4.3.2" class="anchored" data-anchor-id="proposed-sketch-2"><span class="header-section-number">4.3.2</span> Proposed Sketch</h3>
+<p>Since the message that I wanted this chart to show was each school’s range of scores for each subject, I have the following suggestions.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/Suggestion3.png" class="img-fluid figure-img"></p>
@@ -714,16 +722,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <ul>
-<li><p>For this chart, I think the tricky bit is that there are many schools (~165 schools) to plot out.</p></li>
-<li><p>Initially, I wanted to do a dumbbell plot for each school. So each dot would show to top score and bottom score for each school and the line would show the difference between the top scores and bottom scores. But I realised that I would be difficult when there are more than 160 schools to plot out.</p></li>
-<li><p>Hence, I came up with Options 2 and 3. The height of the bar or ‘lollipop’ would show the difference in the top and bottom scores for each school. We can also add a threshold so that we know which schools have a wide range and which schools have students performing at similar levels.</p></li>
+<li><p>For this chart, I think the tricky bit is that there are many schools (~164 schools) to plot out. Initially, I wanted to do a dumbbell plot (option 1) for each school. So each dot would show to top score and bottom score for each school and the line would show the difference between the top scores and bottom scores. But I realised that it would be quite messy and too much information in the chart when there are more than 160 schools to plot out.</p></li>
+<li><p>Hence, I came up with Options 2 and 3. In options 2 and 3, we can use the height of the bar or ‘lollipop’ would show the difference in the top and bottom scores for each school. We can also add a threshold so that we know which schools have a wide range and which schools have students performing at similar levels.</p></li>
 <li><p>The difference between barplot and lollipop plot is that lollipop plot uses less ink so people can focus on the height of the “dot”.</p></li>
 </ul>
+<p>After considering the various strengths and weaknesses of the various plots, I decided to remake the original chart into a lollipop plot.</p>
 </section>
 <section id="makeover-design-2" class="level3" data-number="4.3.3">
 <h3 data-number="4.3.3" class="anchored" data-anchor-id="makeover-design-2"><span class="header-section-number">4.3.3</span> Makeover Design</h3>
-<p>After considering the various strengths and weaknesses of the various plots, we decided to plot a lollipop plot.</p>
-<p>Let us first prepare the data.</p>
+<p>Let us first prepare the data for each subject.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -747,122 +754,93 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>stu_math <span class="ot">&lt;-</span> stu_math <span class="sc">%&gt;%</span> </span>
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mycolor =</span> <span class="fu">ifelse</span>(diff<span class="sc">&gt;</span><span class="dv">250</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>))<span class="sc">%&gt;%</span></span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>   <span class="fu">arrange</span>(diff) <span class="sc">%&gt;%</span>    </span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNTSCHID=</span><span class="fu">factor</span>(CNTSCHID, <span class="at">levels=</span>CNTSCHID))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNTSCHID=</span><span class="fu">factor</span>(CNTSCHID, <span class="at">levels=</span>CNTSCHID)) </span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>stu_read_min <span class="ot">&lt;-</span> stu <span class="sc">%&gt;%</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CNTSCHID) <span class="sc">%&gt;%</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(READ),</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>               <span class="fu">list</span>(<span class="at">min_read =</span> min))</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>stu_read_max <span class="ot">&lt;-</span> stu <span class="sc">%&gt;%</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CNTSCHID) <span class="sc">%&gt;%</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(READ),</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>               <span class="fu">list</span>(<span class="at">max_read =</span> max))</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>stu_read <span class="ot">&lt;-</span> <span class="fu">full_join</span>(stu_read_max, stu_read_min,</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="st">"CNTSCHID"</span>)</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>stu_read<span class="sc">$</span>diff <span class="ot">&lt;-</span> stu_read<span class="sc">$</span>max_read <span class="sc">-</span> stu_read<span class="sc">$</span>min_read</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>stu_read<span class="sc">$</span>CNTSCHID <span class="ot">&lt;-</span> <span class="fu">substr</span>(stu_read<span class="sc">$</span>CNTSCHID, <span class="dv">6</span>, <span class="dv">8</span>)</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>stu_read <span class="ot">&lt;-</span> stu_read <span class="sc">%&gt;%</span> </span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mycolor =</span> <span class="fu">ifelse</span>(diff<span class="sc">&gt;</span><span class="dv">250</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>   <span class="fu">arrange</span>(diff) <span class="sc">%&gt;%</span>    </span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNTSCHID=</span><span class="fu">factor</span>(CNTSCHID, <span class="at">levels=</span>CNTSCHID)) </span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>stu_sci_min <span class="ot">&lt;-</span> stu <span class="sc">%&gt;%</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CNTSCHID) <span class="sc">%&gt;%</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(SCI),</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>               <span class="fu">list</span>(<span class="at">min_sci =</span> min))</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>stu_sci_max <span class="ot">&lt;-</span> stu <span class="sc">%&gt;%</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CNTSCHID) <span class="sc">%&gt;%</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(SCI),</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>               <span class="fu">list</span>(<span class="at">max_sci =</span> max))</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>stu_sci <span class="ot">&lt;-</span> <span class="fu">full_join</span>(stu_sci_max, stu_sci_min,</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="st">"CNTSCHID"</span>)</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>stu_sci<span class="sc">$</span>diff <span class="ot">&lt;-</span> stu_sci<span class="sc">$</span>max_sci <span class="sc">-</span> stu_sci<span class="sc">$</span>min_sci</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>stu_sci<span class="sc">$</span>CNTSCHID <span class="ot">&lt;-</span> <span class="fu">substr</span>(stu_sci<span class="sc">$</span>CNTSCHID, <span class="dv">6</span>, <span class="dv">8</span>)</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>stu_sci <span class="ot">&lt;-</span> stu_sci <span class="sc">%&gt;%</span> </span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mycolor =</span> <span class="fu">ifelse</span>(diff<span class="sc">&gt;</span><span class="dv">250</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>   <span class="fu">arrange</span>(diff) <span class="sc">%&gt;%</span>    </span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNTSCHID=</span><span class="fu">factor</span>(CNTSCHID, <span class="at">levels=</span>CNTSCHID))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>The following code chunk plots out the individual charts for each subject. We will save each subject’s chart as a variable so that we can stitch them together later.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>stu_read_min <span class="ot">&lt;-</span> stu <span class="sc">%&gt;%</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CNTSCHID) <span class="sc">%&gt;%</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(READ),</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">list</span>(<span class="at">min_read =</span> min))</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>stu_read_max <span class="ot">&lt;-</span> stu <span class="sc">%&gt;%</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CNTSCHID) <span class="sc">%&gt;%</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(READ),</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>               <span class="fu">list</span>(<span class="at">max_read =</span> max))</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>stu_read <span class="ot">&lt;-</span> <span class="fu">full_join</span>(stu_read_max, stu_read_min,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="st">"CNTSCHID"</span>)</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>stu_read<span class="sc">$</span>diff <span class="ot">&lt;-</span> stu_read<span class="sc">$</span>max_read <span class="sc">-</span> stu_read<span class="sc">$</span>min_read</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>stu_read<span class="sc">$</span>CNTSCHID <span class="ot">&lt;-</span> <span class="fu">substr</span>(stu_read<span class="sc">$</span>CNTSCHID, <span class="dv">6</span>, <span class="dv">8</span>)</span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_math, <span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">y =</span> diff)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">xend=</span>CNTSCHID, <span class="at">y =</span> <span class="dv">250</span>, <span class="at">yend=</span>diff), <span class="at">color =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span>stu_math<span class="sc">$</span>mycolor, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">250</span>, <span class="at">color=</span><span class="st">"orange"</span>,<span class="at">linewidth =</span> <span class="fl">0.6</span>)<span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SchoolID"</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Difference in Math Scores"</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>()<span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">colour =</span> <span class="st">"grey80"</span>))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_read, <span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">y =</span> diff)) <span class="sc">+</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">xend=</span>CNTSCHID, <span class="at">y =</span> <span class="dv">250</span>, <span class="at">yend=</span>diff), <span class="at">color =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span>stu_read<span class="sc">$</span>mycolor, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">250</span>, <span class="at">color=</span><span class="st">"orange"</span>,<span class="at">linewidth =</span> <span class="fl">0.6</span>)<span class="sc">+</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SchoolID"</span>) <span class="sc">+</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Difference in Reading Scores"</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">colour =</span> <span class="st">"grey80"</span>))</span>
 <span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>stu_read <span class="ot">&lt;-</span> stu_read <span class="sc">%&gt;%</span> </span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mycolor =</span> <span class="fu">ifelse</span>(diff<span class="sc">&gt;</span><span class="dv">250</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>))<span class="sc">%&gt;%</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>   <span class="fu">arrange</span>(diff) <span class="sc">%&gt;%</span>    </span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNTSCHID=</span><span class="fu">factor</span>(CNTSCHID, <span class="at">levels=</span>CNTSCHID))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_sci, <span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">y =</span> diff)) <span class="sc">+</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">xend=</span>CNTSCHID, <span class="at">y =</span> <span class="dv">250</span>, <span class="at">yend=</span>diff), <span class="at">color =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span>stu_sci<span class="sc">$</span>mycolor, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">250</span>, <span class="at">color=</span><span class="st">"orange"</span>,<span class="at">linewidth =</span> <span class="fl">0.6</span>)<span class="sc">+</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SchoolID"</span>) <span class="sc">+</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Difference in Science Scores"</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span> </span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>, <span class="at">colour =</span> <span class="st">"grey80"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>We will stitch the individual charts together using patchwork.</p>
 <div class="cell">
-<details>
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>stu_sci_min <span class="ot">&lt;-</span> stu <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CNTSCHID) <span class="sc">%&gt;%</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(SCI),</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>               <span class="fu">list</span>(<span class="at">min_sci =</span> min))</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>stu_sci_max <span class="ot">&lt;-</span> stu <span class="sc">%&gt;%</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(CNTSCHID) <span class="sc">%&gt;%</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_at</span>(<span class="fu">vars</span>(SCI),</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>               <span class="fu">list</span>(<span class="at">max_sci =</span> max))</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>stu_sci <span class="ot">&lt;-</span> <span class="fu">full_join</span>(stu_sci_max, stu_sci_min,</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">by =</span> <span class="st">"CNTSCHID"</span>)</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>stu_sci<span class="sc">$</span>diff <span class="ot">&lt;-</span> stu_sci<span class="sc">$</span>max_sci <span class="sc">-</span> stu_sci<span class="sc">$</span>min_sci</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>stu_sci<span class="sc">$</span>CNTSCHID <span class="ot">&lt;-</span> <span class="fu">substr</span>(stu_sci<span class="sc">$</span>CNTSCHID, <span class="dv">6</span>, <span class="dv">8</span>)</span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>stu_sci <span class="ot">&lt;-</span> stu_sci <span class="sc">%&gt;%</span> </span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mycolor =</span> <span class="fu">ifelse</span>(diff<span class="sc">&gt;</span><span class="dv">250</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>))<span class="sc">%&gt;%</span></span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>   <span class="fu">arrange</span>(diff) <span class="sc">%&gt;%</span>    </span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNTSCHID=</span><span class="fu">factor</span>(CNTSCHID, <span class="at">levels=</span>CNTSCHID))  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<details>
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_math, <span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">y =</span> diff)) <span class="sc">+</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">xend=</span>CNTSCHID, <span class="at">y =</span> <span class="dv">250</span>, <span class="at">yend=</span>diff), <span class="at">color =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span>stu_math<span class="sc">$</span>mycolor, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SchoolID"</span>) <span class="sc">+</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Difference in Math Scores"</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>()</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>patch1 <span class="ot">&lt;-</span> p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>patch1 <span class="sc">+</span> <span class="fu">plot_annotation</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Most of the schools had a wide disparity between their top scorers and bottom scorers."</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">subtitle =</span> <span class="st">"164 Schools participated in study. The threshold for difference in top and bottom score was 250."</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Data from PISA 2022"</span>, <span class="at">theme =</span> <span class="fu">theme_ipsum_rc</span>()) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="384"></p>
-</div>
-</div>
-<div class="cell">
-<details>
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_read, <span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">y =</span> diff)) <span class="sc">+</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">xend=</span>CNTSCHID, <span class="at">y =</span> <span class="dv">250</span>, <span class="at">yend=</span>diff), <span class="at">color =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span>stu_read<span class="sc">$</span>mycolor, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SchoolID"</span>) <span class="sc">+</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Difference in Reading Scores"</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>()</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="384"></p>
-</div>
-</div>
-<div class="cell">
-<details>
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu_sci, <span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">y =</span> diff)) <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>CNTSCHID, <span class="at">xend=</span>CNTSCHID, <span class="at">y =</span> <span class="dv">250</span>, <span class="at">yend=</span>diff), <span class="at">color =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span>stu_sci<span class="sc">$</span>mycolor, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"SchoolID"</span>) <span class="sc">+</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Difference in Science Scores"</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>()</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>p3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="384"></p>
+<p><img src="Take-home_Ex02_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="864"></p>
 </div>
 </div>
 </section>
@@ -900,14 +878,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details>
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>h1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(MATH, ESCS)) <span class="sc">+</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>h2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(READ, ESCS)) <span class="sc">+</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>h3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(SCI, ESCS)) <span class="sc">+</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>h1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(MATH, ESCS)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>h2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(READ, ESCS)) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>h3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(stu, <span class="fu">aes</span>(SCI, ESCS)) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(<span class="at">bins =</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
