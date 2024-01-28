@@ -38,11 +38,11 @@ These data files are in SAS and SPSS formats. For the purpose of this exercise, 
 
 # Getting Started
 
-First, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
+First, let us ensure that the required R packages have been installed and import the relevant data for this exercise.
 
 ## Loading R packages
 
-For this in-class exercise, we will be using the following two packages:
+For this exercise, we will be using the following packages:
 
 -   [**tidyverse**](https://www.tidyverse.org/) : to load the core tidyverse packages, which includes ggplot2 and dplyr.
 
@@ -69,7 +69,7 @@ pacman::p_load(tidyverse, haven, patchwork, ggrepel, ggdist, ggridges, knitr)
 
 ## Importing the Data into R
 
-For this in-class exercise, we are using [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/)'s student questionnaire data file. As the data file is in SAS file format, we will use **haven**'s [`read_sas()`](https://haven.tidyverse.org/reference/read_sas.html) function to import the data into R environment. Then we will filter the data to those data from Singapore since this exercise is only focusing on responses from Singapore students.
+For this exercise, we are using [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/)'s student questionnaire data file. As the data file is in SAS file format, we will use **haven**'s [`read_sas()`](https://haven.tidyverse.org/reference/read_sas.html) function to import the data into R environment. Then we will filter the data to those data from Singapore since this exercise is only focusing on responses from Singapore students.
 
 ::: panel-tabset
 ## Import the Data (All Countries)

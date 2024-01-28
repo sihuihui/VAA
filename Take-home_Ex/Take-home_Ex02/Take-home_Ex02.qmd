@@ -47,7 +47,7 @@ pacman::p_load(tidyverse, haven, patchwork, ggrepel, ggdist, ggridges, knitr, hr
 
 ## Importing Data into R
 
-For this exercise, we are using [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/)'s student questionnaire data file, which is the same dataset as Take-home exercise 1. As we have already filtered out the PISA data from Singapore and saved it in rds file previously in Take-home exercise 1, let us import the rds file using the following code chunk.
+For this exercise, we are using [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/)'s student questionnaire data file, which is the same dataset as Take-home exercise 1. As we have already filtered out the PISA data from Singapore and saved it in rds file previously in[Take-home exercise 1](https://gsh-vaa.netlify.app/take-home_ex/take-home_ex01/take-home_ex01), let us import the rds file using the following code chunk.
 
 ```{r}
 #| code-fold: true
@@ -59,7 +59,7 @@ stu_qqq_SG <- read_rds("data/stu_qqq_SG.rds")
 
 # Data Preparation
 
-Before I can critique and remake my peer's charts, I followed the following data preparation steps taken by my peer.
+Before I can critique and remake my peer's charts, I follow the following data preparation steps taken by my peer.
 
 ```{r}
 #| code-fold: true
@@ -105,7 +105,7 @@ The following charts were from the original submission.
 
 ### Critique
 
-***What the message is***
+***What is the message***
 
 -   Before I critique, I shall attempt to deduce the author's message for this chart so that we can make recommendations to improve the chart based on the intended message.
 
@@ -147,7 +147,7 @@ There are pros and cons for the above 3 options:
 
 After weighing the above pros and cons, I decided to change the box plots to raincloud plot. Below is how I imagined the plot to look like with a title and subtitle:
 
-![Finalised Chart for Chart 1](images/finalised1.png){fig-align="center" width="344"}
+![Finalised Suggestion for Chart 1](images/finalised1.png){fig-align="center" width="344"}
 
 ### Makeover Design
 
@@ -206,7 +206,7 @@ The following charts were from the original submission.
 
 ### Critique
 
-***What the message is***
+***What is the message***
 
 -   The original author seems to want to see if there are any differences in subject scores between gender.
 
@@ -248,7 +248,7 @@ For option 2, it splits the plots by subject so that we can see if there are any
 
 After weighing the above pros and cons, I decided to change the box plots to combine option 1 and 2 ideas. So we will plot ridge plots and box plots for gender and subjects into 1 plot. This is how it looks like:
 
-![Finalised Chart for Chart 2](images/finalised2.png){fig-align="center" width="460"}
+![Finalised Suggestion for Chart 2](images/finalised2.png){fig-align="center" width="460"}
 
 ### Makeover Design
 
@@ -312,13 +312,13 @@ The following charts were from the original submission.
 
 ### Critique
 
-***What the message is***
+***What is the message***
 
 -   The original author seemed to want to see if there are any differences in subject scores between schools.
 
 ***Aesthetics***
 
--   Similarly, the title could be more informative. We can also add a subtitle to provide information on the number of schools. .
+-   Similarly, the title could be more informative. We can also add a subtitle to provide information on the number of schools.
 
 -   We can put the 3 boxplots side by side for easy comparison.
 
@@ -348,11 +348,13 @@ Since the message that I wanted this chart to show was each school's range of sc
 
 -   The difference between barplot and lollipop plot is that lollipop plot uses less ink so people can focus on the height of the "dot".
 
-After considering the various strengths and weaknesses of the various plots, I decided to remake the original chart into a lollipop plot.
+After considering the various strengths and weaknesses of the various plots, I decided to remake the original chart into a lollipop plot and this is how I planned for it to look like:
+
+![Finalised Suggestion for Chart 3](images/finalised3.png){fig-align="center" width="842"}
 
 ### Makeover Design
 
-Let us first prepare the data for each subject.
+Let us first prepare the data for each subject. When preparing the data, I removed the "70200" in the school IDs (i.e. `CNTSCHID`) because it is present in every school IDs and they would take up extra space and cause clutter when we plot the school IDs in the axis.
 
 ```{r}
 #| code-fold: true
@@ -424,8 +426,15 @@ stu_sci <- stu_sci %>%
   mutate(CNTSCHID=factor(CNTSCHID, levels=CNTSCHID))  
 ```
 
+The following code chunk plots out the individual charts for each subject. We will save each subject's chart as a variable so that we can stitch them together later.
 
-The following code chunk plots out the individual charts for each subject. We will save each subject's chart as a variable so that we can stitch them together later. 
+While plotting these charts out,
+
+-   I rotated the charts using `coord_flip()` because I realised that it is easier to compare across subjects for each schools when they are in a vertical format.
+
+-   I added an abline using `geom_hline` to make the threshold of 250 points obvious.
+
+-   I also removed the plot background colour and grid lines because of the lines in the lollipop charts.
 
 ```{r}
 #| code-fold: true
@@ -457,16 +466,17 @@ p3 <- ggplot(stu_sci, aes(x=CNTSCHID, y = diff)) +
 
 ```
 
-
-We will stitch the individual charts together using patchwork. 
+We then stitch the individual charts together using patchwork and added title, subtitle and caption and a theme using `plot_annotation()`.
 
 ```{r fig.width=9, fig.height=20}
+#| code-fold: true
+#| code-summary: "Show the code"
 
 patch1 <- p1 + p2 + p3 
 
 patch1 + plot_annotation(
-  title = "Most of the schools had a wide disparity between their top scorers and bottom scorers.",
-  subtitle = "164 Schools participated in study. The threshold for difference in top and bottom score was 250.",
+  title = "Most of the schools had a wide disparity between their top scorers and \nbottom scorers, exceeding the threshold of 250 points.",
+  subtitle = "164 Schools participated in study.",
   caption = "Data from PISA 2022", theme = theme_ipsum_rc()) 
 
 
@@ -480,44 +490,175 @@ The following charts were from the original submission.
 
 ![Chart 4 by Original Author](images/Chart4.png){fig-align="center"}
 
--   The author used scatter plot to show the relationship between socioeconomic status (ESCS) and subject scores. Added a line of best fit to show the relationship between ESCS and subject scores, which was useful to illustrate the relationship.
+***What is the message***
+
+-   The original author seemed to want to see if there are any relationship between subject scores and socioeconomic status (ESCS).
+
+***Aesthetics***
+
+-   Similarly, the title could be more informative. We can also add a subtitle to provide information on the number of observations, or additional information about ESCS since it is an index.
+
+-   Instead of putting the charts in different tabs, we can put the 3 charts side by side for easy comparison.
+
+**Clarity**
+
+-   The author used scatter plot to show the relationship between socioeconomic status (ESCS) and subject scores. A line of best fit was also added to show the relationship between ESCS and subject scores, which was useful to illustrate the relationship.
+
 -   However, because there are many data points (we have more than 6000 observations), the scatter plots were too dense to interpret.
--   
 
 ### Proposed Sketch
 
-![Suggestions for Chart 4](images/Suggestion4.png){fig-align="center"}
+As such, we suggest the following options:
 
-We can consider plotting a hexbin plot to show the density of points, can help to identify patterns and outliers in the data.
+Option 1: Hexbin plot to overcome the large number of data points by binning them. A hexbin plot can show the density of data points (using the colour gradient) and help to identify patterns and outliers in the data.
 
-binning makes it easier to identify data clusters and depict patterns.
+Option 2: Ridge plot by binning the scores into "[Proficiency levels](https://www.oecd.org/pisa/pisa-for-development/pisafordevelopment2018technicalreport/PISA-D%20TR%20Chapter%2015%20-%20Proficiency%20Scale%20Construction%20-%20final.pdf)". Binning the scores makes it easier to identify data clusters and depict patterns. If the higher (i.e. better) proficiency levels tend to fall within the higher ESCS scores, then there could be a relationship between scores and socioeconomic status.
 
-We can also change the scores from numerical to categorical by binning the scores into the various proficiency levels.
+![Suggestions for Chart 4](images/Suggestion4.1.png){fig-align="center" width="659"}
+
+I decided to bind the scores into proficiency levels and plot ridgeplots to compare the students' proficiency levels across ESCS. This is how I imagined the revamped chart would look like:
+
+![Finalised Suggestion for Chart 4](images/finalised4.png){fig-align="center"}
 
 ### Makeover Design
+
+First, we will prepare the data by binning the subject scores into various proficiency levels and also defining the factor levels for the subject's proficiency levels.
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-h1 <- ggplot(stu, aes(MATH, ESCS)) +
-  geom_hex(bins = 50)
 
-h2 <- ggplot(stu, aes(READ, ESCS)) +
-  geom_hex(bins = 50)
+stu_math_b <- stu %>%
+  select(CNTSTUID, MATH, ESCS) 
 
-h3 <- ggplot(stu, aes(SCI, ESCS)) +
-  geom_hex(bins = 50)
+stu_math_b$MATHLevel[stu_math_b$MATH >669.30] <- "6"
+stu_math_b$MATHLevel[stu_math_b$MATH > 606.99 & stu_math_b$MATH <= 669.30] <- "5"
+stu_math_b$MATHLevel[stu_math_b$MATH > 544.68 & stu_math_b$MATH <= 606.99] <- "4"
+stu_math_b$MATHLevel[stu_math_b$MATH > 482.38 & stu_math_b$MATH <= 544.68] <- "3"
+stu_math_b$MATHLevel[stu_math_b$MATH > 420.38 & stu_math_b$MATH <= 482.38] <- "2"
+stu_math_b$MATHLevel[stu_math_b$MATH > 357.77 & stu_math_b$MATH <= 420.38] <- "1a"
+stu_math_b$MATHLevel[stu_math_b$MATH > 295.47 & stu_math_b$MATH <= 357.77] <- "1b"
+stu_math_b$MATHLevel[stu_math_b$MATH > 233.17 & stu_math_b$MATH <= 295.47] <- "1c"
+
+stu_math_b$MATHLevel<- factor(stu_math_b$MATHLevel, levels=c('1c', '1b', '1a', '2', '3', '4', '5', '6'))
+
+stu_read_b <- stu %>%
+  select(CNTSTUID, READ, ESCS) 
+
+stu_read_b$READLevel[stu_read_b$READ > 698.32] <- "6"
+stu_read_b$READLevel[stu_read_b$READ > 625.61 & stu_read_b$READ <= 698.32] <- "5"
+stu_read_b$READLevel[stu_read_b$READ > 552.89 & stu_read_b$READ <= 625.61] <- "4"
+stu_read_b$READLevel[stu_read_b$READ > 480.18 & stu_read_b$READ <= 552.89] <- "3"
+stu_read_b$READLevel[stu_read_b$READ > 407.47 & stu_read_b$READ <= 480.18] <- "2"
+stu_read_b$READLevel[stu_read_b$READ > 334.75 & stu_read_b$READ <= 407.47] <- "1a"
+stu_read_b$READLevel[stu_read_b$READ > 262.04 & stu_read_b$READ <= 334.75] <- "1b"
+stu_read_b$READLevel[stu_read_b$READ > 189.33 & stu_read_b$READ <= 262.04] <- "1c"
+stu_read_b$READLevel[stu_read_b$READ < 189.33] <- "0"
+
+stu_read_b$READLevel<- factor(stu_read_b$READLevel, levels=c('0', '1c', '1b', '1a', '2', '3', '4', '5', '6'))
+
+stu_sci_b <- stu %>%
+  select(CNTSTUID, SCI, ESCS) 
+
+stu_sci_b$SCILevel[stu_sci_b$SCI > 707.93] <- "6"
+stu_sci_b$SCILevel[stu_sci_b$SCI > 633.33 & stu_sci_b$SCI <= 707.93] <- "5"
+stu_sci_b$SCILevel[stu_sci_b$SCI > 558.73 & stu_sci_b$SCI <= 633.33] <- "4"
+stu_sci_b$SCILevel[stu_sci_b$SCI > 484.14 & stu_sci_b$SCI <= 558.73] <- "3"
+stu_sci_b$SCILevel[stu_sci_b$SCI > 409.54 & stu_sci_b$SCI <= 484.14] <- "2"
+stu_sci_b$SCILevel[stu_sci_b$SCI > 334.94 & stu_sci_b$SCI <= 409.54] <- "1a"
+stu_sci_b$SCILevel[stu_sci_b$SCI > 260.54 & stu_sci_b$SCI <= 334.94] <- "1b"
+stu_sci_b$SCILevel[stu_sci_b$SCI > 185.94 & stu_sci_b$SCI <= 260.54] <- "1c"
+stu_sci_b$SCILevel[stu_sci_b$SCI < 185.94] <- "0"
+
+stu_sci_b$SCILevel<- factor(stu_sci_b$SCILevel, levels=c('0', '1c', '1b', '1a', '2', '3', '4', '5', '6'))
+```
+
+With the prepared data, we will plot 1 chart for each subject. When working on the chart, I realised that a stat_halfeye from ggdist is better than ridge chart from ggridge because it shows the density and the interval with a boxplot.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+e1 <- ggplot(stu_math_b, 
+       aes(x = ESCS, 
+           y = MATHLevel,
+           color = MATHLevel)) + 
+stat_halfeye(expand = TRUE) +
+  stat_summary(fun = median, geom = "text", aes(label = paste("median:", round(after_stat(x), 1))),
+               position = position_nudge(y=0.15), vjust=-0.5, size = 2.3, color = "black")+
+  stat_summary(fun=mean, geom ="text", aes(label = paste("mean: ", round(after_stat(x), 1))), 
+               position = position_nudge(y =-0.2), vjust = 0.5, color= "black", size = 2.3)+ 
+  stat_summary(fun = mean, geom = "point", shape = 16, size = 2, color = "black",
+               position = position_nudge(x = 0.0)) +
+  labs(title = "Maths")+
+  ylab("Proficiency Level") + 
+  xlab("ESCS") + 
+  theme_ipsum_rc(plot_margin = margin(4, 4, 4, 4))  
+
+
+e2 <- ggplot(stu_read_b, 
+       aes(x = ESCS, 
+           y = READLevel,
+           color = READLevel)) + 
+stat_halfeye(expand = TRUE) +
+  stat_summary(fun = median, geom = "text", aes(label = paste("median:", round(after_stat(x), 1))),
+               position = position_nudge(y=0.15), vjust=-0.5, size = 2.3, color = "black")+
+  stat_summary(fun=mean, geom ="text", aes(label = paste("mean: ", round(after_stat(x), 1))), 
+               position = position_nudge(y =-0.2), vjust = 0.5, color= "black", size = 2.3)+ 
+  stat_summary(fun = mean, geom = "point", shape = 16, size = 2, color = "black",
+               position = position_nudge(x = 0.0)) +
+  labs(title = "Reading")+
+  ylab("Proficiency Level") + 
+  xlab("ESCS") + 
+  theme_ipsum_rc(plot_margin = margin(4, 4, 4, 4)) 
+
+
+e3 <- ggplot(stu_sci_b, 
+       aes(x = ESCS, 
+           y = SCILevel,
+           color = SCILevel)) + 
+stat_halfeye(expand = TRUE) +
+  stat_summary(fun = median, geom = "text", aes(label = paste("median:", round(after_stat(x), 1))),
+               position = position_nudge(y=0.15), vjust=-0.5, size = 2.3, color = "black")+
+  stat_summary(fun=mean, geom ="text", aes(label = paste("mean: ", round(after_stat(x), 1))), 
+               position = position_nudge(y =-0.2), vjust = 0.5, color= "black", size = 2.3)+ 
+  stat_summary(fun = mean, geom = "point", shape = 16, size = 2, color = "black",
+               position = position_nudge(x = 0.0)) +
+  labs(title = "Science")+
+  ylab("Proficiency Level") + 
+  xlab("ESCS") + 
+  theme_ipsum_rc(plot_margin = margin(4, 4, 4, 4)) 
+```
+
+We will now use patchwork to stitch these 3 charts into 1 plot, add title, subtitle, caption and also add a theme to the plot.
+
+```{r fig.width=15, fig.height=8}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+patch2 <- e1 + e2 + e3 
+
+patch2 + plot_annotation(
+  title = "Students with higher Proficiency Levels seemed to have higher ESCS index.",
+  subtitle = "Number of observations: 6606.\nNote: The higher the value of ESCS, the higher the socio-economic status.", caption = "Data from PISA 2022") & theme_ipsum_rc(plot_margin = margin(4, 4, 4, 4), grid_col = "azure2", axis_text_size = 9) & theme(legend.position = "none") 
 
 ```
 
 # My Takeaways
 
-By reworking my peer's visualisation made me reflect and think of ways to improve my own take-home exercise 1. I find that determining the message that we want to convey is an important starting point to figure out and "shortlist" which charts to use. After shortlisting the possible charts to use, I find that I struggled to choose the best chart because each chart has its pros and cons and I learnt that there are different ways to show the same message. I managed to finally decide on the chart to use by plotting the "shortlisted" charts out and see which one works best in my opinion. I also learnt that adding annotations and thinking how to make the chart "prettier" are very time consuming but important steps. People often took for granted that visually appealling and efficient charts need a lot of thought and time spent into it.
+By reworking my peer's visualisation made me reflect and think of ways to improve my own take-home exercise 1.
+
+I find that determining the message that we want to convey is an important starting point to figure out and "shortlist" which charts to use. After shortlisting the possible charts to use, I find that I struggled to choose the best chart because each chart has its pros and cons and I learnt that there are different ways to show the same message. I managed to finally decide on the chart to use by drawing or plotting the "shortlisted" charts out and see which one works best in my opinion.
+
+When working on the "finalised" chart, I realised that plans might change along the way. For example, sometimes I decided to change a ridge chart to a rain cloud chart. Also, learning how much annotations to add is a balancing add. Sometimes I want to annotate everything but too much annotations can clutter the chart.
+
+I also learnt that adding annotations and thinking how to make the chart "prettier" are very time consuming but important steps. People often took for granted that visually appealling and efficient charts actually need a lot of thought and time spent into it.
 
 # References
 
 -   Kam, T. S. (2023). *R for Visual Analytics* \[Web-book\]. <https://r4va.netlify.app/>.
 
 -   Kay M (2024). “ggdist: Visualizations of Distributions and Uncertainty in the Grammar of Graphics.” *IEEE Transactions on Visualization and Computer Graphics*, 1–11. [doi:10.1109/TVCG.2023.3327195](https://doi.org/10.1109/TVCG.2023.3327195).
+
+-   PISA - Programme for International Student Assessment. (2023). \[Dataset\]. OCED. \[https://www.oecd.org/pisa/\]<https://www.oecd.org/pisa/>
 
 -   Wickham, H., Navarro, D., & Pedersen, T. L. (2024). *ggplot2: Elegant Graphics for Data Analysis* (3rd ed.). <https://ggplot2-book.org/>.
