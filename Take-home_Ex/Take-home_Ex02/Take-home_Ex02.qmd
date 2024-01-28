@@ -47,7 +47,7 @@ pacman::p_load(tidyverse, haven, patchwork, ggrepel, ggdist, ggridges, knitr, hr
 
 ## Importing Data into R
 
-For this exercise, we are using [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/)'s student questionnaire data file, which is the same dataset as Take-home exercise 1. As we have already filtered out the PISA data from Singapore and saved it in rds file previously in[Take-home exercise 1](https://gsh-vaa.netlify.app/take-home_ex/take-home_ex01/take-home_ex01), let us import the rds file using the following code chunk.
+For this exercise, we are using [PISA 2022 database](https://www.oecd.org/pisa/data/2022database/)'s student questionnaire data file, which is the same dataset as Take-home exercise 1. As we have already filtered out the PISA data from Singapore and saved it in rds file previously in [Take-home exercise 1](https://gsh-vaa.netlify.app/take-home_ex/take-home_ex01/take-home_ex01), let us import the rds file using the following code chunk.
 
 ```{r}
 #| code-fold: true
@@ -85,7 +85,7 @@ stu_qqq_SG_filtered <- stu_qqq_SG_filtered %>%
 
 ```
 
-As the charts that we will be re-creating only uses the selected columns, I also drop the columns that we will not be using for this exercise using the following code chunk.
+As the charts that we will be re-creating only use selected columns, I also drop the columns that we will not be using for this exercise using the following code chunk.
 
 ```{r}
 #| code-fold: true
@@ -208,7 +208,7 @@ The following charts were from the original submission.
 
 ***What is the message***
 
--   The original author seems to want to see if there are any differences in subject scores between gender.
+-   The original author seemed to want to see if there are any differences in subject scores between gender.
 
 ***Aesthetics***
 
@@ -328,9 +328,9 @@ The following charts were from the original submission.
 
 -   Based on the original author's interpretation, it seemed that if a school's score was within the box plot and not an outlier, the author interpreted the school as not having a wide disparity between students.
 
--   However, we cannot interpret this way due to how the school's score was being calculated. Since the school score was derived by averaging the students' scores and arithmethic averages were affected by extreme values, a school with non-outlier scores does not mean that all its students performed well. This is because the school might have some students with very high scores to make up for the underperforming students.
+-   However, we cannot interpret this way due to how the school's score was being calculated. Since the school score was derived by averaging the students' scores and arithmetic averages were affected by extreme values, a school with non-outlier scores does not mean that all its students performed well. This is because the school might have some students with very high scores to make up for the under-performing students.
 
--   As such, I suggest to find out the difference between the top score and bottom score for each school. By doing so we get the range of the students' scores for each school. Then we will compare each school's range to determine if the school is doing "well". A wider range means the school's students had a wider disparity which could warrant further exploration.
+-   As such, when remaking the chart, I would find out the difference between the top score and bottom score for each school. By doing so we get the range of the students' scores for each school. Then we will compare each school's range to determine if the school is doing "well". A wider range means the school's students had a wider disparity which could warrant further exploration and investigation.
 
 -   In addition, the author chose notched box plots to compare the schools' scores for different subjects. These plots were also in different tabs, making it hard to compare across subjects.
 
@@ -342,9 +342,9 @@ Since the message that I wanted this chart to show was each school's range of sc
 
 ![Suggestions for Chart 3](images/Suggestion3.png){fig-align="center"}
 
--   For this chart, I think the tricky bit is that there are many schools (\~164 schools) to plot out. Initially, I wanted to do a dumbbell plot (option 1) for each school. So each dot would show to top score and bottom score for each school and the line would show the difference between the top scores and bottom scores. But I realised that it would be quite messy and too much information in the chart when there are more than 160 schools to plot out.
+-   For this chart, I think the tricky bit is that there are many schools (\~164 schools) to plot out. Initially, I wanted to do a dumbbell plot (option 1) for each school. So each dot would show to top score and bottom score for each school and the line would show the difference between the top scores and bottom scores. But I realised that it would be quite messy and too much information (i.e., top score, lowest score, difference in scores) in the chart when there are more than 160 schools to plot out.
 
--   Hence, I came up with Options 2 and 3. In options 2 and 3, we can use the height of the bar or 'lollipop' would show the difference in the top and bottom scores for each school. We can also add a threshold so that we know which schools have a wide range and which schools have students performing at similar levels.
+-   Hence, I came up with Options 2 and 3. In options 2 and 3, we can use the height of the bar or 'lollipop' would show the difference in the top and bottom scores for each school. We can also add a threshold so that we know which schools have a wide range and which schools have students performing at similar levels. For this exercise, we set an arbitrary threshold of 250.
 
 -   The difference between barplot and lollipop plot is that lollipop plot uses less ink so people can focus on the height of the "dot".
 
@@ -354,7 +354,7 @@ After considering the various strengths and weaknesses of the various plots, I d
 
 ### Makeover Design
 
-Let us first prepare the data for each subject. When preparing the data, I removed the "70200" in the school IDs (i.e. `CNTSCHID`) because it is present in every school IDs and they would take up extra space and cause clutter when we plot the school IDs in the axis.
+Let us first prepare the data for each subject. When preparing the data, I removed the "70200" in the school IDs (i.e. `CNTSCHID`) because it is present in every school IDs and they would clutter and take up extra space when we plot the school IDs on the axis.
 
 ```{r}
 #| code-fold: true
@@ -516,13 +516,17 @@ Option 2: Ridge plot by binning the scores into "[Proficiency levels](https://ww
 
 ![Suggestions for Chart 4](images/Suggestion4.1.png){fig-align="center" width="659"}
 
-I decided to bind the scores into proficiency levels and plot ridgeplots to compare the students' proficiency levels across ESCS. This is how I imagined the revamped chart would look like:
+I decided to bind the scores into proficiency levels and plot ridgeplots to compare the students' proficiency levels across ESCS. The ridgeplots could give a clear overview if ESCS and scores are related by checking if the "ridges" are skewed in a certain direction. This is how I imagined the revamped chart would look like:
 
 ![Finalised Suggestion for Chart 4](images/finalised4.png){fig-align="center"}
 
 ### Makeover Design
 
-First, we will prepare the data by binning the subject scores into various proficiency levels and also defining the factor levels for the subject's proficiency levels.
+First, we will prepare the data by:
+
+1.  binning the subject scores into various proficiency levels; and
+
+2.   defining the factor levels for the subject's proficiency levels.
 
 ```{r}
 #| code-fold: true
@@ -573,7 +577,7 @@ stu_sci_b$SCILevel[stu_sci_b$SCI < 185.94] <- "0"
 stu_sci_b$SCILevel<- factor(stu_sci_b$SCILevel, levels=c('0', '1c', '1b', '1a', '2', '3', '4', '5', '6'))
 ```
 
-With the prepared data, we will plot 1 chart for each subject. When working on the chart, I realised that a stat_halfeye from ggdist is better than ridge chart from ggridge because it shows the density and the interval with a boxplot.
+With the prepared data, we will plot 1 chart for each subject and save each chart as a variable. When working on the chart, I realised that the `stat_halfeye()` from ggdist (i.e., a raincloud plot without the 'rain') is better than ridge chart from ggridge because it shows density with a distribution curve and interval with a boxplot.
 
 ```{r}
 #| code-fold: true
@@ -629,7 +633,7 @@ stat_halfeye(expand = TRUE) +
   theme_ipsum_rc(plot_margin = margin(4, 4, 4, 4)) 
 ```
 
-We will now use patchwork to stitch these 3 charts into 1 plot, add title, subtitle, caption and also add a theme to the plot.
+We will now use patchwork to stitch these 3 charts into 1 plot. Then, we add title, subtitle, caption and a theme to the plot.
 
 ```{r fig.width=15, fig.height=8}
 #| code-fold: true

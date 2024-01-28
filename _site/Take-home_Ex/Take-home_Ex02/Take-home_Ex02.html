@@ -424,7 +424,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="importing-data-into-r" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="importing-data-into-r"><span class="header-section-number">2.2</span> Importing Data into R</h2>
-<p>For this exercise, we are using <a href="https://www.oecd.org/pisa/data/2022database/">PISA 2022 database</a>’s student questionnaire data file, which is the same dataset as Take-home exercise 1. As we have already filtered out the PISA data from Singapore and saved it in rds file previously in<a href="https://gsh-vaa.netlify.app/take-home_ex/take-home_ex01/take-home_ex01">Take-home exercise 1</a>, let us import the rds file using the following code chunk.</p>
+<p>For this exercise, we are using <a href="https://www.oecd.org/pisa/data/2022database/">PISA 2022 database</a>’s student questionnaire data file, which is the same dataset as Take-home exercise 1. As we have already filtered out the PISA data from Singapore and saved it in rds file previously in <a href="https://gsh-vaa.netlify.app/take-home_ex/take-home_ex01/take-home_ex01">Take-home exercise 1</a>, let us import the rds file using the following code chunk.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -457,7 +457,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">CNTSCHID =</span> <span class="fu">as.character</span>(CNTSCHID))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>As the charts that we will be re-creating only uses the selected columns, I also drop the columns that we will not be using for this exercise using the following code chunk.</p>
+<p>As the charts that we will be re-creating only use selected columns, I also drop the columns that we will not be using for this exercise using the following code chunk.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -588,7 +588,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="critique-1"><span class="header-section-number">4.2.1</span> Critique</h3>
 <p><strong><em>What is the message</em></strong></p>
 <ul>
-<li>The original author seems to want to see if there are any differences in subject scores between gender.</li>
+<li>The original author seemed to want to see if there are any differences in subject scores between gender.</li>
 </ul>
 <p><strong><em>Aesthetics</em></strong></p>
 <ul>
@@ -706,8 +706,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>In the original work, the students’ scores were averaged to determine the school’s score.</p></li>
 <li><p>Based on the original author’s interpretation, it seemed that if a school’s score was within the box plot and not an outlier, the author interpreted the school as not having a wide disparity between students.</p></li>
-<li><p>However, we cannot interpret this way due to how the school’s score was being calculated. Since the school score was derived by averaging the students’ scores and arithmethic averages were affected by extreme values, a school with non-outlier scores does not mean that all its students performed well. This is because the school might have some students with very high scores to make up for the underperforming students.</p></li>
-<li><p>As such, I suggest to find out the difference between the top score and bottom score for each school. By doing so we get the range of the students’ scores for each school. Then we will compare each school’s range to determine if the school is doing “well”. A wider range means the school’s students had a wider disparity which could warrant further exploration.</p></li>
+<li><p>However, we cannot interpret this way due to how the school’s score was being calculated. Since the school score was derived by averaging the students’ scores and arithmetic averages were affected by extreme values, a school with non-outlier scores does not mean that all its students performed well. This is because the school might have some students with very high scores to make up for the under-performing students.</p></li>
+<li><p>As such, when remaking the chart, I would find out the difference between the top score and bottom score for each school. By doing so we get the range of the students’ scores for each school. Then we will compare each school’s range to determine if the school is doing “well”. A wider range means the school’s students had a wider disparity which could warrant further exploration and investigation.</p></li>
 <li><p>In addition, the author chose notched box plots to compare the schools’ scores for different subjects. These plots were also in different tabs, making it hard to compare across subjects.</p></li>
 <li><p>There was a red dot for the average school score but it would be more useful if it has text annotation so that readers can easily read off the value.</p></li>
 </ul>
@@ -722,8 +722,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 <ul>
-<li><p>For this chart, I think the tricky bit is that there are many schools (~164 schools) to plot out. Initially, I wanted to do a dumbbell plot (option 1) for each school. So each dot would show to top score and bottom score for each school and the line would show the difference between the top scores and bottom scores. But I realised that it would be quite messy and too much information in the chart when there are more than 160 schools to plot out.</p></li>
-<li><p>Hence, I came up with Options 2 and 3. In options 2 and 3, we can use the height of the bar or ‘lollipop’ would show the difference in the top and bottom scores for each school. We can also add a threshold so that we know which schools have a wide range and which schools have students performing at similar levels.</p></li>
+<li><p>For this chart, I think the tricky bit is that there are many schools (~164 schools) to plot out. Initially, I wanted to do a dumbbell plot (option 1) for each school. So each dot would show to top score and bottom score for each school and the line would show the difference between the top scores and bottom scores. But I realised that it would be quite messy and too much information (i.e., top score, lowest score, difference in scores) in the chart when there are more than 160 schools to plot out.</p></li>
+<li><p>Hence, I came up with Options 2 and 3. In options 2 and 3, we can use the height of the bar or ‘lollipop’ would show the difference in the top and bottom scores for each school. We can also add a threshold so that we know which schools have a wide range and which schools have students performing at similar levels. For this exercise, we set an arbitrary threshold of 250.</p></li>
 <li><p>The difference between barplot and lollipop plot is that lollipop plot uses less ink so people can focus on the height of the “dot”.</p></li>
 </ul>
 <p>After considering the various strengths and weaknesses of the various plots, I decided to remake the original chart into a lollipop plot and this is how I planned for it to look like:</p>
@@ -736,7 +736,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="makeover-design-2" class="level3" data-number="4.3.3">
 <h3 data-number="4.3.3" class="anchored" data-anchor-id="makeover-design-2"><span class="header-section-number">4.3.3</span> Makeover Design</h3>
-<p>Let us first prepare the data for each subject. When preparing the data, I removed the “70200” in the school IDs (i.e.&nbsp;<code>CNTSCHID</code>) because it is present in every school IDs and they would take up extra space and cause clutter when we plot the school IDs in the axis.</p>
+<p>Let us first prepare the data for each subject. When preparing the data, I removed the “70200” in the school IDs (i.e.&nbsp;<code>CNTSCHID</code>) because it is present in every school IDs and they would clutter and take up extra space when we plot the school IDs on the axis.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -897,7 +897,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <figcaption class="figure-caption">Suggestions for Chart 4</figcaption>
 </figure>
 </div>
-<p>I decided to bind the scores into proficiency levels and plot ridgeplots to compare the students’ proficiency levels across ESCS. This is how I imagined the revamped chart would look like:</p>
+<p>I decided to bind the scores into proficiency levels and plot ridgeplots to compare the students’ proficiency levels across ESCS. The ridgeplots could give a clear overview if ESCS and scores are related by checking if the “ridges” are skewed in a certain direction. This is how I imagined the revamped chart would look like:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/finalised4.png" class="img-fluid figure-img"></p>
@@ -907,7 +907,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="makeover-design-3" class="level3" data-number="4.4.3">
 <h3 data-number="4.4.3" class="anchored" data-anchor-id="makeover-design-3"><span class="header-section-number">4.4.3</span> Makeover Design</h3>
-<p>First, we will prepare the data by binning the subject scores into various proficiency levels and also defining the factor levels for the subject’s proficiency levels.</p>
+<p>First, we will prepare the data by:</p>
+<ol type="1">
+<li><p>binning the subject scores into various proficiency levels; and</p></li>
+<li><p>defining the factor levels for the subject’s proficiency levels.</p></li>
+</ol>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -956,7 +960,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>stu_sci_b<span class="sc">$</span>SCILevel<span class="ot">&lt;-</span> <span class="fu">factor</span>(stu_sci_b<span class="sc">$</span>SCILevel, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">'0'</span>, <span class="st">'1c'</span>, <span class="st">'1b'</span>, <span class="st">'1a'</span>, <span class="st">'2'</span>, <span class="st">'3'</span>, <span class="st">'4'</span>, <span class="st">'5'</span>, <span class="st">'6'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>With the prepared data, we will plot 1 chart for each subject. When working on the chart, I realised that a stat_halfeye from ggdist is better than ridge chart from ggridge because it shows the density and the interval with a boxplot.</p>
+<p>With the prepared data, we will plot 1 chart for each subject and save each chart as a variable. When working on the chart, I realised that the <code>stat_halfeye()</code> from ggdist (i.e., a raincloud plot without the ‘rain’) is better than ridge chart from ggridge because it shows density with a distribution curve and interval with a boxplot.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
@@ -1011,7 +1015,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_ipsum_rc</span>(<span class="at">plot_margin =</span> <span class="fu">margin</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>We will now use patchwork to stitch these 3 charts into 1 plot, add title, subtitle, caption and also add a theme to the plot.</p>
+<p>We will now use patchwork to stitch these 3 charts into 1 plot. Then, we add title, subtitle, caption and a theme to the plot.</p>
 <div class="cell">
 <details>
 <summary>Show the code</summary>
