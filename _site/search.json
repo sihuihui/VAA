@@ -60,7 +60,7 @@
     "href": "index.html#hands-on-exercises",
     "title": "SiHui Learns Visual Analytics!",
     "section": "Hands-On Exercises",
-    "text": "Hands-On Exercises\n\n\n\n\n\n\n\n\nHands-on Exercise 1 - A Layered Grammar of Graphics: ggplot2 methods\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 11, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 2 - Beyond ggplot2 Fundamentals\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3a: Programming Interactive Data Visualisation with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3b: Programming Animated Statistical Graphics with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 24, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 4a - Visualising Distribution\n\n\n\n\n\n\nGoh Si Hui\n\n\nFeb 1, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 4b - Visual Statistical Analysis\n\n\n\n\n\n\nGoh Si Hui\n\n\nFeb 1, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Hands-On Exercises\n\n\n\n\n\n\n\n\nHands-on Exercise 1 - A Layered Grammar of Graphics: ggplot2 methods\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 11, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 2 - Beyond ggplot2 Fundamentals\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3a: Programming Interactive Data Visualisation with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3b: Programming Animated Statistical Graphics with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 24, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 4a - Visualising Distribution\n\n\n\n\n\n\nGoh Si Hui\n\n\nFeb 1, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 4b - Visual Statistical Analysis\n\n\n\n\n\n\nGoh Si Hui\n\n\nFeb 1, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 4C - Visualising Uncertainty\n\n\n\n\n\n\nGoh Si Hui\n\n\nFeb 1, 2024\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html#in-class-exercises",
@@ -821,5 +821,61 @@
       "Hands-on Exercises",
       "Hands-on Exercise 4b - Visual Statistical Analysis"
     ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html",
+    "title": "Hands-on Exercise 4C - Visualising Uncertainty",
+    "section": "",
+    "text": "In this hands-on exercise, we will learn how to:\n\nplot static error bars using ggplot2\nplot interactive error bars using ggplot2, plotly and DT\ncreate advance"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#installing-and-loading-the-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#installing-and-loading-the-packages",
+    "title": "Hands-on Exercise 4C - Visualising Uncertainty",
+    "section": "2.1 Installing and Loading the Packages",
+    "text": "2.1 Installing and Loading the Packages\nFor this exercise, other than tidyverse, we will use the following packages:\n\ntidyverse: a family of R packages for data science process,\nplotly: to create interactive plot,\ngganimate: to create animation plot,\nDT: to display interactive html table,\ncrosstalk: to implement cross-widget interactions (currently, linked brushing and filtering), and\nggdist: to visualise distribution and uncertainty.\n\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\n\nShow the code\ndevtools::install_github(\"wilkelab/ungeviz\") #you only need to do this step once \n\n\n\n\nShow the code\npacman::p_load(ungeviz, plotly, crosstalk,\n               DT, ggdist, ggridges,\n               colorspace, gganimate, tidyverse)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#importing-data-into-r",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#importing-data-into-r",
+    "title": "Hands-on Exercise 4C - Visualising Uncertainty",
+    "section": "2.2 Importing Data into R",
+    "text": "2.2 Importing Data into R\nWe will use Exam_data.csv for this exercise.\n\n\nShow the code\nexam &lt;- read_csv(\"data/Exam_data.csv\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#standard-error-bars-of-point-estimates",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#standard-error-bars-of-point-estimates",
+    "title": "Hands-on Exercise 4C - Visualising Uncertainty",
+    "section": "4.1 Standard Error Bars of Point Estimates",
+    "text": "4.1 Standard Error Bars of Point Estimates\nWe can visualise the standard error bars of mean maths score by race using the following code chunk.\nNote that the error bars are computed by using the formula mean+/-se. :::{.callout-important} For geom_point(), it is important to indicate stat=“identity”. :::\n\n\nShow the code\nggplot(my_sum) +\n  geom_errorbar(\n    aes(x=RACE, \n        ymin=mean-se, \n        ymax=mean+se), \n    width=0.2, \n    colour=\"black\", \n    alpha=0.9, \n    size=0.5) +\n  geom_point(aes\n           (x=RACE, \n            y=mean), \n           stat=\"identity\", \n           color=\"red\",\n           size = 1.5,\n           alpha=1) +\n  ggtitle(\"Standard error of mean maths score by race\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#confidence-interval-of-point-estimates",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#confidence-interval-of-point-estimates",
+    "title": "Hands-on Exercise 4C - Visualising Uncertainty",
+    "section": "4.2 Confidence Interval of Point Estimates",
+    "text": "4.2 Confidence Interval of Point Estimates\nInstead of plotting the standard error bar of point estimates, we can also plot the confidence intervals of mean maths score by race.\n\n\nShow the code\nggplot(my_sum) +\n  geom_errorbar(\n    aes(x=reorder(RACE, -mean), \n        ymin=mean-1.96*se, \n        ymax=mean+1.96*se), \n    width=0.2, \n    colour=\"black\", \n    alpha=0.9, \n    size=0.5) +\n  geom_point(aes\n           (x=RACE, \n            y=mean), \n           stat=\"identity\", \n           color=\"red\",\n           size = 1.5,\n           alpha=1) +\n  labs(x = \"Maths score\",\n       title = \"95% confidence interval of mean maths score by race\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe confidence intervals are computed by using the formula mean+/-1.96*se. The error bars are sorted using the average maths scores. labs() argument of ggplot2 is used to change the x-axis label."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#interactive-error-bars",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#interactive-error-bars",
+    "title": "Hands-on Exercise 4C - Visualising Uncertainty",
+    "section": "4.3 Interactive error bars",
+    "text": "4.3 Interactive error bars\nWe can also plot interactive error bars for the 99% confidence interval of mean maths scores by race using the following code chunk.\n\n\nShow the code\nshared_df = SharedData$new(my_sum)\n\nbscols(widths = c(4,8),\n       ggplotly((ggplot(shared_df) +\n                   geom_errorbar(aes(\n                     x=reorder(RACE, -mean),\n                     ymin=mean-2.58*se, \n                     ymax=mean+2.58*se), \n                     width=0.2, \n                     colour=\"black\", \n                     alpha=0.9, \n                     size=0.5) +\n                   geom_point(aes(\n                     x=RACE, \n                     y=mean, \n                     text = paste(\"Race:\", `RACE`, \n                                  \"&lt;br&gt;N:\", `n`,\n                                  \"&lt;br&gt;Avg. Scores:\", round(mean, digits = 2),\n                                  \"&lt;br&gt;95% CI:[\", \n                                  round((mean-2.58*se), digits = 2), \",\",\n                                  round((mean+2.58*se), digits = 2),\"]\")),\n                     stat=\"identity\", \n                     color=\"red\", \n                     size = 1.5, \n                     alpha=1) + \n                   xlab(\"Race\") + \n                   ylab(\"Average Scores\") + \n                   theme_minimal() + \n                   theme(axis.text.x = element_text(\n                     angle = 45, vjust = 0.5, hjust=1)) +\n                   ggtitle(\"99% Confidence interval of average /&lt;br&gt;maths scores by race\")), \n                tooltip = \"text\"), \n       DT::datatable(shared_df, \n                     rownames = FALSE, \n                     class=\"compact\", \n                     width=\"100%\", \n                     options = list(pageLength = 10,\n                                    scrollX=T), \n                     colnames = c(\"No. of pupils\", \n                                  \"Avg Scores\",\n                                  \"Std Dev\",\n                                  \"Std Error\")) %&gt;%\n         formatRound(columns=c('mean', 'sd', 'se'),\n                     digits=2))"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#about-ggdist",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#about-ggdist",
+    "title": "Hands-on Exercise 4C - Visualising Uncertainty",
+    "section": "5.1 About ggdist",
+    "text": "5.1 About ggdist\nggdist is an R package that provides a flexible set of ggplot2 geoms and stats designed especially for visualising distributions and uncertainty.\nIt is designed for both frequentist and Bayesian uncertainty visualization, taking the view that uncertainty visualization can be unified through the perspective of distribution visualization:\n\nfor frequentist models, one visualises confidence distributions or bootstrap distributions (see vignette(“freq-uncertainty-vis”));\nfor Bayesian models, one visualises probability distributions (see the tidybayes package, which builds on top of ggdist)."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#confidence-intervals-of-mean-maths-scores",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html#confidence-intervals-of-mean-maths-scores",
+    "title": "Hands-on Exercise 4C - Visualising Uncertainty",
+    "section": "5.2 Confidence Intervals of Mean Maths Scores",
+    "text": "5.2 Confidence Intervals of Mean Maths Scores\nWe can use stat_pointinterval() or stat_gradientinterval() to build a visual for displaying distribution of maths scores by race\n\nstat_pointinterval()stat_gradientinterval()\n\n\n\nexam %&gt;%\n  ggplot(aes(x = RACE, \n             y = MATHS)) +\n  stat_pointinterval() +\n  labs(\n    title = \"Visualising confidence intervals of mean math score\",\n    subtitle = \"Mean Point + Multiple-interval plot\")\n\n\n\n\n\n\n\n\n\n\n\nexam %&gt;%\n  ggplot(aes(x = RACE, \n             y = MATHS)) +\n  stat_gradientinterval(   \n    fill = \"skyblue\",      \n    show.legend = TRUE     \n  ) +                        \n  labs(\n    title = \"Visualising confidence intervals of mean math score\",\n    subtitle = \"Gradient + interval plot\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImportant\n\n\n\nThese two functions come with many arguments, please refer to the syntax reference for more detail."
   }
 ]
