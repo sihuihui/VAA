@@ -27,13 +27,11 @@ Before we dive into the steps for creating an animated statistical graph, it’s
 -   Animation Attributes: The animation attributes are the settings that control how the animation behaves. For example, we can specify the duration of each frame, the easing function used to transition between frames, and whether to start the animation from the current frame or from the beginning.
 
 ::: {.callout-note appearance="simple"}
-
 ## When should we use animated graphs?
 
 Before you start making animated graphs, we should first ask ourselves: Does it makes sense to go through the effort?
 
 An animated graphic may not be worth the time investment for exploratory data analysis. However, it might be more useful if it is meant for presentation because a few well-placed animated graphs can help audience connect with the presentation topic better than static graphs.
-
 :::
 
 # Getting Started
@@ -61,14 +59,13 @@ The code chunk below uses `p_load()` of **pacman** package to check if the above
 pacman::p_load(readxl, gifski, gapminder, plotly, gganimate, tidyverse)
 ```
 
+## Importing the Data
 
-## Importing the Data 
+In this hands-on exercise, the `Data` worksheet from `GlobalPopulation` Excel workbook will be used.We will first use `read_xls()` of **readxl** package to import the excel sheet, then use `mutate_each_()` of **dplyr** package to convert all character data type into factor, then we will use `mutate()` to convert data values of the `Year` field into integer.
 
-In this hands-on exercise, the `Data` worksheet from `GlobalPopulation` Excel workbook will be used.We will first use `read_xls()` of **readxl** package to import the excel sheet, then use `mutate_each_()` of **dplyr** package to convert all character data type into factor, then we will use `mutate()` to convert data values of the `Year` field into integer. 
+::: panel-tabset
+## Using mutate_each\_()
 
-:::{.panel-tabset}
-
-## Using mutate_each_()
 ```{r}
 
 col <- c("Country", "Continent")
@@ -80,9 +77,10 @@ globalpop <- read_xls("data/GlobalPopulation.xls",
 
 ```
 
-
 ## Using mutate_at()
-Unfortunately, `mutate_each_()` was deprecated in dplyr 0.7.0. and `funs() `was deprecated in dplyr 0.8.0. In view of this, we will re-write the code by using `mutate_at()` as shown in the code chunk below.
+
+Unfortunately, `mutate_each_()` was deprecated in dplyr 0.7.0. and `funs()`was deprecated in dplyr 0.8.0. In view of this, we will re-write the code by using `mutate_at()` as shown in the code chunk below.
+
 ```{r}
 
 col <- c("Country", "Continent")
@@ -94,9 +92,10 @@ globalpop <- read_xls("data/GlobalPopulation.xls",
 
 ```
 
-
 ## Using across()
-We can also use `across()` instead of `mutate_at()` to derive the same output. 
+
+We can also use `across()` instead of `mutate_at()` to derive the same output.
+
 ```{r}
 
 col <- c("Country", "Continent")
@@ -107,23 +106,22 @@ globalpop <- read_xls("data/GlobalPopulation.xls",
   mutate(Year = as.integer(Year))
 
 ```
-
-
 :::
 
-# Animated Data Visualisation: gganimate methods 
-gganimate extends the grammar of graphics implemented by ggplot2 by including animation. It does this by providing a range of new grammar classes that can be added to the plot object in order to customise how it should change with time. 
+# Animated Data Visualisation: gganimate methods
 
--   transition_*(): defines how the data should be spread out and how it relates itself across time 
--   view_*(): defines how the positonal scales should change along the animation 
--   shadow_*(): defines how data from other points in time should be presented in the given point in time 
--   enter_*()/ exit_*(): defines how new data should appear and how old data should disappear during the course of the animation. 
--   ease_aes(): defines how different aesthetics should be eased during transitions. 
+gganimate extends the grammar of graphics implemented by ggplot2 by including animation. It does this by providing a range of new grammar classes that can be added to the plot object in order to customise how it should change with time.
 
-:::{.panel-tabset}
+-   transition\_\*(): defines how the data should be spread out and how it relates itself across time
+-   view\_\*(): defines how the positonal scales should change along the animation
+-   shadow\_\*(): defines how data from other points in time should be presented in the given point in time
+-   enter\_*()/ exit\_*(): defines how new data should appear and how old data should disappear during the course of the animation.
+-   ease_aes(): defines how different aesthetics should be eased during transitions.
 
+::: panel-tabset
 ## Static Bubble Plot
-In the following code chunk, we plot a static bubble plot using the basic ggplot2 functions. 
+
+In the following code chunk, we plot a static bubble plot using the basic ggplot2 functions.
 
 ```{r}
 ggplot(data = globalpop, aes(x = Old, y = Young, size = Population, color = Country)) + 
@@ -135,8 +133,9 @@ ggplot(data = globalpop, aes(x = Old, y = Young, size = Population, color = Coun
        y = "% Young")
 ```
 
-## Animated Bubble Plot 
-To create an animated bubble plot from the static bubble plot, we add the following functions to the code chunk in the previous tab: 
+## Animated Bubble Plot
+
+To create an animated bubble plot from the static bubble plot, we add the following functions to the code chunk in the previous tab:
 
 -   `transition_time()`: to create transition through distinct states in time (in this case, it is year)
 -   `ease_aes()`: to control easing of aesthetics. The default is linear, Other methods are: quadratic, cubic, quartic, quintic, sine, circular, exponential, elastic, back, and bounce.
@@ -155,18 +154,16 @@ ggplot(data = globalpop, aes(x = Old, y = Young, size = Population, color = Coun
 
 
 ```
-::: 
+:::
 
+# Animated Data Visualisation: plotly methods
 
-# Animated Data Visualisation: plotly methods 
+In Plotly R package, both `ggplotly()`and `plot_ly()` support key frame animations through the frame argument/aesthetic. They also support an `ids` argument/aesthetic to ensure smooth transitions between objects with the same id (which helps to facilitate object constancy).
 
-In Plotly R package, both `ggplotly() `and `plot_ly()` support key frame animations through the frame argument/aesthetic. They also support an `ids` argument/aesthetic to ensure smooth transitions between objects with the same id (which helps to facilitate object constancy).
-
-:::{.panel-tabset}
-
+::: panel-tabset
 ## `ggplotly()` method
 
-First, we will use the appropriate ggplotly2 functions to create a static bubble plot and save it as an R object called `gg`. Then we use `ggplotly()` to convert the R graphic object into an animated svg object. 
+First, we will use the appropriate ggplotly2 functions to create a static bubble plot and save it as an R object called `gg`. Then we use `ggplotly()` to convert the R graphic object into an animated svg object.
 
 ```{r}
 
@@ -210,10 +207,8 @@ bp
 
 
 ```
+:::
 
-::: 
-
-
-# Reference 
+# Reference
 
 -   Kam, T. S. (2023). *R for Visual Analytics* \[Web-book\]. <https://r4va.netlify.app/>.
