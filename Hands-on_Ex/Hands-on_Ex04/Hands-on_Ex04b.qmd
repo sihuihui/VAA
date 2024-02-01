@@ -1,0 +1,281 @@
+---
+title: "Hands-on Exercise 4b - Visual Statistical Analysis"
+author: "Goh Si Hui"
+date: 2024/02/01
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+# About this Exercise
+
+In this hands-on exercise, we will learn how to:
+
+-   create visual graphics with rich statistical information using ggstatsplot package
+
+-   visualise model diagnostics using performance package
+
+-   visualise model parameters using parameters package.
+
+# Getting Started
+
+Before we start, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
+
+## Installing and Loading the Packages
+
+For this exercise, other than tidyverse, we will use the following packages:
+
+-   ggstatplot: an extension of ggplot2 package for creating graphics with details from statistical tests included in the information-rich plots themselves.
+
+-   performance: to provide utilities for computing indices of model quality and goodness of fit.
+
+-   parameters: to provide utilities for processing the parameters of various statistical models
+
+-   tidyverse: a family of R packages for data science processing
+
+-   readxl: to import excel files into R
+
+The code chunk below uses `p_load()` of **pacman** package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+pacman::p_load(ggstatsplot, performance, parameters, tidyverse, readxl, see)
+
+```
+
+## Importing the Data
+
+For this exercise, we will be using the Exam_data.csv provided by the course instructor and we have used it in Hands-on Exercises 1 and 2. It consists of year end examination grades of a cohort of primary 3 students from a local school. It is in csv file format.
+
+We use `read_csv()` function of **readr** to import the Exam_data csv file into R and save it as a tibble data frame called `exam_data`. Then we will use `datatable()` of **DT** to have an overview of the imported data.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+exam_data <- read_csv("data/Exam_data.csv")
+glimpse(exam_data)
+
+```
+
+In addition, we will be using the ToyotaCorolla.xls for Visualising Models and Parameters. We use `read_xls()` of readxl package to import the data worksheet of ToyotaCorolla.cls workbook into R. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+car_resale <- read_xls("data/ToyotaCorolla.xls", 
+                       "data")
+glimpse(car_resale)
+
+```
+# Visual Statistical Analysis 
+
+## One-sample test: gghistostats() method
+
+We can use `gghistostats()` to build an visual of one-sample test on English Scores.
+
+```{r}
+set.seed(2024)
+
+gghistostats(data = exam_data, x = ENGLISH, 
+             type = "bayes",
+             test.value = 60, 
+             xlab= "English Scores")
+
+```
+
+::: callout-note
+The default information presented are:
+
+-   Statistical details
+
+-   Bayes Factor
+
+-   Sample Sizes
+
+-   Distribution Summary
+:::
+
+### Unpacking the Bayes Factor
+
+-   A Bayes factor is the ratio of the likelihood of one particular hypothesis to the likelihood of another. It can be interpreted as a measure of the strength of evidence in favor of one theory among two competing theories.
+
+-   Bayes factor gives us a way to evaluate the data in favor of a null hypothesis, and to use external information to do so. It tells us what the weight of the evidence is in favor of a given hypothesis.
+
+-   When we are comparing two hypotheses, H1 (the alternate hypothesis) and H0 (the null hypothesis), the Bayes Factor is often written as B10.
+
+-   The Schwarz criterion is one of the easiest ways to calculate rough approximation of the Bayes Factor.
+
+-   A Bayes Factor can be any positive number (i.e., 0 and ∞).
+
+    -   1 indicates the data do not favor either theory more than the other;
+
+    -   values greater than 1 indicate increasing evidence for one theory over the other (e.g., the alternative over a null hypothesis) ; and
+
+    -   values less than 1 the converse (e.g., increasing evidence for the null over the alternative hypothesis).
+
+-   Thus, Bayes factors allow three different types of conclusions:
+
+    -   There is strong evidence for the alternative (B much greater than 1);
+
+    -   there is strong evidence for the null (B close to 0); and
+
+    -   the evidence is insensitive (B close to 1).
+
+## Two-sample mean test: ggbetweenstats()
+
+We can use `ggbetweenstats()` to build an visual of two sample means test of math scores by gender. 
+```{r}
+
+ggbetweenstats(data = exam_data, x = GENDER, 
+               y = MATHS, type = "np", 
+               messages = FALSE)
+
+```
+
+::: callout-note
+The default information presented are:
+
+-   Statistical details
+
+-   Bayes Factor
+
+-   Sample Sizes
+
+-   Distribution Summary
+:::
+
+
+## One Way ANOVA Test: ggbetweenstats() method 
+
+We can use `ggbetweenstats()` to build a visual for one-way ANOVA test on English Score by race. 
+
+```{r}
+ggbetweenstats(
+  data = exam_data, x = RACE, y = ENGLISH, 
+  type = "p", mean.ci = TRUE, 
+  pairwise_comparisons = TRUE, 
+  pairwise.display = "s",
+  p.adjust.method = "fdr", 
+  messages = FALSE)
+
+
+```
+
+
+## Significant Test of Correlation: ggscatterstats()
+
+We can use `ggscatterstats()` to build a visual for significant test of correlation between Math Scores and English Scores. 
+
+```{r}
+ggscatterstats(data = exam_data, 
+               x = MATHS,
+               y = ENGLISH, 
+               marginal = FALSE)
+
+```
+## Significant Test of Association (Dependence): ggbarstats()
+
+We can use `ggbarstats()` to build a visual for significant test of association. 
+
+For our data, we will first bin the Math scores into a 4-class varialbe using `cut()`
+
+```{r}
+exam1 <- exam_data %>%
+  mutate(MATHS_bins = cut(MATHS, breaks = c(0, 60,75,85,100)))
+```
+
+
+Then we will build the visual using `ggbarstats()`.
+
+```{r}
+ggbarstats(exam1, x = MATHS_bins, 
+           y = GENDER)
+
+```
+
+# Visualising Model Diagnostic and Model Parameters 
+
+## Multiple Regression Model using lm()
+The following code chunk is used to calibrate a multiple linear regression model using `lm()` of Base Stats of R.
+
+```{r}
+model <- lm(Price ~ Age_08_04 + Mfg_Year + KM + 
+              Weight + Guarantee_Period, data = car_resale)
+model
+```
+
+## Model Diagnostic: Checks for Multicolinearity 
+
+We check for multicolinearity using `check_collinearity()` function of performance package. 
+
+```{r}
+check_collinearity(model)
+```
+
+```{r}
+check_c <- check_collinearity(model)
+plot(check_c)
+```
+
+## Model Diagnostic: Check for Normality 
+
+We use `check_normality()` of performance package to check if the model follows the normality assumption. 
+
+```{r}
+model1 <- lm(Price ~ Age_08_04 + KM + 
+              Weight + Guarantee_Period, data = car_resale)
+
+check_n <- check_normality(model1)
+
+plot(check_n)
+```
+## Model Diagnostic: Check for Homogeneity of Variances
+
+We check for homogeneity of Variances using `check_heterscedasticity` of performance package. 
+
+```{r}
+
+check_h <- check_heteroscedasticity(model1)
+plot(check_h)
+```
+
+
+## Model Diagnostic: Complete Check 
+
+We can also perform the complete by using `check_model()`.
+
+```{r fig.width=12, fig.height=10}
+check_model(model1)
+
+```
+
+## Visualising Regression Parameters
+
+We can use two methods to visualise regression parameters: (i) see method and (ii) ggcoefstats() method. 
+
+:::{.panel-tabset}
+## see method
+
+```{r}
+plot(parameters(model1))
+
+```
+
+## ggcoefstats() method 
+
+```{r}
+ggcoefstats(model1, 
+            output = "plot")
+
+``` 
+:::
+
+# References
+
+-   Kam, T. S. (2023). *R for Visual Analytics* \[Web-book\]. <https://r4va.netlify.app/>.

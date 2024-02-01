@@ -60,7 +60,7 @@
     "href": "index.html#hands-on-exercises",
     "title": "SiHui Learns Visual Analytics!",
     "section": "Hands-On Exercises",
-    "text": "Hands-On Exercises\n\n\n\n\n\n\n\n\nHands-on Exercise 1 - A Layered Grammar of Graphics: ggplot2 methods\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 11, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 2 - Beyond ggplot2 Fundamentals\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3a: Programming Interactive Data Visualisation with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3b: Programming Animated Statistical Graphics with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 24, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 4a - Visualising Distribution\n\n\n\n\n\n\nGoh Si Hui\n\n\nFeb 1, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Hands-On Exercises\n\n\n\n\n\n\n\n\nHands-on Exercise 1 - A Layered Grammar of Graphics: ggplot2 methods\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 11, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 2 - Beyond ggplot2 Fundamentals\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3a: Programming Interactive Data Visualisation with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 22, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-On Exercise 3b: Programming Animated Statistical Graphics with R\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 24, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 4a - Visualising Distribution\n\n\n\n\n\n\nGoh Si Hui\n\n\nFeb 1, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nHands-on Exercise 4b - Visual Statistical Analysis\n\n\n\n\n\n\nGoh Si Hui\n\n\nFeb 1, 2024\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html#in-class-exercises",
@@ -666,6 +666,160 @@
     "crumbs": [
       "Hands-on Exercises",
       "Hands-on Exercise 4a - Visualising Distribution"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "",
+    "text": "In this hands-on exercise, we will learn how to:\n\ncreate visual graphics with rich statistical information using ggstatsplot package\nvisualise model diagnostics using performance package\nvisualise model parameters using parameters package.",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#installing-and-loading-the-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#installing-and-loading-the-packages",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "2.1 Installing and Loading the Packages",
+    "text": "2.1 Installing and Loading the Packages\nFor this exercise, other than tidyverse, we will use the following packages:\n\nggstatplot: an extension of ggplot2 package for creating graphics with details from statistical tests included in the information-rich plots themselves.\nperformance: to provide utilities for computing indices of model quality and goodness of fit.\nparameters: to provide utilities for processing the parameters of various statistical models\ntidyverse: a family of R packages for data science processing\nreadxl: to import excel files into R\n\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\n\nShow the code\npacman::p_load(ggstatsplot, performance, parameters, tidyverse, readxl, see)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#importing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#importing-the-data",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "2.2 Importing the Data",
+    "text": "2.2 Importing the Data\nFor this exercise, we will be using the Exam_data.csv provided by the course instructor and we have used it in Hands-on Exercises 1 and 2. It consists of year end examination grades of a cohort of primary 3 students from a local school. It is in csv file format.\nWe use read_csv() function of readr to import the Exam_data csv file into R and save it as a tibble data frame called exam_data. Then we will use datatable() of DT to have an overview of the imported data.\n\n\nShow the code\nexam_data &lt;- read_csv(\"data/Exam_data.csv\")\nglimpse(exam_data)\n\n\nRows: 322\nColumns: 7\n$ ID      &lt;chr&gt; \"Student321\", \"Student305\", \"Student289\", \"Student227\", \"Stude…\n$ CLASS   &lt;chr&gt; \"3I\", \"3I\", \"3H\", \"3F\", \"3I\", \"3I\", \"3I\", \"3I\", \"3I\", \"3H\", \"3…\n$ GENDER  &lt;chr&gt; \"Male\", \"Female\", \"Male\", \"Male\", \"Male\", \"Female\", \"Male\", \"M…\n$ RACE    &lt;chr&gt; \"Malay\", \"Malay\", \"Chinese\", \"Chinese\", \"Malay\", \"Malay\", \"Chi…\n$ ENGLISH &lt;dbl&gt; 21, 24, 26, 27, 27, 31, 31, 31, 33, 34, 34, 36, 36, 36, 37, 38…\n$ MATHS   &lt;dbl&gt; 9, 22, 16, 77, 11, 16, 21, 18, 19, 49, 39, 35, 23, 36, 49, 30,…\n$ SCIENCE &lt;dbl&gt; 15, 16, 16, 31, 25, 16, 25, 27, 15, 37, 42, 22, 32, 36, 35, 45…\n\n\nIn addition, we will be using the ToyotaCorolla.xls for Visualising Models and Parameters. We use read_xls() of readxl package to import the data worksheet of ToyotaCorolla.cls workbook into R.\n\n\nShow the code\ncar_resale &lt;- read_xls(\"data/ToyotaCorolla.xls\", \n                       \"data\")\nglimpse(car_resale)\n\n\nRows: 1,436\nColumns: 38\n$ Id               &lt;dbl&gt; 81, 1, 2, 3, 4, 5, 6, 7, 8, 44, 45, 46, 47, 49, 51, 6…\n$ Model            &lt;chr&gt; \"TOYOTA Corolla 1.6 5drs 1 4/5-Doors\", \"TOYOTA Coroll…\n$ Price            &lt;dbl&gt; 18950, 13500, 13750, 13950, 14950, 13750, 12950, 1690…\n$ Age_08_04        &lt;dbl&gt; 25, 23, 23, 24, 26, 30, 32, 27, 30, 27, 22, 23, 27, 2…\n$ Mfg_Month        &lt;dbl&gt; 8, 10, 10, 9, 7, 3, 1, 6, 3, 6, 11, 10, 6, 11, 11, 11…\n$ Mfg_Year         &lt;dbl&gt; 2002, 2002, 2002, 2002, 2002, 2002, 2002, 2002, 2002,…\n$ KM               &lt;dbl&gt; 20019, 46986, 72937, 41711, 48000, 38500, 61000, 9461…\n$ Quarterly_Tax    &lt;dbl&gt; 100, 210, 210, 210, 210, 210, 210, 210, 210, 234, 234…\n$ Weight           &lt;dbl&gt; 1180, 1165, 1165, 1165, 1165, 1170, 1170, 1245, 1245,…\n$ Guarantee_Period &lt;dbl&gt; 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,…\n$ HP_Bin           &lt;chr&gt; \"100-120\", \"&lt; 100\", \"&lt; 100\", \"&lt; 100\", \"&lt; 100\", \"&lt; 100…\n$ CC_bin           &lt;chr&gt; \"1600\", \"&gt;1600\", \"&gt;1600\", \"&gt;1600\", \"&gt;1600\", \"&gt;1600\", …\n$ Doors            &lt;dbl&gt; 5, 3, 3, 3, 3, 3, 3, 3, 3, 5, 5, 5, 5, 5, 5, 5, 3, 3,…\n$ Gears            &lt;dbl&gt; 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,…\n$ Cylinders        &lt;dbl&gt; 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,…\n$ Fuel_Type        &lt;chr&gt; \"Petrol\", \"Diesel\", \"Diesel\", \"Diesel\", \"Diesel\", \"Di…\n$ Color            &lt;chr&gt; \"Blue\", \"Blue\", \"Silver\", \"Blue\", \"Black\", \"Black\", \"…\n$ Met_Color        &lt;dbl&gt; 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1,…\n$ Automatic        &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…\n$ Mfr_Guarantee    &lt;dbl&gt; 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1,…\n$ BOVAG_Guarantee  &lt;dbl&gt; 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ ABS              &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ Airbag_1         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ Airbag_2         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ Airco            &lt;dbl&gt; 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ Automatic_airco  &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1,…\n$ Boardcomputer    &lt;dbl&gt; 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ CD_Player        &lt;dbl&gt; 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1,…\n$ Central_Lock     &lt;dbl&gt; 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ Powered_Windows  &lt;dbl&gt; 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ Power_Steering   &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ Radio            &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…\n$ Mistlamps        &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…\n$ Sport_Model      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1,…\n$ Backseat_Divider &lt;dbl&gt; 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…\n$ Metallic_Rim     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…\n$ Radio_cassette   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…\n$ Tow_Bar          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#one-sample-test-gghistostats-method",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#one-sample-test-gghistostats-method",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "3.1 One-sample test: gghistostats() method",
+    "text": "3.1 One-sample test: gghistostats() method\nWe can use gghistostats() to build an visual of one-sample test on English Scores.\n\nset.seed(2024)\n\ngghistostats(data = exam_data, x = ENGLISH, \n             type = \"bayes\",\n             test.value = 60, \n             xlab= \"English Scores\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe default information presented are:\n\nStatistical details\nBayes Factor\nSample Sizes\nDistribution Summary\n\n\n\n\n3.1.1 Unpacking the Bayes Factor\n\nA Bayes factor is the ratio of the likelihood of one particular hypothesis to the likelihood of another. It can be interpreted as a measure of the strength of evidence in favor of one theory among two competing theories.\nBayes factor gives us a way to evaluate the data in favor of a null hypothesis, and to use external information to do so. It tells us what the weight of the evidence is in favor of a given hypothesis.\nWhen we are comparing two hypotheses, H1 (the alternate hypothesis) and H0 (the null hypothesis), the Bayes Factor is often written as B10.\nThe Schwarz criterion is one of the easiest ways to calculate rough approximation of the Bayes Factor.\nA Bayes Factor can be any positive number (i.e., 0 and ∞).\n\n1 indicates the data do not favor either theory more than the other;\nvalues greater than 1 indicate increasing evidence for one theory over the other (e.g., the alternative over a null hypothesis) ; and\nvalues less than 1 the converse (e.g., increasing evidence for the null over the alternative hypothesis).\n\nThus, Bayes factors allow three different types of conclusions:\n\nThere is strong evidence for the alternative (B much greater than 1);\nthere is strong evidence for the null (B close to 0); and\nthe evidence is insensitive (B close to 1).",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#two-sample-mean-test-ggbetweenstats",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#two-sample-mean-test-ggbetweenstats",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "3.2 Two-sample mean test: ggbetweenstats()",
+    "text": "3.2 Two-sample mean test: ggbetweenstats()\nWe can use ggbetweenstats() to build an visual of two sample means test of math scores by gender.\n\nggbetweenstats(data = exam_data, x = GENDER, \n               y = MATHS, type = \"np\", \n               messages = FALSE)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe default information presented are:\n\nStatistical details\nBayes Factor\nSample Sizes\nDistribution Summary",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#one-way-anova-test-ggbetweenstats-method",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#one-way-anova-test-ggbetweenstats-method",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "3.3 One Way ANOVA Test: ggbetweenstats() method",
+    "text": "3.3 One Way ANOVA Test: ggbetweenstats() method\nWe can use ggbetweenstats() to build a visual for one-way ANOVA test on English Score by race.\n\nggbetweenstats(\n  data = exam_data, x = RACE, y = ENGLISH, \n  type = \"p\", mean.ci = TRUE, \n  pairwise_comparisons = TRUE, \n  pairwise.display = \"s\",\n  p.adjust.method = \"fdr\", \n  messages = FALSE)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#significant-test-of-correlation-ggscatterstats",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#significant-test-of-correlation-ggscatterstats",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "3.4 Significant Test of Correlation: ggscatterstats()",
+    "text": "3.4 Significant Test of Correlation: ggscatterstats()\nWe can use ggscatterstats() to build a visual for significant test of correlation between Math Scores and English Scores.\n\nggscatterstats(data = exam_data, \n               x = MATHS,\n               y = ENGLISH, \n               marginal = FALSE)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#significant-test-of-association-dependence-ggbarstats",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#significant-test-of-association-dependence-ggbarstats",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "3.5 Significant Test of Association (Dependence): ggbarstats()",
+    "text": "3.5 Significant Test of Association (Dependence): ggbarstats()\nWe can use ggbarstats() to build a visual for significant test of association.\nFor our data, we will first bin the Math scores into a 4-class varialbe using cut()\n\nexam1 &lt;- exam_data %&gt;%\n  mutate(MATHS_bins = cut(MATHS, breaks = c(0, 60,75,85,100)))\n\nThen we will build the visual using ggbarstats().\n\nggbarstats(exam1, x = MATHS_bins, \n           y = GENDER)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#multiple-regression-model-using-lm",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#multiple-regression-model-using-lm",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "4.1 Multiple Regression Model using lm()",
+    "text": "4.1 Multiple Regression Model using lm()\nThe following code chunk is used to calibrate a multiple linear regression model using lm() of Base Stats of R.\n\nmodel &lt;- lm(Price ~ Age_08_04 + Mfg_Year + KM + \n              Weight + Guarantee_Period, data = car_resale)\nmodel\n\n\nCall:\nlm(formula = Price ~ Age_08_04 + Mfg_Year + KM + Weight + Guarantee_Period, \n    data = car_resale)\n\nCoefficients:\n     (Intercept)         Age_08_04          Mfg_Year                KM  \n      -2.637e+06        -1.409e+01         1.315e+03        -2.323e-02  \n          Weight  Guarantee_Period  \n       1.903e+01         2.770e+01",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#model-diagnostic-checks-for-multicolinearity",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#model-diagnostic-checks-for-multicolinearity",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "4.2 Model Diagnostic: Checks for Multicolinearity",
+    "text": "4.2 Model Diagnostic: Checks for Multicolinearity\nWe check for multicolinearity using check_collinearity() function of performance package.\n\ncheck_collinearity(model)\n\n# Check for Multicollinearity\n\nLow Correlation\n\n             Term  VIF     VIF 95% CI Increased SE Tolerance Tolerance 95% CI\n               KM 1.46 [ 1.37,  1.57]         1.21      0.68     [0.64, 0.73]\n           Weight 1.41 [ 1.32,  1.51]         1.19      0.71     [0.66, 0.76]\n Guarantee_Period 1.04 [ 1.01,  1.17]         1.02      0.97     [0.86, 0.99]\n\nHigh Correlation\n\n      Term   VIF     VIF 95% CI Increased SE Tolerance Tolerance 95% CI\n Age_08_04 31.07 [28.08, 34.38]         5.57      0.03     [0.03, 0.04]\n  Mfg_Year 31.16 [28.16, 34.48]         5.58      0.03     [0.03, 0.04]\n\n\n\ncheck_c &lt;- check_collinearity(model)\nplot(check_c)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#model-diagnostic-check-for-normality",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#model-diagnostic-check-for-normality",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "4.3 Model Diagnostic: Check for Normality",
+    "text": "4.3 Model Diagnostic: Check for Normality\nWe use check_normality() of performance package to check if the model follows the normality assumption.\n\nmodel1 &lt;- lm(Price ~ Age_08_04 + KM + \n              Weight + Guarantee_Period, data = car_resale)\n\ncheck_n &lt;- check_normality(model1)\n\nplot(check_n)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#model-diagnostic-check-for-homogeneity-of-variances",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#model-diagnostic-check-for-homogeneity-of-variances",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "4.4 Model Diagnostic: Check for Homogeneity of Variances",
+    "text": "4.4 Model Diagnostic: Check for Homogeneity of Variances\nWe check for homogeneity of Variances using check_heterscedasticity of performance package.\n\ncheck_h &lt;- check_heteroscedasticity(model1)\nplot(check_h)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#model-diagnostic-complete-check",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#model-diagnostic-complete-check",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "4.5 Model Diagnostic: Complete Check",
+    "text": "4.5 Model Diagnostic: Complete Check\nWe can also perform the complete by using check_model().\n\ncheck_model(model1)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#visualising-regression-parameters",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html#visualising-regression-parameters",
+    "title": "Hands-on Exercise 4b - Visual Statistical Analysis",
+    "section": "4.6 Visualising Regression Parameters",
+    "text": "4.6 Visualising Regression Parameters\nWe can use two methods to visualise regression parameters: (i) see method and (ii) ggcoefstats() method.\n\nsee methodggcoefstats() method\n\n\n\nplot(parameters(model1))\n\n\n\n\n\n\n\n\n\n\n\nggcoefstats(model1, \n            output = \"plot\")",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 4b - Visual Statistical Analysis"
     ]
   }
 ]
