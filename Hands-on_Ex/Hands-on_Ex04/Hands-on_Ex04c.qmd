@@ -1,0 +1,54 @@
+---
+title: "Hands-on Exercise 4C - Visualising Uncertainty"
+author: "Goh Si Hui"
+date: 2024/02/01
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+# About this Exercise
+
+In this hands-on exercise, we will learn how to:
+
+-   plot static error bars using ggplot2
+
+-   plot interactive error bars using ggplot2, plotly and DT
+
+-   create advance
+
+# Getting Started
+
+Before we start, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
+
+## Installing and Loading the Packages
+
+For this exercise, other than tidyverse, we will use the following packages:
+
+-   ggstatplot: an extension of ggplot2 package for creating graphics with details from statistical tests included in the information-rich plots themselves.
+
+-   performance: to provide utilities for computing indices of model quality and goodness of fit.
+
+-   parameters: to provide utilities for processing the parameters of various statistical models
+
+-   tidyverse: a family of R packages for data science processing
+
+-   readxl: to import excel files into R
+
+The code chunk below uses `p_load()` of **pacman** package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+pacman::p_load(ggstatsplot, performance, parameters, tidyverse, readxl, see)
+
+```
+
+# References
+
+-   Kam, T. S. (2023). *R for Visual Analytics* \[Web-book\]. <https://r4va.netlify.app/>.
