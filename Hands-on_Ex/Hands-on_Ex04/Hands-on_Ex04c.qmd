@@ -20,7 +20,7 @@ In this hands-on exercise, we will learn how to:
 
 -   plot interactive error bars using ggplot2, plotly and DT
 
--   create advance
+-   create hypothetical outcome plots (HOPs) by using ungeviz package.
 
 # Getting Started
 

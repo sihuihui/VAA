@@ -21,6 +21,10 @@ website:
           href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04a.qmd"
         - text: Hands-on Exercise 4b
           href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.qmd"
+        - text: Hands-on Exercise 4c
+          href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.qmd"
+        - text: Hands-on Exercise 4d
+          href: "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04d.qmd"
 
     - text: In-class Exercises
       menu:
@@ -58,6 +62,9 @@ website:
           - Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.qmd
           - Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04a.qmd
           - Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.qmd
+          - Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.qmd
+          - Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04d.qmd
+        
       - section: "In-class Exercises"
         contents:
           - In-class_Ex/In-class_Ex01/In-class_Ex01.qmd 
