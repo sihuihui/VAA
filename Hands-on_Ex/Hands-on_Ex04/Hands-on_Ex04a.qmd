@@ -39,7 +39,7 @@ The code chunk below uses `p_load()` of **pacman** package to check if the above
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-pacman::p_load(tidyverse, ggridges, ggdist, DT, colorspace, ggthemes)
+pacman::p_load(tidyverse, ggridges, ggdist, DT, colorspace, ggthemes, ggiraph, plotly, patchwork, crosstalk)
 
 ```
 
@@ -327,7 +327,49 @@ ggplot(exam_data,
 
 ```
 
-Try to add interactivity to this raincloud plot using the interactivity methods learnt in lesson 3!
+
+
+## Adding Interactivity - Using ggirafe
+
+```{r}
+exam_data$tooltip <- c(paste0("Name = ", exam_data$ID, 
+                              "\n Class = ", exam_data$CLASS))
+
+plot1 <- ggplot(exam_data, 
+       aes(x = RACE, 
+           y = ENGLISH)) +
+  stat_halfeye(adjust = 0.5,
+               justification = -0.4,
+               .width = 0,
+               point_colour = NA) +
+  geom_boxplot(width = .20,
+               position= position_nudge(x = 0.2),
+               outlier.shape = NA) +
+  geom_dotplot_interactive(aes(data_id = CLASS,
+                               tooltip = exam_data$tooltip),
+                           binaxis = "y",
+                           stackdir = "down",
+                           stackgroups = TRUE, 
+                           binwidth = 0.5,
+                           method = "histodot"
+                           )+
+  coord_flip() + 
+  theme_economist()
+
+girafe(ggobj = plot1, 
+       width_svg = 6,
+       height_svg = 6*0.618,
+       options = list(
+         opts_hover(css = "fill:#FF33A2;"),
+         opts_hover_inv(css = "opacity:0.2")
+       ))
+```
+
+
+## Adding Interactivity - Using ggplotly 
+
+*Work in progress!*
+
 
 # References
 

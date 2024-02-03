@@ -154,6 +154,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html">
  <span class="dropdown-text">Hands-on Exercise 4b</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html">
+ <span class="dropdown-text">Hands-on Exercise 4c</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04d.html">
+ <span class="dropdown-text">Hands-on Exercise 4d</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -275,6 +283,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Hands-on Exercise 4b - Visual Statistical Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 4C - Visualising Uncertainty</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04d.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Hands-on Exercise 4d - Funnel Plots for Fair Comparisons</span></a>
   </div>
 </li>
       </ul>
@@ -405,7 +425,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 1, 2024</p>
+      <p class="date-modified">February 3, 2024</p>
     </div>
   </div>
     
@@ -449,7 +469,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="importing-the-data" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="importing-the-data"><span class="header-section-number">2.2</span> Importing the Data</h2>
 <p>For this exercise, we will be using the Exam_data.csv provided by the course instructor and we have used it in Hands-on Exercises 1 and 2. It consists of year end examination grades of a cohort of primary 3 students from a local school. It is in csv file format.</p>
-<p>We use <code>read_csv()</code> function of <strong>readr</strong> to import the Exam_data csv file into R and save it as a tibble data frame called <code>exam_data</code>. Then we will use <code>datatable()</code> of <strong>DT</strong> to have an overview of the imported data.</p>
+<p>We use <code>read_csv()</code> function of <strong>readr</strong> to import the <strong><em>Exam_data.csv</em></strong> file into R and save it as a tibble data frame called <code>exam_data</code>. Then we will use <code>datatable()</code> of <strong>DT</strong> to have an overview of the imported data.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -468,7 +488,7 @@ $ MATHS   &lt;dbl&gt; 9, 22, 16, 77, 11, 16, 21, 18, 19, 49, 39, 35, 23, 36, 49,
 $ SCIENCE &lt;dbl&gt; 15, 16, 16, 31, 25, 16, 25, 27, 15, 37, 42, 22, 32, 36, 35, 45…</code></pre>
 </div>
 </div>
-<p>In addition, we will be using the ToyotaCorolla.xls for Visualising Models and Parameters. We use <code>read_xls()</code> of readxl package to import the data worksheet of ToyotaCorolla.cls workbook into R.</p>
+<p>In addition, we will be using the <strong><em>ToyotaCorolla.xls</em></strong> for Visualising Models and Parameters. We use <code>read_xls()</code> of readxl package to import the data worksheet of <strong>ToyotaCorolla.xls</strong> workbook into R.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -636,6 +656,7 @@ Note
 </div>
 </div>
 </div>
+<p>Try: explore the aov object!</p>
 </section>
 <section id="significant-test-of-correlation-ggscatterstats" class="level2" data-number="3.4">
 <h2 data-number="3.4" class="anchored" data-anchor-id="significant-test-of-correlation-ggscatterstats"><span class="header-section-number">3.4</span> Significant Test of Correlation: ggscatterstats()</h2>
@@ -657,7 +678,7 @@ Note
 <section id="significant-test-of-association-dependence-ggbarstats" class="level2" data-number="3.5">
 <h2 data-number="3.5" class="anchored" data-anchor-id="significant-test-of-association-dependence-ggbarstats"><span class="header-section-number">3.5</span> Significant Test of Association (Dependence): ggbarstats()</h2>
 <p>We can use <code>ggbarstats()</code> to build a visual for significant test of association.</p>
-<p>For our data, we will first bin the Math scores into a 4-class varialbe using <code>cut()</code></p>
+<p>For our data, we will first bin the Math scores into a 4-class variable using <code>cut()</code></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>exam1 <span class="ot">&lt;-</span> exam_data <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">MATHS_bins =</span> <span class="fu">cut</span>(MATHS, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>,<span class="dv">75</span>,<span class="dv">85</span>,<span class="dv">100</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
