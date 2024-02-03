@@ -53,7 +53,7 @@ pacman::p_load(ggstatsplot, performance, parameters, tidyverse, readxl, see)
 
 For this exercise, we will be using the Exam_data.csv provided by the course instructor and we have used it in Hands-on Exercises 1 and 2. It consists of year end examination grades of a cohort of primary 3 students from a local school. It is in csv file format.
 
-We use `read_csv()` function of **readr** to import the Exam_data csv file into R and save it as a tibble data frame called `exam_data`. Then we will use `datatable()` of **DT** to have an overview of the imported data.
+We use `read_csv()` function of **readr** to import the ***Exam_data.csv*** file into R and save it as a tibble data frame called `exam_data`. Then we will use `datatable()` of **DT** to have an overview of the imported data.
 
 ```{r}
 #| code-fold: true
@@ -63,7 +63,7 @@ glimpse(exam_data)
 
 ```
 
-In addition, we will be using the ToyotaCorolla.xls for Visualising Models and Parameters. We use `read_xls()` of readxl package to import the data worksheet of ToyotaCorolla.cls workbook into R. 
+In addition, we will be using the ***ToyotaCorolla.xls*** for Visualising Models and Parameters. We use `read_xls()` of readxl package to import the data worksheet of **ToyotaCorolla.xls** workbook into R.
 
 ```{r}
 #| code-fold: true
@@ -73,7 +73,8 @@ car_resale <- read_xls("data/ToyotaCorolla.xls",
 glimpse(car_resale)
 
 ```
-# Visual Statistical Analysis 
+
+# Visual Statistical Analysis
 
 ## One-sample test: gghistostats() method
 
@@ -129,7 +130,8 @@ The default information presented are:
 
 ## Two-sample mean test: ggbetweenstats()
 
-We can use `ggbetweenstats()` to build an visual of two sample means test of math scores by gender. 
+We can use `ggbetweenstats()` to build an visual of two sample means test of math scores by gender.
+
 ```{r}
 
 ggbetweenstats(data = exam_data, x = GENDER, 
@@ -150,10 +152,9 @@ The default information presented are:
 -   Distribution Summary
 :::
 
+## One Way ANOVA Test: ggbetweenstats() method
 
-## One Way ANOVA Test: ggbetweenstats() method 
-
-We can use `ggbetweenstats()` to build a visual for one-way ANOVA test on English Score by race. 
+We can use `ggbetweenstats()` to build a visual for one-way ANOVA test on English Score by race.
 
 ```{r}
 ggbetweenstats(
@@ -167,10 +168,11 @@ ggbetweenstats(
 
 ```
 
+Try: explore the aov object!
 
 ## Significant Test of Correlation: ggscatterstats()
 
-We can use `ggscatterstats()` to build a visual for significant test of correlation between Math Scores and English Scores. 
+We can use `ggscatterstats()` to build a visual for significant test of correlation between Math Scores and English Scores.
 
 ```{r}
 ggscatterstats(data = exam_data, 
@@ -179,17 +181,17 @@ ggscatterstats(data = exam_data,
                marginal = FALSE)
 
 ```
+
 ## Significant Test of Association (Dependence): ggbarstats()
 
-We can use `ggbarstats()` to build a visual for significant test of association. 
+We can use `ggbarstats()` to build a visual for significant test of association.
 
-For our data, we will first bin the Math scores into a 4-class varialbe using `cut()`
+For our data, we will first bin the Math scores into a 4-class variable using `cut()`
 
 ```{r}
 exam1 <- exam_data %>%
   mutate(MATHS_bins = cut(MATHS, breaks = c(0, 60,75,85,100)))
 ```
-
 
 Then we will build the visual using `ggbarstats()`.
 
@@ -199,9 +201,10 @@ ggbarstats(exam1, x = MATHS_bins,
 
 ```
 
-# Visualising Model Diagnostic and Model Parameters 
+# Visualising Model Diagnostic and Model Parameters
 
 ## Multiple Regression Model using lm()
+
 The following code chunk is used to calibrate a multiple linear regression model using `lm()` of Base Stats of R.
 
 ```{r}
@@ -210,9 +213,9 @@ model <- lm(Price ~ Age_08_04 + Mfg_Year + KM +
 model
 ```
 
-## Model Diagnostic: Checks for Multicolinearity 
+## Model Diagnostic: Checks for Multicolinearity
 
-We check for multicolinearity using `check_collinearity()` function of performance package. 
+We check for multicolinearity using `check_collinearity()` function of performance package.
 
 ```{r}
 check_collinearity(model)
@@ -223,9 +226,9 @@ check_c <- check_collinearity(model)
 plot(check_c)
 ```
 
-## Model Diagnostic: Check for Normality 
+## Model Diagnostic: Check for Normality
 
-We use `check_normality()` of performance package to check if the model follows the normality assumption. 
+We use `check_normality()` of performance package to check if the model follows the normality assumption.
 
 ```{r}
 model1 <- lm(Price ~ Age_08_04 + KM + 
@@ -235,9 +238,10 @@ check_n <- check_normality(model1)
 
 plot(check_n)
 ```
+
 ## Model Diagnostic: Check for Homogeneity of Variances
 
-We check for homogeneity of Variances using `check_heterscedasticity` of performance package. 
+We check for homogeneity of Variances using `check_heterscedasticity` of performance package.
 
 ```{r}
 
@@ -245,8 +249,7 @@ check_h <- check_heteroscedasticity(model1)
 plot(check_h)
 ```
 
-
-## Model Diagnostic: Complete Check 
+## Model Diagnostic: Complete Check
 
 We can also perform the complete by using `check_model()`.
 
@@ -257,9 +260,9 @@ check_model(model1)
 
 ## Visualising Regression Parameters
 
-We can use two methods to visualise regression parameters: (i) see method and (ii) ggcoefstats() method. 
+We can use two methods to visualise regression parameters: (i) see method and (ii) ggcoefstats() method.
 
-:::{.panel-tabset}
+::: panel-tabset
 ## see method
 
 ```{r}
@@ -267,13 +270,13 @@ plot(parameters(model1))
 
 ```
 
-## ggcoefstats() method 
+## ggcoefstats() method
 
 ```{r}
 ggcoefstats(model1, 
             output = "plot")
 
-``` 
+```
 :::
 
 # References

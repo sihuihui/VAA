@@ -12,6 +12,8 @@ execute:
 editor: visual 
 ---
 
+*\[Updated with In-class notes on 3 Feb 2024\]*
+
 # About this Exercise
 
 In hands-on exercise 1, we have learnt how to visualise distributions using popular statistical graphics methods such as histogram, probability density curve (pdf), box plot, notch plot and violin plot, and how they can be created using ggplot2. In this hands-on exercise, we will learn about two relatively new statistical graphic methods to visualise distributions: ridgepline plot and raincloud plot.
@@ -56,31 +58,37 @@ datatable(exam_data, caption= "Table 1: Exam Data of Primary 3 Students")
 
 ```
 
+::: callout-note
+**ggridge** and **ggdist** are slightly different.
+
+ggridge allow us to examine the distribution of the data while ggdist allow us to examine both distribution and uncertainty (hence the box plot).
+
+ggridge also does not require time-series data. It is akin to a histogram.
+:::
+
 # Ridgeline Plot
 
 *Ridgeline plot* (sometimes called *Joyplot*) is a data visualisation technique for revealing the distribution of a numeric value for several groups. Distribution can be represented using histograms or density plots, all aligned to the same horizontal scale and presented with a slight overlap.
 
-
 There are several ways to plot ridgeline plot with R. In this exercise, we will learn how to plot ridgeline plot using *ggridges* package.
 
-ggridges package provides two main geom to plot gridgeline plots, they are: 
--   `geom_ridgeline()`: takes height values directly to draw the ridgelines  
--   `geom_density_ridges()`: first estimates data densities and then draws those using ridgelines.
+ggridges package provides two main geom to plot gridgeline plots, they are: - `geom_ridgeline()`: takes height values directly to draw the ridgelines\
+- `geom_density_ridges()`: first estimates data densities and then draws those using ridgelines.
 
+::: callout-tip
+## When should we use ridgeline plots?
 
-:::{.callout-tip}
-## When should we use ridgeline plots? 
+Ridgeline plots make sense when the number of group to represent is medium to high, since a classic window separation would take too much space. As ridgeline plots allow groups to overlap each other, it allows more efficient use of space. If we have less than 5 groups, dealing with other distribution plots is probably better.
 
-Ridgeline plots make sense when the number of group to represent is medium to high, since a classic window separation would take too much space. As ridgeline plots allow groups to overlap each other, it allows more efficient use of space. If we have less than 5 groups, dealing with other distribution plots is probably better. 
+Also, ridgeline plots work well when there is a clear pattern in the result. For example, an obvious ranking in groups. Otherwise, groups will tend to overlap each other, leading to a messy plot and not providing any insight.
 
-Also, ridgeline plots work well when there is a clear pattern in the result. For example, an obvious ranking in groups. Otherwise, groups will tned to overlap each other, leading to a messy plot and not providing any insight. 
-::: 
+Ridgeline plots need 1 continuous variable and 1 categorical variable.
+:::
 
 The following code chunk plots the distribution of Primary 3 students' English scores using `geom_density_ridges()`.
 
-:::{.callout-note}
-
-When `geom_density_ridges()` is used, the `height` aesthetic does not need to be specified. However, `height` needs to be specified when `geom_ridgeline` is used. 
+::: callout-note
+When `geom_density_ridges()` is used, the `height` aesthetic does not need to be specified. However, `height` needs to be specified when `geom_ridgeline` is used because `geom_ridgeline` is made up of lines and need explicit values to plot the lines. So we use `geom_ridgeline` when we want the absolute values to be plotted but the `geom_density_ridges()` calculate the probability density of the distribution.
 
 There is also `geom_density_ridges2()`, which is identical to `geom_density_ridges()` except it uses closed polygons instead of ridgelines for drawing.
 
@@ -105,13 +113,15 @@ ggplot(exam_data, aes(x = ENGLISH, y = CLASS))+
 
 ```
 
-:::{.callout-note}
+When using ridgeline plots, it allows us to compare between distributions and see if they are normally distributed because they are all in the same context.
+
+For example, looking at class 3A and 3B, while both resemble a normal distribution, class 3B's distribution is narrower than class 3A, meaning that students from class 3B perform more similarly within the class. Also another point to note is that, while class 3A's top students get higher scores than class 3B's top students, 3A's low performance students have lower scores than 3B's low performance students.
+
+::: callout-note
 The overlapping of the density plot can be controlled by adjusting the value of scale. Scale defines how much the peak of the lower curve touches the curve above.
 
 A setting of `scale=1` means the tallest density curve just touches the baseline of the next higher one. Smaller values create a separation between the curves, and larger values create more overlap.
-
 :::
-
 
 ```{r}
 #| code-fold: true
@@ -130,7 +140,9 @@ ggplot(exam_data, aes(x = ENGLISH, y = CLASS))+
   theme_ridges() + labs(title = "Ridgeline Plot with scale = 5")
 
 ```
-## Varying fill colours along the x axis 
+
+## Varying fill colours along the x axis
+
 Sometimes we would like to have the area under a ridgeline filled with colors that vary in some form along the x axis. This effect can be achieved by using either `geom_ridgeline_gradient()` or `geom_density_ridges_gradient()`. Both geoms work just like `geom_ridgeline()` and `geom_density_ridges()`, except that they allow for varying fill colors. However, they do not allow for alpha transparency in the fill. For technical reasons, we can have changing fill colors or transparency but not both.
 
 ```{r}
@@ -149,11 +161,13 @@ theme_ridges()
 
 ```
 
+By varying the fill colours, we can visualise how the students' scores are being distributed. For example, we see that the ridges of class 3A is filled with a lot of yellow, meaning that most of the students had relatively higher scores. In comparison, the ridge for class 3I is filled with a lot of purple, meaning that most of the students had relatively lower scores.
 
-## Mapping the probabilities directly onto color 
+## Mapping the probabilities directly onto color
+
 Besides providing additional geom objects to support the need to plot ridgeline plot, ggridges package also provides a stat function called `stat_density_ridges()` that replaces `stat_density()` of ggplot2.
 
-We can map the probabilities calculated using `stat(ecdf)` which represents the empirical cumulative density function for the distribution of English Scores. 
+We can map the probabilities calculated using `stat(ecdf)` which represents the empirical cumulative density function for the distribution of English Scores.
 
 ```{r}
 ggplot(exam_data,
@@ -167,15 +181,14 @@ ggplot(exam_data,
   theme_ridges()
 
 ```
-:::{.callout-important}
+
+::: callout-important
 It is important include the argument `calc_ecdf = TRUE` in `stat_density_ridges()`.
-
 :::
-
 
 ## Ridgeline plot with quantile lines
 
-Using geom_density_ridges_gradient, we can colour the ridgeline plot by quantile via the calculated `stat(quantile)` aesthetic as shown in the following code chunk. 
+Using geom_density_ridges_gradient, we can colour the ridgeline plot by quantile via the calculated `stat(quantile)` aesthetic as shown in the following code chunk.
 
 ```{r}
 ggplot(exam_data, aes(x = ENGLISH, y = CLASS, fill = factor(stat(quantile)))) +
@@ -189,7 +202,7 @@ ggplot(exam_data, aes(x = ENGLISH, y = CLASS, fill = factor(stat(quantile)))) +
 
 ```
 
-Instead of using number to define the quantiles, we can also specify quantiles by cut points such as 2.5% and 97.5% tails to colour the ridgeline plot as shown in following code chunk. 
+Instead of using number to define the quantiles, we can also specify quantiles by cut points such as 2.5% and 97.5% tails to colour the ridgeline plot as shown in following code chunk.
 
 ```{r}
 
@@ -216,7 +229,7 @@ ggplot(exam_data,
 
 Raincloud Plot is a data visualisation techniques that produces a half-density to a distribution plot. It gets the name because the density plot is in the shape of a “raincloud”. The raincloud (half-density) plot enhances the traditional box-plot by highlighting multiple modalities (an indicator that groups may exist). The boxplot does not show where densities are clustered, but the raincloud plot does!
 
-## Plotting a Half Eye graph 
+## Plotting a Half Eye graph
 
 To plot a raincloud plot, first we will plot a half-eye graph using stat_halfeye() of ggdist package. This produces a Half Eye visualization, which is contains a half-density and a slab-interval.
 
@@ -235,10 +248,10 @@ ggplot(exam_data,
 
 
 ```
-Note: We remove the slab interval by setting `.width = 0 `and `point_colour = NA`.
 
+Note: We remove the slab interval by setting `.width = 0`and `point_colour = NA`.
 
-## With Slab Interval 
+## With Slab Interval
 
 ```{r}
 ggplot(exam_data, 
@@ -252,8 +265,7 @@ ggplot(exam_data,
 
 ```
 
-
-## Adding the boxplot 
+## Adding the boxplot
 
 Next, we will add the second geometry layer using geom_boxplot() of ggplot2. This produces a narrow boxplot. We reduce the width and adjust the opacity.
 
@@ -272,7 +284,8 @@ ggplot(exam_data,
 
 ```
 
-## Adding dot plots 
+## Adding dot plots
+
 Next, we will add the third geometry layer using `stat_dots()` of ggdist package. This produces a half-dotplot, which is similar to a histogram that indicates the number of samples (number of dots) in each bin. We select `side = “left”` to indicate we want it on the left-hand side.
 
 ```{r}
@@ -292,11 +305,9 @@ ggplot(exam_data,
 
 ```
 
+## Finishing Touch
 
-## Finishing Touch 
-
-Lastly, we will flip the raincloud chart horizontally using `coord_flip()` to give it a raincloud appearance. 
-We will also add `theme_economist()` of ggthemes package to give the raincloud chart a professional publishing standard look. 
+Lastly, we will flip the raincloud chart horizontally using `coord_flip()` to give it a raincloud appearance. We will also add `theme_economist()` of ggthemes package to give the raincloud chart a professional publishing standard look.
 
 ```{r}
 ggplot(exam_data, 
@@ -315,5 +326,9 @@ ggplot(exam_data,
   coord_flip() + theme_economist()
 
 ```
-# References 
-Kam, T. S. (2023). R for Visual Analytics [Web-book]. https://r4va.netlify.app/.
+
+Try to add interactivity to this raincloud plot using the interactivity methods learnt in lesson 3!
+
+# References
+
+Kam, T. S. (2023). R for Visual Analytics \[Web-book\]. https://r4va.netlify.app/.
