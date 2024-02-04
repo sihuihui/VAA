@@ -12,7 +12,7 @@ execute:
 editor: visual 
 ---
 
-*\[Updated with In-class notes on 3 Feb 2024\]*
+*\[Updated with In-class notes on 3 Feb 2024 and an interactive raincloud plot!\]*
 
 # About this Exercise
 
