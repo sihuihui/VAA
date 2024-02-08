@@ -612,7 +612,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04a.html#installing-and-loading-the-packages",
     "title": "Hands-on Exercise 4a - Visualising Distribution",
     "section": "2.1 Installing and Loading the Packages",
-    "text": "2.1 Installing and Loading the Packages\nFor this exercise, other than tidyverse, we will use the following packages:\n\ntidyverse: a family of R packages for data science process\nggridges: a ggplot2 extension specially designed for plotting ridgeline plots\nggdist: a package to visualise distribution and uncertainty.\nDT: to create interactive tables using the JavaScript library DataTables\n\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\n\nShow the code\npacman::p_load(tidyverse, ggridges, ggdist, DT, colorspace, ggthemes, ggiraph, plotly, patchwork, crosstalk)",
+    "text": "2.1 Installing and Loading the Packages\nFor this exercise, other than tidyverse, we will use the following packages:\n\nggridges: a ggplot2 extension specially designed for plotting ridgeline plots\nggdist: a package to visualise distribution and uncertainty.\nDT: to create interactive tables using the JavaScript library DataTables\n\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\n\nShow the code\npacman::p_load(tidyverse, ggridges, ggdist, DT, colorspace, ggthemes, ggiraph, plotly, patchwork, crosstalk)",
     "crumbs": [
       "Hands-on Exercises",
       "Hands-on Exercise 4a - Visualising Distribution"
@@ -645,7 +645,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04a.html#mapping-the-probabilities-directly-onto-color",
     "title": "Hands-on Exercise 4a - Visualising Distribution",
     "section": "3.2 Mapping the probabilities directly onto color",
-    "text": "3.2 Mapping the probabilities directly onto color\nBesides providing additional geom objects to support the need to plot ridgeline plot, ggridges package also provides a stat function called stat_density_ridges() that replaces stat_density() of ggplot2.\nWe can map the probabilities calculated using stat(ecdf) which represents the empirical cumulative density function for the distribution of English Scores.\n\nggplot(exam_data,\n       aes(x = ENGLISH, \n           y = CLASS, \n           fill = 0.5 - abs(0.5-stat(ecdf)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\", \n                      calc_ecdf = TRUE) +\n  scale_fill_viridis_c(name = \"Tail probability\",\n                       direction = -1) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nImportant\n\n\n\nIt is important include the argument calc_ecdf = TRUE in stat_density_ridges().",
+    "text": "3.2 Mapping the probabilities directly onto color\nBesides providing additional geom objects to support the need to plot ridgeline plot, ggridges package also provides a stat function called stat_density_ridges() that replaces stat_density() of ggplot2.\nWe can map the probabilities calculated using stat(ecdf) which represents the empirical cumulative density function for the distribution of English Scores.\n\nggplot(exam_data,\n       aes(x = ENGLISH, \n           y = CLASS, \n           fill = 0.5 - abs(0.5-stat(ecdf)))) +\n  stat_density_ridges(geom = \"density_ridges_gradient\", \n                      calc_ecdf = TRUE) +\n  scale_fill_viridis_c(name = \"Tail probability\",\n                       direction = -1) +\n  theme_ridges()\n\n\n\n\n\n\n\n\n\nIt is important include the argument calc_ecdf = TRUE in stat_density_ridges().",
     "crumbs": [
       "Hands-on Exercises",
       "Hands-on Exercise 4a - Visualising Distribution"
@@ -1097,5 +1097,82 @@
       "Hands-on Exercises",
       "Hands-on Exercise 4a - Visualising Distribution"
     ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "",
+    "text": "In this exercise, we will learn how to build ternary plot programmatically using R for visualising and analysing population structure of Singapore.\n\n\n\n\n\n\nWhat is ternary plot?\n\n\n\nTernary plots are a way of displaying the distribution and variability of three-part compositional data. For example, in this exercise, we will have proportions of population: (1) aged, (2) economy active and (3) young. The plot is displayed in a triangle with sides scaled from 0 to 1. Each side represents one of the three components. A point is plotted so that a line drawn perpendicular from the point to each leg of the triangle intersect at the component values of the point.\nWe will see more of it later!"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#installing-and-loading-the-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#installing-and-loading-the-packages",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "2.1 Installing and Loading the Packages",
+    "text": "2.1 Installing and Loading the Packages\nFor this exercise, other than tidyverse (in particular readr, dplyr and tidyr), we will use the following packages:\n\nggtern: a ggplot extension specially designed to plot ternary diagrams. We will use this to plot static ternary plots.\nplotly R: to create interactive web-based graphs based on plotly’s JavaScript graphing library, plotly.js. We will make use of plotly R library’s ggplotly() function to convert ggplot2 figures into a plotly object.\n\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\n\nShow the code\npacman::p_load(tidyverse, plotly, ggtern, DT)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#importing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#importing-the-data",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "2.2 Importing the Data",
+    "text": "2.2 Importing the Data\nFor this exercise, we will be using the Singapore Residents by Planning Area Subzone, Age Group, Sex and Type of Dwelling (June 2000-2018) data from Singstats. The course instructor has provided the downloaded data respopagsex2000to2018_tidy.csv in csv file format.\nThe following code chunk uses read_csv() function of readr package to import the data into R.\n\n\nShow the code\npopdata &lt;- read_csv(\"data/respopagsex2000to2018_tidy.csv\")\n\n\n\nThe DataChecking the Data\n\n\n\ndatatable(popdata)\n\n\n\n\n\n\n\n\nglimpse(popdata)\n\nRows: 108,126\nColumns: 5\n$ PA         &lt;chr&gt; \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"An…\n$ SZ         &lt;chr&gt; \"Ang Mo Kio Town Centre\", \"Ang Mo Kio Town Centre\", \"Ang Mo…\n$ AG         &lt;chr&gt; \"AGE0-4\", \"AGE0-4\", \"AGE0-4\", \"AGE0-4\", \"AGE0-4\", \"AGE0-4\",…\n$ Year       &lt;dbl&gt; 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2011, 2012,…\n$ Population &lt;dbl&gt; 290, 270, 260, 250, 260, 250, 200, 180, 290, 290, 270, 300,…\n\n\n\n\n\nNote that the data has information from 2000 to 2018. In addition, each row tells us the number of residents for a particular population age group in a certain planning area subzone for a particular year. This current format is not useful for the ternary plot that we are going to make."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#preparing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#preparing-the-data",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "2.3 Preparing the Data",
+    "text": "2.3 Preparing the Data\nAs such, we use the mutate() function of dplyr package to:\n\nchange the year from numerical to character\nderive three new measures: young, active, and old using spread()\nfilter only those data from year 2018 and with values more than 0.\n\n\n\nShow the code\nagpop_mutated &lt;- popdata %&gt;%\n  mutate(`Year` = as.character(Year))%&gt;%\n  spread(AG, Population) %&gt;%\n  mutate(YOUNG = rowSums(.[4:8]))%&gt;%\n  mutate(ACTIVE = rowSums(.[9:16]))  %&gt;%\n  mutate(OLD = rowSums(.[17:21])) %&gt;%\n  mutate(TOTAL = rowSums(.[22:24])) %&gt;%\n  filter(Year == 2018)%&gt;%\n  filter(TOTAL &gt; 0)\n\n\n\nThe DataChecking the Data\n\n\n\ndatatable(agpop_mutated)\n\n\n\n\n\n\n\n\nglimpse(agpop_mutated)\n\nRows: 234\nColumns: 25\n$ PA         &lt;chr&gt; \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"An…\n$ SZ         &lt;chr&gt; \"Ang Mo Kio Town Centre\", \"Cheng San\", \"Chong Boon\", \"Kebun…\n$ Year       &lt;chr&gt; \"2018\", \"2018\", \"2018\", \"2018\", \"2018\", \"2018\", \"2018\", \"20…\n$ `AGE0-4`   &lt;dbl&gt; 180, 1060, 900, 720, 220, 550, 260, 830, 160, 810, 350, 282…\n$ `AGE05-9`  &lt;dbl&gt; 270, 1080, 900, 850, 310, 630, 340, 930, 160, 1070, 460, 32…\n$ `AGE10-14` &lt;dbl&gt; 320, 1080, 1030, 1010, 380, 670, 430, 930, 220, 1300, 490, …\n$ `AGE15-19` &lt;dbl&gt; 300, 1260, 1220, 1120, 500, 780, 500, 860, 260, 1450, 400, …\n$ `AGE20-24` &lt;dbl&gt; 260, 1400, 1380, 1230, 550, 950, 640, 1020, 350, 1500, 330,…\n$ `AGE25-29` &lt;dbl&gt; 300, 1880, 1760, 1460, 500, 1080, 690, 1400, 340, 1590, 310…\n$ `AGE30-34` &lt;dbl&gt; 270, 1940, 1830, 1330, 300, 990, 440, 1350, 230, 1390, 310,…\n$ `AGE35-39` &lt;dbl&gt; 330, 2300, 1920, 1540, 290, 1100, 400, 1700, 250, 1770, 630…\n$ `AGE40-44` &lt;dbl&gt; 430, 2090, 1900, 1700, 420, 1140, 490, 1720, 260, 1860, 810…\n$ `AGE45-49` &lt;dbl&gt; 470, 2180, 1910, 1830, 550, 1230, 580, 1530, 320, 2000, 830…\n$ `AGE50-54` &lt;dbl&gt; 360, 2160, 2070, 1880, 550, 1350, 640, 1480, 300, 1980, 620…\n$ `AGE55-59` &lt;dbl&gt; 310, 2150, 2140, 1810, 560, 1420, 730, 1720, 360, 2010, 460…\n$ `AGE60-64` &lt;dbl&gt; 300, 2270, 2170, 1750, 450, 1290, 680, 1680, 350, 1980, 390…\n$ `AGE65-69` &lt;dbl&gt; 270, 2130, 2050, 1700, 410, 1150, 500, 1610, 250, 1790, 340…\n$ `AGE70-74` &lt;dbl&gt; 190, 1370, 1570, 1240, 290, 830, 280, 1190, 160, 1090, 220,…\n$ `AGE75-79` &lt;dbl&gt; 150, 980, 1170, 870, 220, 680, 210, 980, 100, 690, 110, 257…\n$ `AGE80-84` &lt;dbl&gt; 60, 560, 640, 540, 140, 360, 180, 560, 70, 390, 80, 1520, 2…\n$ AGE85over  &lt;dbl&gt; 60, 440, 530, 430, 140, 340, 130, 460, 60, 310, 100, 1350, …\n$ YOUNG      &lt;dbl&gt; 1330, 5880, 5430, 4930, 1960, 3580, 2170, 4570, 1150, 6130,…\n$ ACTIVE     &lt;dbl&gt; 2770, 16970, 15700, 13300, 3620, 9600, 4650, 12580, 2410, 1…\n$ OLD        &lt;dbl&gt; 730, 5480, 5960, 4780, 1200, 3360, 1300, 4800, 640, 4270, 8…\n$ TOTAL      &lt;dbl&gt; 4830, 28330, 27090, 23010, 6780, 16540, 8120, 21950, 4200, …"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#checking-the-data-1",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#checking-the-data-1",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "2.7 Checking the Data",
+    "text": "2.7 Checking the Data\n\nglimpse(agpop_mutated)\n\nRows: 234\nColumns: 25\n$ PA         &lt;chr&gt; \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"An…\n$ SZ         &lt;chr&gt; \"Ang Mo Kio Town Centre\", \"Cheng San\", \"Chong Boon\", \"Kebun…\n$ Year       &lt;chr&gt; \"2018\", \"2018\", \"2018\", \"2018\", \"2018\", \"2018\", \"2018\", \"20…\n$ `AGE0-4`   &lt;dbl&gt; 180, 1060, 900, 720, 220, 550, 260, 830, 160, 810, 350, 282…\n$ `AGE05-9`  &lt;dbl&gt; 270, 1080, 900, 850, 310, 630, 340, 930, 160, 1070, 460, 32…\n$ `AGE10-14` &lt;dbl&gt; 320, 1080, 1030, 1010, 380, 670, 430, 930, 220, 1300, 490, …\n$ `AGE15-19` &lt;dbl&gt; 300, 1260, 1220, 1120, 500, 780, 500, 860, 260, 1450, 400, …\n$ `AGE20-24` &lt;dbl&gt; 260, 1400, 1380, 1230, 550, 950, 640, 1020, 350, 1500, 330,…\n$ `AGE25-29` &lt;dbl&gt; 300, 1880, 1760, 1460, 500, 1080, 690, 1400, 340, 1590, 310…\n$ `AGE30-34` &lt;dbl&gt; 270, 1940, 1830, 1330, 300, 990, 440, 1350, 230, 1390, 310,…\n$ `AGE35-39` &lt;dbl&gt; 330, 2300, 1920, 1540, 290, 1100, 400, 1700, 250, 1770, 630…\n$ `AGE40-44` &lt;dbl&gt; 430, 2090, 1900, 1700, 420, 1140, 490, 1720, 260, 1860, 810…\n$ `AGE45-49` &lt;dbl&gt; 470, 2180, 1910, 1830, 550, 1230, 580, 1530, 320, 2000, 830…\n$ `AGE50-54` &lt;dbl&gt; 360, 2160, 2070, 1880, 550, 1350, 640, 1480, 300, 1980, 620…\n$ `AGE55-59` &lt;dbl&gt; 310, 2150, 2140, 1810, 560, 1420, 730, 1720, 360, 2010, 460…\n$ `AGE60-64` &lt;dbl&gt; 300, 2270, 2170, 1750, 450, 1290, 680, 1680, 350, 1980, 390…\n$ `AGE65-69` &lt;dbl&gt; 270, 2130, 2050, 1700, 410, 1150, 500, 1610, 250, 1790, 340…\n$ `AGE70-74` &lt;dbl&gt; 190, 1370, 1570, 1240, 290, 830, 280, 1190, 160, 1090, 220,…\n$ `AGE75-79` &lt;dbl&gt; 150, 980, 1170, 870, 220, 680, 210, 980, 100, 690, 110, 257…\n$ `AGE80-84` &lt;dbl&gt; 60, 560, 640, 540, 140, 360, 180, 560, 70, 390, 80, 1520, 2…\n$ AGE85over  &lt;dbl&gt; 60, 440, 530, 430, 140, 340, 130, 460, 60, 310, 100, 1350, …\n$ YOUNG      &lt;dbl&gt; 1330, 5880, 5430, 4930, 1960, 3580, 2170, 4570, 1150, 6130,…\n$ ACTIVE     &lt;dbl&gt; 2770, 16970, 15700, 13300, 3620, 9600, 4650, 12580, 2410, 1…\n$ OLD        &lt;dbl&gt; 730, 5480, 5960, 4780, 1200, 3360, 1300, 4800, 640, 4270, 8…\n$ TOTAL      &lt;dbl&gt; 4830, 28330, 27090, 23010, 6780, 16540, 8120, 21950, 4200, …"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#the-data",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "2.3 The Data",
+    "text": "2.3 The Data\n\ndatatable(popdata)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#checking-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#checking-the-data",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "2.4 Checking the Data",
+    "text": "2.4 Checking the Data\n\nglimpse(popdata)\n\nRows: 108,126\nColumns: 5\n$ PA         &lt;chr&gt; \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\", \"An…\n$ SZ         &lt;chr&gt; \"Ang Mo Kio Town Centre\", \"Ang Mo Kio Town Centre\", \"Ang Mo…\n$ AG         &lt;chr&gt; \"AGE0-4\", \"AGE0-4\", \"AGE0-4\", \"AGE0-4\", \"AGE0-4\", \"AGE0-4\",…\n$ Year       &lt;dbl&gt; 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2011, 2012,…\n$ Population &lt;dbl&gt; 290, 270, 260, 250, 260, 250, 200, 180, 290, 290, 270, 300,…"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#static-ternary-diagram",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#static-ternary-diagram",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "3.1 Static Ternary Diagram",
+    "text": "3.1 Static Ternary Diagram\nWe can use ggtern() function of ggtern package to create a simple static ternary plot.\n\n\nShow the code\nggtern(data = agpop_mutated, \n       aes(x = YOUNG, y = ACTIVE, z = OLD)) + \n  geom_point()\n\n\n\n\n\n\n\n\n\nWe can further customise the ternary chart by adding titles using labs() from ggplot2 and themes from ggtern package.\nFor the list of themes provided by ggtern, please refer to here.\n\n\nShow the code\nggtern(agpop_mutated,\n       aes(x=YOUNG, y=ACTIVE, z=OLD)) +\n  geom_point() +\n  labs(title = \"Population Struction 2018\") +\n  theme_rgbg()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#interactive-ternary-diagram",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#interactive-ternary-diagram",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "3.2 Interactive Ternary Diagram",
+    "text": "3.2 Interactive Ternary Diagram\nTo create an interactive ternary plot, we will be using plot_ly() function of Plotly R. It consists several steps: 1. we will first create a function for creating annotation object. 2. Then we will create a function for axis formating 3. Then we will create a plotly visualisation!\nFirst, we will create a function for the label. In this label, we specify the font size, font color, label background color and border width of the label.\n\n\nShow the code\nlabel &lt;- function(txt){\n  list(\n    text = txt,\n    x = 0.1, \n    y = 0.1,\n    ax = 0,\n    ay = 0,\n    xref=\"paper\",\n    yref = \"paper\",\n    align = \"center\",\n    font = list(family = \"serif\", size = 15, color = \"white\"),\n    bgcolor = \"#760241\", bordercolor = \"black\", borderwidth = 2)\n}\n\n\nThen we will create a function for the axis formatting.\n\n\nShow the code\naxis &lt;- function(txt){\n  list(title = txt, tickformat = \".0%\", tickfont = list(size=10))\n}\n\n\nUsing the axis function created, we will create labels for the axes on the ternary plot.\n\n\nShow the code\nternaryaxes &lt;- list(\n  aaxis = axis(\"Young\"),\n  baxis = axis(\"Active\"), \n  caxis = axis(\"Old\")\n)\n\n\nNow we can plot the ternary chart using the scatterternary chart type in plot_ly.\n\n\nShow the code\nplot_ly(\n  agpop_mutated,\n  a = ~YOUNG,\n  b = ~ACTIVE,\n  c = ~OLD,\n  color = I(\"black\"),\n  type = \"scatterternary\"\n) %&gt;%\n  layout(annotations = label(\"Ternary Markers\"),\n         ternary = ternaryaxes)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#what-is-ternary-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#what-is-ternary-plot",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "",
+    "text": "Ternary plots are a way of displaying the distribution and variability of three-part compositional data. For example, in this exercise, we will have proportions of population: (1) aged, (2) economy active and (3) young. The plot is displayed in a triangle with sides scaled from 0 to 1. Each side represents one of the three components. A point is plotted so that a line drawn perpendicular from the point to each leg of the triangle intersect at the component values of the point.\nWe will see more of it later!\n:::"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#the-data-1",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html#the-data-1",
+    "title": "Hands-on Exercise 5a - Creating Ternary Plot with R",
+    "section": "2.6 The Data",
+    "text": "2.6 The Data\n\ndatatable(agpop_mutated)"
   }
 ]

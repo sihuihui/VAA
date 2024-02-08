@@ -26,8 +26,6 @@ Before we start, let us ensure that the required R packages have been installed 
 
 For this exercise, other than tidyverse, we will use the following packages:
 
--   tidyverse: a family of R packages for data science process
-
 -   ggridges: a ggplot2 extension specially designed for plotting ridgeline plots
 
 -   ggdist: a package to visualise distribution and uncertainty.
@@ -58,7 +56,7 @@ datatable(exam_data, caption= "Table 1: Exam Data of Primary 3 Students")
 
 ```
 
-::: callout-note
+:::{.callout-note}
 **ggridge** and **ggdist** are slightly different.
 
 ggridge allow us to examine the distribution of the data while ggdist allow us to examine both distribution and uncertainty (hence the box plot).
@@ -182,7 +180,7 @@ ggplot(exam_data,
 
 ```
 
-::: callout-important
+:::{callout-important}
 It is important include the argument `calc_ecdf = TRUE` in `stat_density_ridges()`.
 :::
 
