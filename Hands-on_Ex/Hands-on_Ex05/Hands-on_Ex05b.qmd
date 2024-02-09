@@ -50,7 +50,7 @@ For this exercise, other than tidyverse , we will use the following packages:
 
 -   [corrplot](https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html): provides a visual exploratory tool on correlation matrix that supports automatic variable reordering to help detect hidden patterns among variables.
 
--   [ggpub](https://rpkgs.datanovia.com/ggpubr/)r: provides some easy-to-use functions for creating and customizing ‘ggplot2’- based publication ready plots.
+-   ggstatsplot: to create correlation matrix 
 
 -   [plotly](https://plotly.com/r/): makes interactive, publication-quality graphs.
 
