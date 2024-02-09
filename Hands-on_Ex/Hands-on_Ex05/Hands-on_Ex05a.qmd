@@ -16,7 +16,7 @@ editor: visual
 
 In this exercise, we will learn how to build ternary plot programmatically using R for visualising and analysing population structure of Singapore.
 
-:::{.callout-note appearance="simple"}
+::: {.callout-note appearance="simple"}
 ## What is ternary plot?
 
 Ternary plots are a way of displaying the distribution and variability of three-part compositional data. For example, in this exercise, we will have proportions of population: (1) aged, (2) economy active and (3) young. The plot is displayed in a triangle with sides scaled from 0 to 1. Each side represents one of the three components. A point is plotted so that a line drawn perpendicular from the point to each leg of the triangle intersect at the component values of the point.
@@ -57,7 +57,7 @@ The following code chunk uses `read_csv()` function of **readr** package to impo
 popdata <- read_csv("data/respopagsex2000to2018_tidy.csv")
 ```
 
-:::{.panel-tabset} 
+:::{.panel-tabset}
 ## The Data
 
 ```{r}
@@ -98,7 +98,7 @@ agpop_mutated <- popdata %>%
   filter(TOTAL > 0)
 ```
 
-::: {.panel-tabset}
+:::{.panel-tabset}
 ## The Data
 
 ```{r}
@@ -141,14 +141,12 @@ ggtern(agpop_mutated,
   theme_rgbg()
 ```
 
-## Interactive Ternary Diagram 
-To create an interactive ternary plot, we will be using `plot_ly()` function of Plotly R.
-It consists several steps: 
-1. we will first create a function for creating annotation object. 
-2. Then we will create a function for axis formating 
-3. Then we will create a plotly visualisation! 
+## Interactive Ternary Diagram
 
-First, we will create a function for the label. In this label, we specify the font size, font color, label background color and border width of the label. 
+To create an interactive ternary plot, we will be using `plot_ly()` function of Plotly R. It consists several steps: 1. we will first create a function for creating annotation object. 2. Then we will create a function for axis formating 3. Then we will create a plotly visualisation!
+
+First, we will create a function for the label. In this label, we specify the font size, font color, label background color and border width of the label.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -167,7 +165,7 @@ label <- function(txt){
 }
 ```
 
-Then we will create a function for the axis formatting. 
+Then we will create a function for the axis formatting.
 
 ```{r}
 #| code-fold: true
@@ -178,7 +176,7 @@ axis <- function(txt){
 
 ```
 
-Using the axis function created, we will create labels for the axes on the ternary plot. 
+Using the axis function created, we will create labels for the axes on the ternary plot.
 
 ```{r}
 #| code-fold: true
@@ -191,7 +189,7 @@ ternaryaxes <- list(
 
 ```
 
-Now we can plot the ternary chart using the scatterternary chart type in plot_ly. 
+Now we can plot the ternary chart using the scatterternary chart type in plot_ly.
 
 ```{r}
 #| code-fold: true
