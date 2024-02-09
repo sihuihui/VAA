@@ -35,11 +35,11 @@ pacman::p_load(tidyverse, DT, treemap, treemapify)
 
 ## Importing the Data
 
-For this exercise, *REALIS2018.csv* data will be used. This dataset provides information of private property transaction records in 2018. The dataset is extracted from REALIS portal (https://spring.ura.gov.sg/lad/ore/login/index.cfm) of Urban Redevelopment Authority (URA).
+For this exercise, *REALIS2018.csv* data will be used. This dataset provides information of private property transaction records in 2018. The dataset is extracted from [REALIS portal](https://spring.ura.gov.sg/lad/ore/login/index.cfm) of Urban Redevelopment Authority (URA).
 
 In the code chunk below, read_csv() of readr is used to import WHData-2018.csv into R and parsed it into tibble R data frame format.
 
 ```{r}
-happy <- read_csv("data/WHData-2018.csv")
+realis2018 <- read_csv("data/realis2018.csv")
 
 ```

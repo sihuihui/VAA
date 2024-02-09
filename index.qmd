@@ -60,7 +60,7 @@ Welcome to **SiHui Learns Visual Analytics**! This website documents my learning
 ::: {#take-home}
 :::
 
-## Experiments
+## Extras
 
 Additional practices and experiments can be found here!
 
