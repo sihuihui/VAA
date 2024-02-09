@@ -1,0 +1,45 @@
+---
+title: "Hands-on Exercise 5e - Treemap Visualisation with R"
+author: "Goh Si Hui"
+date: 2024/02/09
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+# About this Exercise
+
+In this exercise, we will learn how to design treemap using appropriate R packages. The hands-on exercise consists of three main section. First, you will learn how to manipulate transaction data into a treemap strcuture by using selected functions provided in **dplyr** package. Then, you will learn how to plot static treemap by using **treemap** package. In the third section, you will learn how to design interactive treemap by using **d3treeR** package.
+
+# Getting Started
+
+Before we start, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
+
+## Installing and Loading the Packages
+
+For this exercise, the **treemap**, **treemapify** and **tidyverse** packages will be used.
+
+The code chunk below uses `p_load()` of **pacman** package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+pacman::p_load(tidyverse, DT, treemap, treemapify)
+
+```
+
+## Importing the Data
+
+For this exercise, *REALIS2018.csv* data will be used. This dataset provides information of private property transaction records in 2018. The dataset is extracted from REALIS portal (https://spring.ura.gov.sg/lad/ore/login/index.cfm) of Urban Redevelopment Authority (URA).
+
+In the code chunk below, read_csv() of readr is used to import WHData-2018.csv into R and parsed it into tibble R data frame format.
+
+```{r}
+happy <- read_csv("data/WHData-2018.csv")
+
+```
