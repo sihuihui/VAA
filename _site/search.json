@@ -1369,41 +1369,131 @@
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html",
     "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
     "section": "",
-    "text": "In this exercise, we will learn how to use R to plot static and interactive heatmap for visualising and analysing multivariate data.\n\n\n\n\n\n\nWhy heatmaps?\n\n\n\nHeatmaps visualise data through variations in colouring. When applied to a tabular format, heatmaps are useful for cross-examining multivariate data, through placing variables in the columns and observation (or records) in rowa and colouring the cells within the table. Heatmaps are good for showing variance across multiple variables, revealing any patterns, displaying whether any variables are similar to each other, and for detecting if any correlations exist in-between them."
+    "text": "In this exercise, we will learn how to use R to plot static and interactive heatmap for visualising and analysing multivariate data.\n\n\n\n\n\n\nWhy heatmaps?\n\n\n\nHeatmaps visualise data through variations in colouring. When applied to a tabular format, heatmaps are useful for cross-examining multivariate data, through placing variables in the columns and observation (or records) in rowa and colouring the cells within the table. Heatmaps are good for showing variance across multiple variables, revealing any patterns, displaying whether any variables are similar to each other, and for detecting if any correlations exist in-between them.",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#installing-and-loading-the-packages",
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#installing-and-loading-the-packages",
     "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
     "section": "2.1 Installing and Loading the Packages",
-    "text": "2.1 Installing and Loading the Packages\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\n\nShow the code\npacman::p_load(tidyverse, DT, seriation, dendextend, heatmaply)"
+    "text": "2.1 Installing and Loading the Packages\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\n\nShow the code\npacman::p_load(tidyverse, DT, seriation, dendextend, heatmaply)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#importing-the-data",
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#importing-the-data",
     "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
     "section": "2.2 Importing the Data",
-    "text": "2.2 Importing the Data\nFor this exercise, we will be using the data from World Happiness 2018 report. The original data set is in Microsoft Excel format. It has been extracted and saved in csv file called WHData-2018.csv.\nIn the code chunk below, read_csv() of readr is used to import WHData-2018.csv into R and parsed it into tibble R data frame format.\n\nhappy &lt;- read_csv(\"data/WHData-2018.csv\")\n\n\nThe DataChecking the Data\n\n\n\ndatatable(happy)\n\n\n\n\n\n\n\n\nglimpse(happy)\n\nRows: 156\nColumns: 12\n$ Country                        &lt;chr&gt; \"Albania\", \"Bosnia and Herzegovina\", \"B…\n$ Region                         &lt;chr&gt; \"Central and Eastern Europe\", \"Central …\n$ `Happiness score`              &lt;dbl&gt; 4.586, 5.129, 4.933, 5.321, 6.711, 5.73…\n$ `Whisker-high`                 &lt;dbl&gt; 4.695, 5.224, 5.022, 5.398, 6.783, 5.81…\n$ `Whisker-low`                  &lt;dbl&gt; 4.477, 5.035, 4.844, 5.244, 6.639, 5.66…\n$ Dystopia                       &lt;dbl&gt; 1.462, 1.883, 1.219, 1.769, 2.494, 1.45…\n$ `GDP per capita`               &lt;dbl&gt; 0.916, 0.915, 1.054, 1.115, 1.233, 1.20…\n$ `Social support`               &lt;dbl&gt; 0.817, 1.078, 1.515, 1.161, 1.489, 1.53…\n$ `Healthy life expectancy`      &lt;dbl&gt; 0.790, 0.758, 0.712, 0.737, 0.854, 0.73…\n$ `Freedom to make life choices` &lt;dbl&gt; 0.419, 0.280, 0.359, 0.380, 0.543, 0.55…\n$ Generosity                     &lt;dbl&gt; 0.149, 0.216, 0.064, 0.120, 0.064, 0.08…\n$ `Perceptions of corruption`    &lt;dbl&gt; 0.032, 0.000, 0.009, 0.039, 0.034, 0.17…"
+    "text": "2.2 Importing the Data\nFor this exercise, we will be using the data from World Happiness 2018 report. The original data set is in Microsoft Excel format. It has been extracted and saved in csv file called WHData-2018.csv.\nIn the code chunk below, read_csv() of readr is used to import WHData-2018.csv into R and parsed it into tibble R data frame format.\n\nhappy &lt;- read_csv(\"data/WHData-2018.csv\")\n\n\nThe DataChecking the Data\n\n\n\ndatatable(happy)\n\n\n\n\n\n\n\n\nglimpse(happy)\n\nRows: 156\nColumns: 12\n$ Country                        &lt;chr&gt; \"Albania\", \"Bosnia and Herzegovina\", \"B…\n$ Region                         &lt;chr&gt; \"Central and Eastern Europe\", \"Central …\n$ `Happiness score`              &lt;dbl&gt; 4.586, 5.129, 4.933, 5.321, 6.711, 5.73…\n$ `Whisker-high`                 &lt;dbl&gt; 4.695, 5.224, 5.022, 5.398, 6.783, 5.81…\n$ `Whisker-low`                  &lt;dbl&gt; 4.477, 5.035, 4.844, 5.244, 6.639, 5.66…\n$ Dystopia                       &lt;dbl&gt; 1.462, 1.883, 1.219, 1.769, 2.494, 1.45…\n$ `GDP per capita`               &lt;dbl&gt; 0.916, 0.915, 1.054, 1.115, 1.233, 1.20…\n$ `Social support`               &lt;dbl&gt; 0.817, 1.078, 1.515, 1.161, 1.489, 1.53…\n$ `Healthy life expectancy`      &lt;dbl&gt; 0.790, 0.758, 0.712, 0.737, 0.854, 0.73…\n$ `Freedom to make life choices` &lt;dbl&gt; 0.419, 0.280, 0.359, 0.380, 0.543, 0.55…\n$ Generosity                     &lt;dbl&gt; 0.149, 0.216, 0.064, 0.120, 0.064, 0.08…\n$ `Perceptions of corruption`    &lt;dbl&gt; 0.032, 0.000, 0.009, 0.039, 0.034, 0.17…",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#preparing-the-data",
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#preparing-the-data",
     "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
     "section": "2.3 Preparing the Data",
-    "text": "2.3 Preparing the Data\nFor the purpose of this exercise, we need to change the rows by country name instead of row number.\n\nrow.names(happy) &lt;- happy$Country\ndatatable(happy)"
+    "text": "2.3 Preparing the Data\nFor the purpose of this exercise, we need to change the rows by country name instead of row number.\n\nrow.names(happy) &lt;- happy$Country\ndatatable(happy)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#transforming-the-data-frame-into-a-matrix",
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#transforming-the-data-frame-into-a-matrix",
     "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
     "section": "2.4 Transforming the data frame into a matrix",
-    "text": "2.4 Transforming the data frame into a matrix\nThe data was loaded into a data frame, but it has to be a data matrix to make your heatmap.\nThe code chunk below will be used to transform happy data frame into a data matrix.\n\nhappy_matrix &lt;- data.matrix(happy)"
+    "text": "2.4 Transforming the data frame into a matrix\nThe data was loaded into a data frame, but it has to be a data matrix to make your heatmap.\nThe code chunk below will be used to transform happy data frame into a data matrix.\n\nhappy_matrix &lt;- data.matrix(happy)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#heatmap-of-r-stats",
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#heatmap-of-r-stats",
     "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
     "section": "3.1 heatmap() of R stats",
-    "text": "3.1 heatmap() of R stats\nIn this section, we will learn how to plot static heatmaps by using heatmap() of R Stats package.By default, heatmap() plots a cluster heatmap. The arguments Rowv=NA and Colv=NA are used to switch off the option of plotting the row and column dendrograms.\n\nWith dendrogramsWithout dendrograms\n\n\n\nhappy_heatmap &lt;- heatmap(happy_matrix)\n\n\n\n\n\n\n\n\n\n\n\nhappy_heatmap &lt;- heatmap(happy_matrix,Rowv=NA, Colv=NA )\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe order of both rows and columns is different compare to the native happy_matrix. This is because heatmap do a reordering using clusterisation: it calculates the distance between each pair of rows and columns and try to order them by similarity. In addition, the corresponding dendrograms are provided beside the heatmap.\n\n\nBy default, red cells denotes small values. As the Happiness Score variable have relatively higher values, this makes other variables with small values all look the same.Thus, we need to normalize this matrix. This is done using the scale argument. It can be applied to rows or to columns following your needs.\n\nNormalise Matrix column-wiseNormalise Matrix row-wise\n\n\n\nhappy_heatmap_c &lt;- heatmap(happy_matrix,\n                      scale=\"column\",\n                      cexRow = 0.6, \n                      cexCol = 0.8,\n                      margins = c(10, 4))\n\n\n\n\n\n\n\n\n\n\n\nhappy_heatmap_r &lt;- heatmap(happy_matrix,\n                      scale=\"row\",\n                      cexRow = 0.6, \n                      cexCol = 0.8,\n                      margins = c(10, 4))\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nNotice that the values are scaled now. Also note that margins argument is used to ensure that the entire x-axis labels are displayed completely and, cexRow and cexCol arguments are used to define the font size used for y-axis and x-axis labels respectively."
+    "text": "3.1 heatmap() of R stats\nIn this section, we will learn how to plot static heatmaps by using heatmap() of R Stats package.By default, heatmap() plots a cluster heatmap. The arguments Rowv=NA and Colv=NA are used to switch off the option of plotting the row and column dendrograms.\n\nWith dendrogramsWithout dendrograms\n\n\n\nhappy_heatmap &lt;- heatmap(happy_matrix)\n\n\n\n\n\n\n\n\n\n\n\nhappy_heatmap &lt;- heatmap(happy_matrix,Rowv=NA, Colv=NA )\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThe order of both rows and columns is different compare to the native happy_matrix. This is because heatmap do a reordering using clusterisation: it calculates the distance between each pair of rows and columns and try to order them by similarity. In addition, the corresponding dendrograms are provided beside the heatmap.\n\n\nBy default, red cells denotes small values. As the Happiness Score variable have relatively higher values, this makes other variables with small values all look the same.Thus, we need to normalize this matrix. This is done using the scale argument. It can be applied to rows or to columns following your needs.\n\nNormalise Matrix column-wiseNormalise Matrix row-wise\n\n\n\nhappy_heatmap_c &lt;- heatmap(happy_matrix,\n                      scale=\"column\",\n                      cexRow = 0.6, \n                      cexCol = 0.8,\n                      margins = c(10, 4))\n\n\n\n\n\n\n\n\n\n\n\nhappy_heatmap_r &lt;- heatmap(happy_matrix,\n                      scale=\"row\",\n                      cexRow = 0.6, \n                      cexCol = 0.8,\n                      margins = c(10, 4))\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nNotice that the values are scaled now. Also note that margins argument is used to ensure that the entire x-axis labels are displayed completely and, cexRow and cexCol arguments are used to define the font size used for y-axis and x-axis labels respectively.",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#basic-plot",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#basic-plot",
+    "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
+    "section": "4.1 Basic Plot",
+    "text": "4.1 Basic Plot\nUsing the function heatmaply(), we can easily create an interactive heat map by putting the datamatrix into it. For this example, we will put happy_matrix into it and also tell the function to not use the columns “Country”, “Region”, ‘whisker-high’ and ‘whisker-low’(i.e., columns 1, 2, 4 and 5)\n\nheatmaply(happy_matrix[, -c(1,2,4,5)])\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nDifferent from heatmap(), for heatmaply() the default horizontal dendrogram is placed on the left hand side of the heatmap. The text label of each raw, on the other hand, is placed on the right hand side of the heat map. When the x-axis marker labels are too long, they will be rotated by 135 degree from the north.",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#data-transformation",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#data-transformation",
+    "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
+    "section": "4.2 Data Transformation",
+    "text": "4.2 Data Transformation\nWhen analysing multivariate data set, it is very common that the variables in the data sets includes values that reflect different types of measurement. In general, these variables’ values have their own range. In order to ensure that all the variables have comparable values, data transformation are commonly used before clustering.\nThree main data transformation methods are supported by heatmaply(), namely: scale, normalise and percentilse.\n\nScaling MethodNormalising MethodPercentilsing Method\n\n\n\nWhen all variables are came from or assumed to come from some normal distribution, then scaling (i.e.: subtract the mean and divide by the standard deviation) would bring them all close to the standard normal distribution.\nIn such a case, each value would reflect the distance from the mean in units of standard deviation.\nThe scale argument in heatmaply() supports column and row scaling.\n\nThe following code chunk scales the variable values columnwise.\n\nheatmaply(happy_matrix[, -c(1,2,4,5)], \n          scale = \"column\", \n          fontsize_row = 4,\n          fontsize_col = 8)\n\n\n\n\n\n\n\n\nWhen variables in the data comes from possibly different (and non-normal) distributions, the normalize function can be used to bring data to the 0 to 1 scale by subtracting the minimum and dividing by the maximum of all observations.\nThis preserves the shape of each variable’s distribution while making them easily comparable on the same “scale”.\nDifferent from Scaling, the normalise method is performed on the input data set i.e. happy_matrix as shown in the code chunk below.\n\n\nheatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]), \n          fontsize_row = 4,\n          fontsize_col = 8)\n\n\n\n\n\n\n\n\nThis is similar to ranking the variables, but instead of keeping the rank values, divide them by the maximal rank.\nThis is done by using the ecdf of the variables on their own values, bringing each value to its empirical percentile.\nThe benefit of the percentize function is that each value has a relatively clear interpretation, it is the percent of observations that got that value or below it.\nSimilar to Normalize method, the Percentize method is also performed on the happy_matrix (i.e, input dataset) as shown in the code chunk below.\n\n\nheatmaply(percentize(happy_matrix[, -c(1, 2, 4, 5)]), \n          fontsize_row = 4,\n          fontsize_col = 8)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#clustering-algorithm",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#clustering-algorithm",
+    "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
+    "section": "4.3 Clustering Algorithm",
+    "text": "4.3 Clustering Algorithm\nheatmaply supports a variety of hierarchical clustering algorithm. The main arguments provided are:\n\ndistfun: function used to compute the distance (dissimilarity) between both rows and columns. Defaults to dist. The options “pearson”, “spearman” and “kendall” can be used to use correlation-based clustering, which uses as.dist(1 - cor(t(x))) as the distance metric (using the specified correlation method).\nhclustfun: function used to compute the hierarchical clustering when Rowv or Colv are not dendrograms. Defaults to hclust.\ndist_method default is NULL, which results in “euclidean” to be used. It can accept alternative character strings indicating the method to be passed to distfun. By default distfun is “dist”” hence this can be one of “euclidean”, “maximum”, “manhattan”, “canberra”, “binary” or “minkowski”.\nhclust_method default is NULL, which results in “complete” method to be used. It can accept alternative character strings indicating the method to be passed to hclustfun. By default hclustfun is hclust hence this can be one of “ward.D”, “ward.D2”, “single”, “complete”, “average” (= UPGMA), “mcquitty” (= WPGMA), “median” (= WPGMC) or “centroid” (= UPGMC).\n\nIn general, a clustering model can be calibrated either manually or statistically.\n\n4.3.1 Manual Approach\nThe following heatmap is plotted using hierarchical clustering algorithm with Euclidean distance and ward.D method.\n\nheatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),\n          dist_method = \"euclidean\",\n          hclust_method = \"ward.D\", \n          fontsize_row = 4,\n          fontsize_col = 8)\n\n\n\n\n\n\n\n4.3.2 Statistical Approach\nIn order to determine the best clustering method and number of clusters the dend_expend() and find_k() functions of dendextend package will be used.\nFirst, the dend_expend() will be used to determine the recommended clustering method to be used.\n\n#normalise the data and compute Eucliean distance \nhappy_d &lt;- dist(normalize(happy_matrix[, -c(1, 2, 4, 5)]), method = \"euclidean\")\n\ndend_expend(happy_d)[[3]]\n\n  dist_methods hclust_methods     optim\n1      unknown         ward.D 0.6137851\n2      unknown        ward.D2 0.6289186\n3      unknown         single 0.4774362\n4      unknown       complete 0.6434009\n5      unknown        average 0.6701688\n6      unknown       mcquitty 0.5020102\n7      unknown         median 0.5901833\n8      unknown       centroid 0.6338734\n\n\nThe output table shows that “average” method should be used because it gave the highest optimum value of 0.6701688.\nNext, find_k() is used to determine the optimal number of cluster.\n\nhappy_clust &lt;- hclust(happy_d, method = \"average\")\nnum_k &lt;- find_k(happy_clust)\nplot(num_k)\n\n\n\n\n\n\n\n\nFigure above shows that k=3 would be good since it has the highest average silhouette width.\nWith reference to the statistical analysis results, we can prepare the code chunk as shown below.\n\nheatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),\n          dist_method = \"euclidean\",\n          hclust_method = \"average\",\n          k_row = 3, \n          fontsize_row = 4,\n          fontsize_col = 8)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#seriation",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#seriation",
+    "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
+    "section": "4.4 Seriation",
+    "text": "4.4 Seriation\nOne of the problems with hierarchical clustering is that it doesn’t actually place the rows in a definite order, it merely constrains the space of possible orderings. Take three items A, B and C. If you ignore reflections, there are three possible orderings: ABC, ACB, BAC. If clustering them gives you ((A+B)+C) as a tree, you know that C can’t end up between A and B, but it doesn’t tell you which way to flip the A+B cluster. It doesn’t tell you if the ABC ordering will lead to a clearer-looking heatmap than the BAC ordering.\nheatmaply uses the seriation package to find an optimal ordering of rows and columns. Optimal means to optimize the Hamiltonian path length that is restricted by the dendrogram structure. This, in other words, means to rotate the branches so that the sum of distances between each adjacent leaf (label) will be minimized. This is related to a restricted version of the travelling salesman problem.\nThe first seriation algorithm that we are going to learn is Optimal Leaf Ordering (OLO). This algorithm starts with the output of an agglomerative clustering algorithm and produces a unique ordering, one that flips the various branches of the dendrogram around so as to minimize the sum of dissimilarities between adjacent leaves. Here is the result of applying Optimal Leaf Ordering (i.e. the default option) to the same clustering result as the heatmap above.\n\nheatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),\n          seriate = \"OLO\", \n          fontsize_row = 4,\n          fontsize_col = 8)\n\n\n\n\n\nOptimal leaf ordering optimizes the above criterion (in O(n^4)).\nAnother option is “GW” (Gruvaeus and Wainer) which aims for the same goal but uses a potentially faster heuristic.\n\nheatmaply(normalize(happy_matrix[, -c(1,2,4,5)]),\n          seriate = \"GW\", \n          fontsize_row = 4,\n          fontsize_col = 8)\n\n\n\n\n\nThe third option “mean” gives the output we would get by default from heatmap functions in other packages such as gplots::heatmap.2.\n\nheatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),\n          seriate = \"mean\", \n          fontsize_row = 4,\n          fontsize_col = 8)\n\n\n\n\n\nThe option “none” gives us the dendrograms without any rotation that is based on the data matrix.\n\nheatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),\n          seriate = \"none\", \n          fontsize_row = 4,\n          fontsize_col = 8)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#working-with-color-palettes",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#working-with-color-palettes",
+    "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
+    "section": "4.5 Working with color palettes",
+    "text": "4.5 Working with color palettes\nThe default colour palette uses by heatmaply is viridis. heatmaply users, however, can use other colour palettes in order to improve the aestheticness and visual friendliness of the heatmap.\nIn the following code chunk, we use the RdPu colour palette of rcolorbrewer.\n\nheatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),\n          seriate = \"none\",\n          colors = RdPu, \n          fontsize_row = 4,\n          fontsize_col = 8)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#finishing-touch",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html#finishing-touch",
+    "title": "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data",
+    "section": "4.6 Finishing Touch",
+    "text": "4.6 Finishing Touch\nheatmaply also provides many plotting features to ensure cartographic quality heatmap can be produced.\nIn the code chunk below the following arguments are used:\n\nk_row is used to produce 5 groups.\nmargins is used to change the top margin to 60 and row margin to 200.\nfontsizw_row and fontsize_col are used to change the font size for row and column labels to 4.\nmain is used to write the main title of the plot.\nxlab and ylab are used to write the x-axis and y-axis labels respectively.\n\n\nheatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),\n          Colv=NA,\n          seriate = \"none\",\n          colors = RdPu,\n          k_row = 5,\n          margins = c(NA,200,60,NA),\n          fontsize_row = 5,\n          fontsize_col = 5,\n          main=\"World Happiness Score and Variables by Country, 2018 \\nDataTransformation using Normalise Method\",\n          xlab = \"World Happiness Indicators\",\n          ylab = \"World Countries\"\n          )",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5c: Heatmap for Visualising and Analysing Multivariate Data"
+    ]
   }
 ]

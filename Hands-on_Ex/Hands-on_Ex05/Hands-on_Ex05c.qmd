@@ -178,10 +178,12 @@ Three main data transformation methods are supported by heatmaply(), namely: sca
 
 The following code chunk scales the variable values columnwise.
 
-```{r}
+```{r fig.width=15, fig.height=20}
 
 heatmaply(happy_matrix[, -c(1,2,4,5)], 
-          scale = "column")
+          scale = "column", 
+          fontsize_row = 4,
+          fontsize_col = 8)
 ```
 
 ## Normalising Method
@@ -190,8 +192,10 @@ heatmaply(happy_matrix[, -c(1,2,4,5)],
 -   This preserves the shape of each variable’s distribution while making them easily comparable on the same “scale”.
 -   Different from Scaling, the normalise method is performed on the input data set i.e. happy_matrix as shown in the code chunk below.
 
-```{r}
-heatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]))
+```{r fig.width=15, fig.height=20}
+heatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]), 
+          fontsize_row = 4,
+          fontsize_col = 8)
 ```
 
 ## Percentilsing Method
@@ -201,8 +205,10 @@ heatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]))
 -   The benefit of the percentize function is that each value has a relatively clear interpretation, it is the percent of observations that got that value or below it.
 -   Similar to Normalize method, the Percentize method is also performed on the happy_matrix (i.e, input dataset) as shown in the code chunk below.
 
-```{r}
-heatmaply(percentize(happy_matrix[, -c(1, 2, 4, 5)]))
+```{r fig.width=15, fig.height=20}
+heatmaply(percentize(happy_matrix[, -c(1, 2, 4, 5)]), 
+          fontsize_row = 4,
+          fontsize_col = 8)
 ```
 :::
 
@@ -224,10 +230,12 @@ In general, a clustering model can be calibrated either manually or statisticall
 
 The following heatmap is plotted using hierarchical clustering algorithm with Euclidean distance and ward.D method.
 
-```{r}
+```{r fig.width=15, fig.height=20}
 heatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),
           dist_method = "euclidean",
-          hclust_method = "ward.D")
+          hclust_method = "ward.D", 
+          fontsize_row = 4,
+          fontsize_col = 8)
 
 ```
 
@@ -261,11 +269,13 @@ Figure above shows that k=3 would be good since it has the highest average silho
 
 With reference to the statistical analysis results, we can prepare the code chunk as shown below.
 
-```{r}
+```{r fig.width=15, fig.height=20}
 heatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),
           dist_method = "euclidean",
           hclust_method = "average",
-          k_row = 3)
+          k_row = 3, 
+          fontsize_row = 4,
+          fontsize_col = 8)
 
 ```
 
@@ -279,7 +289,9 @@ The first seriation algorithm that we are going to learn is Optimal Leaf Orderin
 
 ```{r}
 heatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),
-          seriate = "OLO")
+          seriate = "OLO", 
+          fontsize_row = 4,
+          fontsize_col = 8)
 
 ```
 
@@ -287,32 +299,49 @@ Optimal leaf ordering optimizes the above criterion (in O(n\^4)).
 
 
 Another option is “GW” (Gruvaeus and Wainer) which aims for the same goal but uses a potentially faster heuristic.
-```{r}
+```{r fig.width=15, fig.height=20}
 heatmaply(normalize(happy_matrix[, -c(1,2,4,5)]),
-          seriate = "GW")
+          seriate = "GW", 
+          fontsize_row = 4,
+          fontsize_col = 8)
 
 ```
 
 The third option “mean” gives the output we would get by default from heatmap functions in other packages such as gplots::heatmap.2.
 
-```{r}
+```{r fig.width=15, fig.height=20}
 heatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),
-          seriate = "mean")
+          seriate = "mean", 
+          fontsize_row = 4,
+          fontsize_col = 8)
 
 ```
 
 
 The option “none” gives us the dendrograms without any rotation that is based on the data matrix.
 
-```{r}
+```{r fig.width=15, fig.height=20}
 heatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),
-          seriate = "none")
+          seriate = "none", 
+          fontsize_row = 4,
+          fontsize_col = 8)
 
 ```
 
 ## Working with color palettes
 
-The default colour palette uses by **heatmaply** is *viridis*. heatmaply users, however, can use other colour palettes in order to improve the aestheticness and visual friendliness of the heatmap.
+The default colour palette uses by **heatmaply** is *viridis*. heatmaply users, however, can use other colour palettes in order to improve the aestheticness and visual friendliness of the heatmap. 
+
+In the following code chunk, we use the RdPu colour palette of rcolorbrewer. 
+
+```{r fig.width=15, fig.height=20}
+heatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),
+          seriate = "none",
+          colors = RdPu, 
+          fontsize_row = 4,
+          fontsize_col = 8)
+
+```
 
 ## Finishing Touch
 
@@ -329,3 +358,19 @@ In the code chunk below the following arguments are used:
 -   *main* is used to write the main title of the plot.
 
 -   *xlab* and *ylab* are used to write the x-axis and y-axis labels respectively.
+
+```{r fig.width=15, fig.height=24}
+heatmaply(normalize(happy_matrix[, -c(1, 2, 4, 5)]),
+          Colv=NA,
+          seriate = "none",
+          colors = RdPu,
+          k_row = 5,
+          margins = c(NA,200,60,NA),
+          fontsize_row = 5,
+          fontsize_col = 5,
+          main="World Happiness Score and Variables by Country, 2018 \nDataTransformation using Normalise Method",
+          xlab = "World Happiness Indicators",
+          ylab = "World Countries"
+          )
+
+```
