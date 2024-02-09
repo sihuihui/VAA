@@ -1633,21 +1633,33 @@
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html",
     "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
     "section": "",
-    "text": "In this exercise, we will learn how to design treemap using appropriate R packages. The hands-on exercise consists of three main section. First, you will learn how to manipulate transaction data into a treemap strcuture by using selected functions provided in dplyr package. Then, you will learn how to plot static treemap by using treemap package. In the third section, you will learn how to design interactive treemap by using d3treeR package."
+    "text": "In this exercise, we will learn how to design treemap using appropriate R packages. The hands-on exercise consists of three main section. First, you will learn how to manipulate transaction data into a treemap strcuture by using selected functions provided in dplyr package. Then, you will learn how to plot static treemap by using treemap package. In the third section, you will learn how to design interactive treemap by using d3treeR package.",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#installing-and-loading-the-packages",
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#installing-and-loading-the-packages",
     "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
     "section": "2.1 Installing and Loading the Packages",
-    "text": "2.1 Installing and Loading the Packages\nFor this exercise, the treemap, treemapify and tidyverse packages will be used.\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\n\nShow the code\npacman::p_load(tidyverse, DT, treemap, treemapify)\n\n\npackage 'gridBase' successfully unpacked and MD5 sums checked\npackage 'treemap' successfully unpacked and MD5 sums checked\n\nThe downloaded binary packages are in\n    C:\\Users\\Si Hui\\AppData\\Local\\Temp\\RtmpCOK1JB\\downloaded_packages\npackage 'shades' successfully unpacked and MD5 sums checked\npackage 'ggfittext' successfully unpacked and MD5 sums checked\npackage 'treemapify' successfully unpacked and MD5 sums checked\n\nThe downloaded binary packages are in\n    C:\\Users\\Si Hui\\AppData\\Local\\Temp\\RtmpCOK1JB\\downloaded_packages"
+    "text": "2.1 Installing and Loading the Packages\nFor this exercise, the treemap, treemapify and tidyverse packages will be used.\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\n\nShow the code\npacman::p_load(tidyverse, DT, treemap, treemapify)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#importing-the-data",
     "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#importing-the-data",
     "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
     "section": "2.2 Importing the Data",
-    "text": "2.2 Importing the Data\nFor this exercise, REALIS2018.csv data will be used. This dataset provides information of private property transaction records in 2018. The dataset is extracted from REALIS portal of Urban Redevelopment Authority (URA).\nIn the code chunk below, read_csv() of readr is used to import WHData-2018.csv into R and parsed it into tibble R data frame format.\n\nrealis2018 &lt;- read_csv(\"data/realis2018.csv\")"
+    "text": "2.2 Importing the Data\nFor this exercise, REALIS2018.csv data will be used. This dataset provides information of private property transaction records in 2018. The dataset is extracted from REALIS portal of Urban Redevelopment Authority (URA).\nIn the code chunk below, read_csv() of readr is used to import WHData-2018.csv into R and parsed it into tibble R data frame format.\n\nrealis2018 &lt;- read_csv(\"data/realis2018.csv\")\n\n\nThe DataChecking the data\n\n\n\ndatatable(realis2018)\n\n\n\n\n\n\n\n\nglimpse(realis2018)\n\nRows: 23,205\nColumns: 20\n$ `Project Name`                &lt;chr&gt; \"ADANA @ THOMSON\", \"ALANA\", \"ALANA\", \"AL…\n$ Address                       &lt;chr&gt; \"8 Old Upper Thomson Road  #05-03\", \"156…\n$ `No. of Units`                &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…\n$ `Area (sqm)`                  &lt;dbl&gt; 52, 284, 256, 256, 277, 285, 234, 155, 1…\n$ `Type of Area`                &lt;chr&gt; \"Strata\", \"Strata\", \"Strata\", \"Strata\", …\n$ `Transacted Price ($)`        &lt;dbl&gt; 888888, 2530000, 2390863, 2450000, 19800…\n$ `Nett Price($)`               &lt;chr&gt; \"-\", \"-\", \"2382517\", \"2441654\", \"-\", \"-\"…\n$ `Unit Price ($ psm)`          &lt;dbl&gt; 17094, 8908, 9307, 9538, 7148, 6947, 147…\n$ `Unit Price ($ psf)`          &lt;dbl&gt; 1588, 828, 865, 886, 664, 645, 1371, 149…\n$ `Sale Date`                   &lt;chr&gt; \"4-Jul-18\", \"5-Oct-18\", \"9-Jun-18\", \"14-…\n$ `Property Type`               &lt;chr&gt; \"Apartment\", \"Terrace House\", \"Terrace H…\n$ Tenure                        &lt;chr&gt; \"Freehold\", \"103 Yrs From 12/08/2013\", \"…\n$ `Completion Date`             &lt;chr&gt; \"2018\", \"2018\", \"2018\", \"2018\", \"2008\", …\n$ `Type of Sale`                &lt;chr&gt; \"New Sale\", \"Sub Sale\", \"New Sale\", \"New…\n$ `Purchaser Address Indicator` &lt;chr&gt; \"Private\", \"Private\", \"HDB\", \"N.A\", \"Pri…\n$ `Postal District`             &lt;dbl&gt; 20, 28, 28, 28, 26, 26, 26, 26, 26, 26, …\n$ `Postal Sector`               &lt;dbl&gt; 57, 80, 80, 80, 78, 78, 78, 78, 78, 78, …\n$ `Postal Code`                 &lt;dbl&gt; 573868, 804555, 804529, 804540, 786300, …\n$ `Planning Region`             &lt;chr&gt; \"North East Region\", \"North East Region\"…\n$ `Planning Area`               &lt;chr&gt; \"Ang Mo Kio\", \"Ang Mo Kio\", \"Ang Mo Kio\"…",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
   },
   {
     "objectID": "index.html#extras",
@@ -1655,5 +1667,137 @@
     "title": "SiHui Learns Visual Analytics!",
     "section": "Extras",
     "text": "Extras\nAdditional practices and experiments can be found here!\n\n\n\n\n\n\n\n\nPost-Lesson Thoughts 1: Annotations\n\n\n\n\n\n\nGoh Si Hui\n\n\nJan 13, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#data-wrangling",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#data-wrangling",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "2.3 Data Wrangling",
+    "text": "2.3 Data Wrangling\nAs seen from the above,realis2018 is in trasaction record form, which is highly disaggregated and not appropriate to be used to plot a treemap. In this section, we will perform the following steps to manipulate and prepare a data.frtame that is appropriate for treemap visualisation:\n\ngroup transaction reocrds by Project Name, Planning Region, Planning Area, Property Type and Type of Sale; and\ncompute Total Units Sold, Total Area, Median Unit Price and Median Transacted Price by applying appropriate summary statistics on number of units, area(sqm), unit price (\\(psm) and transacted price (\\)) respectively.\n\nTwo key verbs of dplyr package, namely: group_by() and summarize() will be used to perform these steps.\ngroup_by() breaks down a data.frame into specified groups of rows. When you then apply the verbs above on the resulting object they’ll be automatically applied “by group”.\nGrouping affects the verbs as follows:\n\ngrouped select() is the same as ungrouped select(), except that grouping variables are always retained.\ngrouped arrange() is the same as ungrouped; unless you set .by_group = TRUE, in which case it orders first by the grouping variables.\nmutate() and filter() are most useful in conjunction with window functions (like rank(), or min(x) == x).\nsample_n() and sample_frac() sample the specified number/fraction of rows in each group.\nsummarise() computes the summary for each group.\n\nIn our case, group_by() will used together with summarise() to derive the summarised data.frame.\n\nGrouped summaries without the PipeGrouped summaries with the Pipe\n\n\nThe code chunk below shows a typical two-lines code approach to perform the steps.\n\nrealis2018_grouped &lt;- group_by(realis2018, `Project Name`,\n                               `Planning Region`, `Planning Area`, \n                               `Property Type`, `Type of Sale`)\n\nrealis2018_summarised &lt;- summarise(realis2018_grouped, \n                          `Total Unit Sold` = sum(`No. of Units`, na.rm = TRUE),\n                          `Total Area` = sum(`Area (sqm)`, na.rm = TRUE),\n                          `Median Unit Price ($ psm)` = median(`Unit Price ($ psm)`, na.rm = TRUE), \n                          `Median Transacted Price` = median(`Transacted Price ($)`, na.rm = TRUE))\n\nThe code chunk above is not very efficient because we have to give each intermediate data.frame a name, even though we don’t have to care about it.\n\n\nThe code chunk below shows a more efficient way to tackle the same processes by using the pipe operator, %&gt;%:\n\nrealis2018_summarised &lt;- realis2018 %&gt;% \n  group_by(`Project Name`,`Planning Region`, \n           `Planning Area`, `Property Type`, \n           `Type of Sale`) %&gt;%\n  summarise(`Total Unit Sold` = sum(`No. of Units`, na.rm = TRUE), \n            `Total Area` = sum(`Area (sqm)`, na.rm = TRUE),\n            `Median Unit Price ($ psm)` = median(`Unit Price ($ psm)`, na.rm = TRUE),\n            `Median Transacted Price` = median(`Transacted Price ($)`, na.rm = TRUE))",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#designing-a-static-treemap",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#designing-a-static-treemap",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "3.1 Designing a static treemap",
+    "text": "3.1 Designing a static treemap\nIn this section, treemap() of Treemap package is used to plot a treemap showing the distribution of median unit prices and total unit sold of resale condominium by geographic hierarchy in 2017.\nFirst, we will select records belongs to resale condominium property type from realis2018_selected data frame.\n\nrealis2018_selected &lt;- realis2018_summarised %&gt;%\n  filter(`Property Type` == \"Condominium\", `Type of Sale` == \"Resale\")",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#using-the-basic-arguments",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#using-the-basic-arguments",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "3.2 Using the basic arguments",
+    "text": "3.2 Using the basic arguments\nThe code chunk below designed a treemap by using three core arguments of treemap(), namely: index, vSize and vColor.\n\ntreemap(realis2018_selected,\n        index=c(\"Planning Region\", \"Planning Area\", \"Project Name\"),\n        vSize=\"Total Unit Sold\",\n        vColor=\"Median Unit Price ($ psm)\",\n        title=\"Resale Condominium by Planning Region and Area, 2017\",\n        title.legend = \"Median Unit Price (S$ per sq. m)\"\n        )\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nThings to learn from the three arguments used:\n\nindex\n\nThe index vector must consist of at least two column names or else no hierarchy treemap will be plotted.\nIf multiple column names are provided, such as the code chunk above, the first name is the highest aggregation level, the second name the second highest aggregation level, and so on.\n\nvSize\n\nThe column must not contain negative values. This is because it’s vaues will be used to map the sizes of the rectangles of the treemaps.\n\n\n\n\n\n\n\n\n\n\nWarning\n\n\n\nThe treemap above was wrongly coloured. For a correctly designed treemap, the colours of the rectagles should be in different intensity showing, in our case, median unit prices.\nFor treemap(), vColor is used in combination with the argument type to determines the colours of the rectangles. Without defining type, like the code chunk above, treemap() assumes type = index, in our case, the hierarchy of planning areas.",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#working-with-vcolor-and-type-arguments",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#working-with-vcolor-and-type-arguments",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "3.3 Working with vColor and type arguments",
+    "text": "3.3 Working with vColor and type arguments\nIn the code chunk below, type argument is define as value.\n\ntreemap(realis2018_selected,\n        index=c(\"Planning Region\", \"Planning Area\", \"Project Name\"),\n        vSize=\"Total Unit Sold\",\n        vColor=\"Median Unit Price ($ psm)\",\n        type = \"value\",\n        title=\"Resale Condominium by Planning Region and Area, 2017\",\n        title.legend = \"Median Unit Price (S$ per sq. m)\"\n        )\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\n\nThe rectangles are coloured with different intensity of green, reflecting their respective median unit prices.\nThe legend reveals that the values are binned into ten bins, i.e. 0-5000, 5000-10000, etc. with an equal interval of 5000.",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#colours-with-treemap-package",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#colours-with-treemap-package",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "3.4 Colours with treemap package",
+    "text": "3.4 Colours with treemap package\nThere are two arguments that determine the mapping to color palettes: mapping and palette. The only difference between “value” and “manual” is the default value for mapping. The “value” treemap considers palette to be a diverging color palette (say ColorBrewer’s “RdYlBu”), and maps it in such a way that 0 corresponds to the middle color (typically white or yellow), -max(abs(values)) to the left-end color, and max(abs(values)), to the right-end color. The “manual” treemap simply maps min(values) to the left-end color, max(values) to the right-end color, and mean(range(values)) to the middle color.\n\n3.4.1 The “value” type treemap\nThe\n\ntreemap(realis2018_selected,\n        index=c(\"Planning Region\", \"Planning Area\", \"Project Name\"),\n        vSize=\"Total Unit Sold\",\n        vColor=\"Median Unit Price ($ psm)\",\n        type=\"value\",\n        palette=\"RdYlBu\", \n        title=\"Resale Condominium by Planning Region and Area, 2017\",\n        title.legend = \"Median Unit Price (S$ per sq. m)\"\n        )\n\n\n\n\n\n\n\n\nThing to learn from the code chunk above:\n\nalthough the colour palette used is RdYlBu but there are no red rectangles in the treemap above. This is because all the median unit prices are positive.\nThe reason why we see only 5000 to 45000 in the legend is because the range argument is by default c(min(values, max(values)) with some pretty rounding.\n\n\n\n3.4.2 The “manual” type treemap\nThe “manual” type does not interpret the values as the “value” type does. Instead, the value range is mapped linearly to the colour palette.\nThe code chunk below shows a manual type treemap.\n\ntreemap(realis2018_selected,\n        index=c(\"Planning Region\", \"Planning Area\", \"Project Name\"),\n        vSize=\"Total Unit Sold\",\n        vColor=\"Median Unit Price ($ psm)\",\n        type=\"manual\",\n        palette=\"RdYlBu\", \n        title=\"Resale Condominium by Planning Region and Area, 2017\",\n        title.legend = \"Median Unit Price (S$ per sq. m)\"\n        )\n\n\n\n\n\n\n\n\nThings to learn from the code chunk above:\n\nThe colour scheme used is very confusing. This is because mapping = (min(values), mean(range(values)), max(values)). It is not wise to use diverging colour palette such as RdYlBu if the values are all positive or negative.\n\nTo overcome this problem, a single colour palette such as Blues/Greens should be used.\n\ntreemap(realis2018_selected,\n        index=c(\"Planning Region\", \"Planning Area\", \"Project Name\"),\n        vSize=\"Total Unit Sold\",\n        vColor=\"Median Unit Price ($ psm)\",\n        type=\"manual\",\n        palette=\"Greens\", \n        title=\"Resale Condominium by Planning Region and Area, 2017\",\n        title.legend = \"Median Unit Price (S$ per sq. m)\"\n        )",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#treemap-layout",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#treemap-layout",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "3.5 Treemap Layout",
+    "text": "3.5 Treemap Layout\ntreemap() supports two popular treemap layouts, namely: “squarified” and “pivotSize”. The default is “pivotSize”.\nThe squarified treemap algorithm (Bruls et al., 2000) produces good aspect ratios, but ignores the sorting order of the rectangles (sortID). The ordered treemap, pivot-by-size, algorithm (Bederson et al., 2002) takes the sorting order (sortID) into account while aspect ratios are still acceptable.",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#working-with-algorithm-argument",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#working-with-algorithm-argument",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "3.6 Working with algorithm argument",
+    "text": "3.6 Working with algorithm argument\nThe code chunk below plots a squarified treemap by changing the algorithm argument.\n\ntreemap(realis2018_selected,\n        index=c(\"Planning Region\", \"Planning Area\", \"Project Name\"),\n        vSize=\"Total Unit Sold\",\n        vColor=\"Median Unit Price ($ psm)\",\n        type=\"manual\",\n        palette=\"Blues\", \n        algorithm = \"squarified\",\n        title=\"Resale Condominium by Planning Region and Area, 2017\",\n        title.legend = \"Median Unit Price (S$ per sq. m)\"\n        )",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#using-sortid",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#using-sortid",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "3.7 Using sortID",
+    "text": "3.7 Using sortID\nWhen “pivotSize” algorithm is used, sortID argument can be used to dertemine the order in which the rectangles are placed from top left to bottom right.\n\ntreemap(realis2018_selected,\n        index=c(\"Planning Region\", \"Planning Area\", \"Project Name\"),\n        vSize=\"Total Unit Sold\",\n        vColor=\"Median Unit Price ($ psm)\",\n        type=\"manual\",\n        palette=\"Blues\", \n        algorithm = \"pivotSize\",\n        sortID = \"Median Transacted Price\",\n        title=\"Resale Condominium by Planning Region and Area, 2017\",\n        title.legend = \"Median Unit Price (S$ per sq. m)\"\n        )",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#designing-a-basic-treemap",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#designing-a-basic-treemap",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "4.1 Designing a basic treemap",
+    "text": "4.1 Designing a basic treemap\n\nggplot(data=realis2018_selected, \n       aes(area = `Total Unit Sold`,\n           fill = `Median Unit Price ($ psm)`),\n       layout = \"scol\",\n       start = \"bottomleft\") + \n  geom_treemap() +\n  scale_fill_gradient(low = \"light blue\", high = \"blue\")",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#defining-hierarchy",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#defining-hierarchy",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "4.2 Defining hierarchy",
+    "text": "4.2 Defining hierarchy\nGroup by Planning Region\n\nggplot(data=realis2018_selected, \n       aes(area = `Total Unit Sold`,\n           fill = `Median Unit Price ($ psm)`,\n           subgroup = `Planning Region`),\n       start = \"topleft\") + \n  geom_treemap()\n\n\n\n\n\n\n\n\nGroup by Planning Area\n\nggplot(data=realis2018_selected, \n       aes(area = `Total Unit Sold`,\n           fill = `Median Unit Price ($ psm)`,\n           subgroup = `Planning Region`,\n           subgroup2 = `Planning Area`)) + \n  geom_treemap()\n\n\n\n\n\n\n\n\nAdding boundary line\n\nggplot(data=realis2018_selected, \n       aes(area = `Total Unit Sold`,\n           fill = `Median Unit Price ($ psm)`,\n           subgroup = `Planning Region`,\n           subgroup2 = `Planning Area`)) + \n  geom_treemap() +\n  geom_treemap_subgroup2_border(colour = \"gray40\",\n                                size = 2) +\n  geom_treemap_subgroup_border(colour = \"gray20\")",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#installing-d3treer-package",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#installing-d3treer-package",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "5.1 Installing d3treeR package",
+    "text": "5.1 Installing d3treeR package\nWe will first load the devtools library and install the package found in github using the codes below.\n\nlibrary(devtools)\ninstall_github(\"timelyportfolio/d3treeR\")\n\nThen we will launch d3treeR package.\n\nlibrary(d3treeR)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#designing-an-interactive-treemap",
+    "href": "Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html#designing-an-interactive-treemap",
+    "title": "Hands-on Exercise 5e - Treemap Visualisation with R",
+    "section": "5.2 Designing an Interactive Treemap",
+    "text": "5.2 Designing an Interactive Treemap\nThe following codes perform two processes:\n\ntreemap() is used to build a treemap by using selected variables in condominium data.frame. The treemap created is save as object called tm.\n\n\ntm &lt;- treemap(realis2018_summarised,\n        index=c(\"Planning Region\", \"Planning Area\"),\n        vSize=\"Total Unit Sold\",\n        vColor=\"Median Unit Price ($ psm)\",\n        type=\"value\",\n        title=\"Private Residential Property Sold, 2017\",\n        title.legend = \"Median Unit Price (S$ per sq. m)\"\n        )\n\n\n\n\n\n\n\n\n\nThen d3tree() is used to build an interactive treemap.\n\n\nd3tree(tm,rootname = \"Singapore\")",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 5e - Treemap Visualisation with R"
+    ]
   }
 ]
