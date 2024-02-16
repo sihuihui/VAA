@@ -1,0 +1,480 @@
+---
+title: "Take-home Exercise 3: Be Weatherwise or Otherwise"
+author: "Goh Si Hui"
+date: 2024/02/12
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+# About this Exercise
+
+In this take-home exercise, I will be using the visual analytics techniques learnt in ISSS 608 to visualise uncertainty methods and create interactive visual analytics to validate the [projection](https://www.nccs.gov.sg/singapores-climate-action/impact-of-climate-change-in-singapore/) that daily mean temperature is projected to increase by 1.4 to 4.6 degrees celsius by the end of the century.
+
+# Getting Started
+
+First, let us ensure that the required R packages have been installed and import the relevant data for this exercise.
+
+## Loading R packages
+
+For this exercise, we will be using the following packages:
+
+-   [**tidyverse**](https://www.tidyverse.org/) : to load the core tidyverse packages, which includes ggplot2 and dplyr.
+
+-   [**ggdist**](https://mjskay.github.io/ggdist/): provides stats and geoms for visualising distributions and uncertainty.
+
+-   plotly:
+
+-   gganimate
+
+-   DT
+
+-   crosstalk
+
+-   ggstatsplot:
+
+-   performance:
+
+-   parameters:
+
+The code chunk below uses `p_load()` of [**pacman**](https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html) package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+pacman::p_load(tidyverse, ggdist, plotly, gganimate, DT, crosstalk, ggstatsplot, performance, parameters, patchwork, nortest, ggiraph)
+
+```
+
+## Importing the Data 
+
+For this exercise, we will be using the historical daily temperature data from Meteorological Service Singapore. As there are more than 60 weather stations in Singapore, for the purpose of this exercise, we will be using the temperature data from Changi weather station in August 1983, 1993, 2003, 2013 and 2023.
+
+:::{.panel-tabset}
+
+## Aug 1983
+```{r}
+aug1983 <- read_csv("data/DAILYDATA_S24_198308.csv")
+head(aug1983,10)
+```
+## Aug 1993
+```{r}
+aug1993 <- read_csv("data/DAILYDATA_S24_199308.csv")
+head(aug1993,10)
+```
+## Aug 2003
+```{r}
+aug2003 <- read_csv("data/DAILYDATA_S24_200308.csv")
+head(aug2003,10)
+```
+
+## Aug 2013
+```{r}
+aug2013 <- read_csv("data/DAILYDATA_S24_201308.csv")
+head(aug2013,10)
+```
+
+## Aug 2023
+```{r}
+aug2023 <- read_csv("data/DAILYDATA_S24_202308.csv")
+head(aug2023,10)
+```
+:::
+
+## Data Preparation 
+
+As the downloaded data are in different tables, we will join them into one table first.
+
+```{r}
+changi <- full_join(aug1983, aug1993)
+changi <- full_join(changi, aug2003)
+changi <- full_join(changi, aug2003)
+changi <- full_join(changi, aug2013)
+changi <- full_join(changi, aug2023)
+```
+```{r}
+datatable(changi)
+
+```
+
+:::{.callout-note}
+
+Mean Daily Temperature: Mean of the temperatures observed at 24 equidistant times in the course of a continuous 24-hour period (normally the mean solar day from midnight to midnight according to the zonal time of the station).
+
+Daily Maximum Temperature: Maximum temperature in the course of a continuous time interval of 24 hours (usually midnight to midnight local time).
+
+Daily Minimum Temperature: Minimum temperature in the course of a continuous time interval of 24 hours (usually midnight to midnight local time).
+
+[Source](https://glossary.ametsoc.org/wiki/Mean_daily_temperature)
+
+
+::::
+
+We will first drop the columns that we do not need (i.e. those related to rainfall and wind) and retain only those related to temperature. 
+
+```{r}
+changitemp <- changi %>%
+  select(Day, Year, `Mean Temperature (degrees celsius)`)
+
+```
+
+We also use the following code chunk to check for missing data. 
+```{r}
+
+any(is.na(changitemp))
+
+```
+
+We will check data type using `glimpse()`
+
+```{r}
+
+glimpse(changitemp)
+
+
+```
+
+
+```{r}
+changitemp <- rename(changitemp, 
+       MeanDailyTemp = `Mean Temperature (degrees celsius)`)
+
+```
+
+```{r}
+changitemp$Day <- as.factor(changitemp$Day)
+changitemp$Year <- as.factor(changitemp$Year)
+
+```
+
+```{r}
+head(changitemp)
+```
+
+
+```{r}
+
+changitemp_transformed <- changitemp %>%
+   pivot_wider(names_from = Year, values_from = MeanDailyTemp)
+
+
+```
+
+
+```{r}
+
+changitemp_transformed <- changitemp_transformed %>%
+  rename("Year1983" = `1983`,
+         "Year1993" = `1993`,
+         "Year2003" = `2003`,
+         "Year2013" = `2013`,
+         "Year2023" = `2023`)
+```
+
+
+```{r}
+glimpse(changitemp_transformed)
+
+```
+
+
+
+# Exploratory Data Analysis
+
+## Dotplot to have a sense of the distribution of daily temperature 
+
+```{r}
+p <- ggplot(data=changitemp, 
+       aes(x = MeanDailyTemp)) +
+  geom_dotplot_interactive(           
+    aes(data_id = Year),             
+    stackgroups = TRUE,               
+    binwidth = 0.1,                        
+    method = "histodot") +               
+  scale_y_continuous(NULL,               
+                     breaks = NULL)
+girafe(                                  
+  ggobj = p,                             
+  width_svg = 6,                         
+  height_svg = 6*0.618                      
+)   
+```
+
+
+## Boxplot for overview of highest and lowest mean daily temp in the month of August
+
+```{r fig.width=20, fig.height=10}
+
+d1 <- highlight_key(changitemp) 
+
+c1 <- ggplot(data = changitemp,
+        aes(factor(Year),
+        MeanDailyTemp))+
+  geom_violin() + geom_jitter(height = 0, width = 0.1)
+
+gg1 <- highlight(ggplotly(c1),        
+                "plotly_selected")  
+
+crosstalk::bscols(gg1,               
+                  datatable(d1), 
+                  widths = 9)  
+```
+
+
+
+
+
+
+
+```{r fig.width=20, fig.height=25}
+
+c2 <- ggplot(data=changitemp_transformed, 
+       aes(x = Year1983)) +
+  geom_dotplot_interactive(              
+    aes(tooltip = paste0("Day: ", Day, " Temp: ", Year1983),
+        data_id =Day),              
+    stackgroups = TRUE,                  
+    binwidth = 0.5,                        
+    method = "histodot") +  
+  coord_cartesian(xlim=c(24,33)) + 
+  scale_y_continuous(NULL,               
+                     breaks = NULL)
+
+
+c3 <- ggplot(data=changitemp_transformed, 
+       aes(x = Year1993)) +
+  geom_dotplot_interactive(              
+    aes(tooltip = paste0("Day: ", Day, " Temp: ", Year1993),
+        data_id =Day),              
+    stackgroups = TRUE,                  
+    binwidth = 0.5,                        
+    method = "histodot") +  
+  coord_cartesian(xlim=c(24,33)) + 
+  scale_y_continuous(NULL,               
+                     breaks = NULL)
+
+
+c4 <- ggplot(data=changitemp_transformed, 
+       aes(x = Year2003)) +
+  geom_dotplot_interactive(              
+    aes(tooltip = paste0("Day: ", Day, " Temp: ", Year2003),
+        data_id =Day),              
+    stackgroups = TRUE,                  
+    binwidth = 0.5,                        
+    method = "histodot") +  
+  coord_cartesian(xlim=c(24,33)) + 
+  scale_y_continuous(NULL,               
+                     breaks = NULL)
+
+c5 <- ggplot(data=changitemp_transformed, 
+       aes(x = Year2013)) +
+  geom_dotplot_interactive(              
+    aes(tooltip = paste0("Day: ", Day, " Temp: ", Year2013),
+        data_id =Day),              
+    stackgroups = TRUE,                  
+    binwidth = 0.5,                        
+    method = "histodot") +  
+  coord_cartesian(xlim=c(24,33)) + 
+  scale_y_continuous(NULL,               
+                     breaks = NULL)
+
+c6 <- ggplot(data=changitemp_transformed, 
+       aes(x = Year2023)) +
+  geom_dotplot_interactive(              
+    aes(tooltip = paste0("Day: ", Day, " Temp: ", Year2023),
+        data_id =Day),              
+    stackgroups = TRUE,                  
+    binwidth = 0.5,                        
+    method = "histodot") +  
+  coord_cartesian(xlim=c(24,33)) + 
+  scale_y_continuous(NULL,               
+                     breaks = NULL)
+
+girafe(code = print(c2 + c3 + c4 +c5 + c6), 
+       width_svg = 10,
+       height_svg = 7,
+       options = list(
+         opts_hover(css = "fill:#FF33A2;"),
+         opts_hover_inv(css = "opacity:0.2;")
+         )
+       ) 
+```
+
+
+
+```{r fig.width=20, fig.height=8}
+
+c7 <- plot_ly(data = changitemp_transformed,
+        x = ~Day,
+        y = ~Year1983,
+        type = "scatter",
+        mode = "lines+markers") |>
+layout(title = "Temperature observed by Changi Weather Station in August",
+       xaxis = list(title =""),
+       yaxis = list(title = "", range = c(0,35)),
+       updatemenus = list(list(type = 'dropdown',
+                               xref = "paper",
+                               yref = "paper",
+                               xanchor = "left",
+                                x = 0.04, 
+                                 y = 0.95,
+                                 buttons = list(
+                                   list(method = "update",
+                                        args = list(list(y = list(changitemp_transformed$Year1983)),
+                                                    list(yaxis = list(title = "Temperature in 1983", range = c(0,35)))),label = "1983"),
+                                   list(method = "update",
+                                        args = list(list(y = list(changitemp_transformed$Year1993)),
+                                                    list(yaxis = list(title = "Temperature in 1993", range = c(0,35)))),label = "1993"),
+                                   list(method = "update",
+                                        args = list(list(y = list(changitemp_transformed$Year2003)),
+                                                    list(yaxis = list(title = "Temperature  in 2003", range = c(0,35)))),label = "2003"),
+                                   list(method = "update",
+                                        args = list(list(y = list(changitemp_transformed$Year2013)),
+                                                    list(yaxis = list(title = "Temperature  in 2013", range = c(0,35)))),label = "2013"),
+                                   list(method = "update",
+                                        args = list(list(y = list(changitemp_transformed$Year2023)),
+                                                    list(yaxis = list(title = "Temperature  in 2023", range = c(0,35)))),label = "2023")
+                                   
+                               ))))
+
+c7
+```
+
+
+## Visualising Uncertainty 
+
+```{r}
+
+c9 <- ggplot(
+  data = changitemp,
+  aes(x = Year,
+      y = MeanDailyTemp)) +
+  stat_pointinterval(show.legend = FALSE)
+
+c9
+
+```
+
+
+```{r}
+tooltip_stat <- function(y, ymax, accuracy = .01) {
+  mean <- scales::number(y, accuracy = accuracy)
+  sem <- scales:: number(ymax-y, accuracy = accuracy)
+  paste("Avg Daily Temperature for the year: ", mean, "+/-", sem)
+}
+
+p3 <- ggplot(data = changitemp,
+             aes(x = Year),) + 
+               stat_summary(aes(y = MeanDailyTemp, tooltip = after_stat(tooltip_stat(y, ymax))),
+                                           fun.data = "mean_se",
+                                           geom = GeomInteractiveCol,
+                                           fill = "pink") + 
+               stat_summary(aes(y = MeanDailyTemp),
+                            fun.data = mean_se, 
+                            geom = "errorbar", width = 0.2, linewidth = 0.2)
+
+girafe( ggobj = p3,
+        width_svg = 8,
+        height_svg = 8 * 0.618)
+```
+
+
+```{r}
+changitemp %>%
+  ggplot(aes(x = Year, 
+             y = MeanDailyTemp)) +
+  stat_gradientinterval(   
+    fill = "orange",      
+    show.legend = TRUE     
+  ) +                        
+  labs(
+    title = "Visualising confidence intervals of mean daily temperature (in degrees celsius)",
+    subtitle = "Gradient + interval plot")
+
+
+```
+
+```{r}
+library(ungeviz)
+
+ggplot(data = changitemp, 
+       (aes(x = factor(Year), 
+            y = MeanDailyTemp))) +
+  geom_point(position = position_jitter(
+    height = 0.3, 
+    width = 0.05), 
+    size = 0.4, 
+    color = "#0072B2", 
+    alpha = 1/2) +
+  geom_hpline(data = sampler(25, 
+                             group = Year), 
+              height = 0.6, 
+              color = "#D55E00") +
+  theme_bw() + 
+  transition_states(.draw, 1, 3)
+
+
+```
+
+
+# Confirmatory Data Analysis
+
+Normality test
+```{r}
+testresultlist <- list()
+
+for (i in unique(changitemp$Year)){
+  subdf <- subset(x = changitemp, subset=Year==i)
+  testresultlist[[i]] <- ad.test(subdf$MeanDailyTemp)
+}
+
+resultlist <- tibble(Year = unique(changitemp$Year),
+                     p_value = unlist(lapply(testresultlist, `[[`, 2)))
+
+datatable(resultlist, class='compact')
+
+```
+Based on the result above, the null hypothesis is rejected as some of the distributions are below 0.05 critical value. As such, we are not able to confirm normality assumption for distribution of mean daily temperature 
+
+
+
+Anova 
+
+```{r}
+
+ggbetweenstats(
+  data = changitemp,
+  x = Year, 
+  y = MeanDailyTemp,
+  type = "np",
+  mean.ci = TRUE, 
+  pairwise.comparisons = TRUE, 
+  pairwise.display = "s",
+  p.adjust.method = "fdr",
+  messages = FALSE
+)
+
+```
+As noted above, the hypothesis testing is done using Kruskal-Wallis test with 95% confidence level for the individual plot. For each plot, they hypothesis is:
+
+H0 : There is no difference between median mean daily temp
+
+H1 : There is difference between median mean daily temp
+
+Important
+Since the p-value < critical value of 0.05, there is statistical evidence to reject the null hypothesis. We can conclude that for each year (grouped by number of transactions), there is difference between median mean daily temp 
+
+
+```{r}
+extract_stats(max)
+```
+
+# My Takeaways
+
+# References
