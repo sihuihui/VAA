@@ -25,6 +25,7 @@ listing:
     contents:
     - "Take-home_Ex/Take-home_Ex01/*.qmd"
     - "Take-home_Ex/Take-home_Ex02/*.qmd"
+    - "Take-home_Ex/Take-home_Ex03/*.qmd"
     type: grid
     sort: "date"
   

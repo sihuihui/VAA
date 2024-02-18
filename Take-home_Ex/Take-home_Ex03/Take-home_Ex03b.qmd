@@ -14,7 +14,7 @@ editor: visual
 
 # About this Exercise
 
-According to Ministry of Sustainability and the Environment, the daily mean temperature is projected to increase by 1.4 to 4.6 degrees celsius by the end of the century.
+According to Ministry of Sustainability and the Environment, the daily mean temperature is projected to increase by 1.4 to 4.6 Degree Celsius by the end of the century.
 
 In this take-home exercise, I will be using the visual analytics techniques learnt in ISSS 608 to visualise uncertainty methods and create interactive visual analytics to validate the [projection](https://www.nccs.gov.sg/singapores-climate-action/impact-of-climate-change-in-singapore/) if the daily mean temperature is increasing from 1983 to 2023.
 
@@ -26,23 +26,21 @@ First, let us ensure that the required R packages have been installed and import
 
 For this exercise, we will be using the following packages:
 
--   [**tidyverse**](https://www.tidyverse.org/) : to load the core tidyverse packages, which includes ggplot2 and dplyr.
+-   tidyverse : to load the core tidyverse packages, which includes ggplot2 and dplyr.
 
--   [**ggdist**](https://mjskay.github.io/ggdist/): provides stats and geoms for visualising distributions and uncertainty.
+-   ggdis: provides stats and geoms for visualising distributions and uncertainty.
 
--   plotly:
+-   ggiraph: to make interactive ggplot2 plots
 
--   gganimate
+-   plotly: to plot interactive statistical graphs
 
--   DT
+-   DT: to create interactive tables using the JavaScript library DataTables
 
--   crosstalk
+-   crosstalk: to implement cross-widget interactions
 
--   ggstatsplot:
+-   ggstatsplot:an extension of ggplot2 package for creating graphics with details from statistical tests included in the information-rich plots themselves.
 
--   nortest:
-
--   ggiraph:
+-   nortest: to test the normality assumption.
 
 The code chunk below uses `p_load()` of [**pacman**](https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html) package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
 
@@ -50,7 +48,7 @@ The code chunk below uses `p_load()` of [**pacman**](https://trinker.github.io/p
 #| code-fold: true
 #| code-summary: "Show the code"
 
-pacman::p_load(tidyverse, ggdist, plotly, gganimate, DT, crosstalk, ggstatsplot, nortest, ggiraph, hrbrthemes, ggpubr)
+pacman::p_load(tidyverse, ggdist, plotly, gganimate, DT, crosstalk, ggstatsplot, nortest, ggiraph, hrbrthemes)
 
 ```
 
@@ -58,9 +56,7 @@ pacman::p_load(tidyverse, ggdist, plotly, gganimate, DT, crosstalk, ggstatsplot,
 
 For this exercise, we will be using the historical daily temperature data from Meteorological Service Singapore. As there are more than 60 weather stations in Singapore, for the purpose of this exercise, we will be using the temperature data from Changi weather station in August 1983, 1993, 2003, 2013 and 2023.
 
-Singapore’s climate station record for temperature stretches back to 1929. The location of the climate station has changed over time; it has been at its current location at Changi Airport since 1984. Therefore, the most reliable long-term records for assessing impact of climate change, urbanisation and other factors on the climate station are for the 1984 – 2023 period, due to earlier changes in the climate station location affecting the measurements.[Source](https://www.weather.gov.sg/wp-content/uploads/2023/03/ACAR_2022.pdf)
-
-:::{.panel-tabset}
+::: panel-tabset
 ## Aug 1983
 
 ```{r}
@@ -121,7 +117,7 @@ From the output above, we see that there are columns such as rainfall and wind t
 ::: callout-note
 At the time of this take-home exercise, we cannot find information on how Weather.gov.sg calculated "mean temperature" or "daily mean temperature".
 
-According to this[Source](https://glossary.ametsoc.org/wiki/Mean_daily_temperature), the mean daily temperature is the mean of the temperatures observed at 24 equidistant times in the course of a continuous 24-hour period (normally the mean solar day from midnight to midnight according to the zonal time of the station).The data from Weather.gov.sg also provided us with the daily maximum temperature and daily minimum temperature, which is the maximum and minimum temperature in the course of a continuous time interval of 24 hours. However, if we do not have hourly temperature of the day, we would not be able to verify the mean temperature given and we are still unable to determine the distribution of the temperature throughout the day.Hence, we will drop the minimum and maximum temperature columns.
+According to this [Source](https://glossary.ametsoc.org/wiki/Mean_daily_temperature), the mean daily temperature is the mean of the temperatures observed at 24 equidistant times in the course of a continuous 24-hour period (normally the mean solar day from midnight to midnight according to the zonal time of the station).The data from Weather.gov.sg also provided us with the daily maximum temperature and daily minimum temperature, which is the maximum and minimum temperature in the course of a continuous time interval of 24 hours. However, if we do not have hourly temperature of the day, we would not be able to verify the mean temperature given and we are still unable to determine the distribution of the temperature throughout the day.Hence, we will drop the minimum and maximum temperature columns.
 :::
 
 We will first drop the columns that we do not need (i.e. those related to rainfall and wind) and retain only the `Day`, `Year`, `Mean Temperature` using `select`. We also check the output using `glimpse()`.
@@ -146,15 +142,13 @@ We also use the following code chunk to check for missing data.
 any(is.na(changitemp))
 
 ```
+
 From the above output, we verified that there is no missing data.
 
-:::{.panel-tabset}
+::: panel-tabset
 ## Rename Mean Temperature
 
 ```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
-
 changitemp <- rename(changitemp, 
        DailyTemp = `Mean Temperature (degrees celsius)`)
 
@@ -164,8 +158,6 @@ glimpse(changitemp)
 ## Change Variables from character to factor
 
 ```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
 
 changitemp$Day <- as.factor(changitemp$Day)
 changitemp$Year <- as.factor(changitemp$Year)
@@ -199,8 +191,7 @@ datatable(changitemp_transformed, caption = "Table 2 - Daily Temperature by Year
 
 # Exploratory Data Analysis
 
-
-To get a sense of the trend of the daily temperature in these five years, we first plot a line graph for each year. In addition, we will also plot a horizontal mean line for each year to show the average.  
+To get a sense of the trend of the daily temperature in these five years, we first plot a line graph for each year. In addition, we will also plot a horizontal mean line for each year to show the average.
 
 ```{r fig.width=15, fig.height=10}
 #| code-fold: true
@@ -227,7 +218,7 @@ c1 <- ggplot(data = d1,
        subtitle = "Years: 1983, 1993, 2003, 2013, 2023 \nWeather Station: Changi",
        caption = "Data from Weather.gov.sg") +
   xlab("Day") + 
-  ylab("Daily Temperature (Degrees celsius)") +
+  ylab("Daily Temperature (Degree Celsius)") +
   guides(color = FALSE, size = FALSE) +
   
   theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4,
@@ -239,14 +230,20 @@ gg1 <- highlight(ggplotly(c1),
                 "plotly_selected")  
 
 crosstalk::bscols(widths = c(7,5), gg1,               
-                  datatable(d1, caption = "Daily Temperature over the Years", class='compact'))      
+                  datatable(d1, caption = "Daily Temperature over the Years", class='compact', rownames = FALSE))      
 ```
-From the above, we can see that there are certain days where the daily temperature is above or below the calculated average temperature for the year (i.e. the black line on the chart). For example, in 1993, day 26 had a lower than average temperature of 25.5 degree Celsius while day 14 had a higher than average temperature of 30.1 degree celsius. 
 
-However, the line graph was not very useful to help us see if there is a rising trend in daily temperature since we are looking at daily temperature in the month of August in Singapore and we are only looking at the mean daily temperature in the Weather.gov.sg data. As such, we added an interactive boxplot. A boxplot not only tells us the dispersion and variation in the data, it also tells us the minimum and maximum value. In addition, we can also add jitter to boxplot to get an idea of the "concentration" of the data points. If the temperature is increasing as years pass, we should be able to observe that there are higher "concentration" of data points at the higher temperatures and the temperature range for each year would be going up. 
+From the above, we can see that there are certain days where the daily temperature is above or below the calculated average temperature for the year (i.e. the black line on the chart). For example, in 1993, day 26 had a lower than average temperature of 25.5 Degree Celsius while day 14 had a higher than average temperature of 30.1 Degree Celsius.
 
+However, the line graph plotted by days was not very useful to help us see if there is a rising trend in daily temperature over the years since we are looking at daily temperature in the month of August in Singapore and we are only looking at the mean daily temperature in the Weather.gov.sg data.
 
-```{r fig.width=20, fig.height=8}
+We considered having a line plot of the mean daily temperature for the year but thought that it would not be useful because it will just be telling us the calculated mean temperature for each year.
+
+As such, we added an interactive boxplot. A boxplot not only tells us the dispersion and variation in the data, it also tells us the minimum, median and maximum value. We can add a dot to indicate the mean temperature for the year. In addition, we can add jitter to boxplot to get an idea of the "concentration" of the data points. If the temperature is increasing as years pass, we should be able to observe that there are higher "concentration" of data points at the higher temperatures and the temperature range for each year would be going up.
+
+```{r fig.width=20, fig.height=15}
+#| code-fold: true
+#| code-summary: "Show the code"
 
 d1 <- highlight_key(changitemp) 
 
@@ -254,41 +251,42 @@ c2 <- ggplot(data = d1,
          aes(x = Year,
              y = DailyTemp),
          show.legend = FALSE) +
-    geom_boxplot(aes(fill = Year)) + 
-    geom_jitter(color="black", size=0.4, alpha=0.9) +
-    theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4,
+  geom_boxplot(outlier.shape = NULL) + 
+  stat_summary(fun = mean, geom = "point", shape = 16, size = 3, color = "red",
+               position = position_nudge(x = 0.0)) +
+  geom_jitter(color="black", size=0.4, alpha=0.9) +
+  
+  labs(title = "Daily Temperature in the Month of August") +
+  xlab("Year") + 
+  ylab("Daily Temperature (Degree Celsius)") +
+  guides(color = FALSE, size = FALSE) +
+  theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4,
                          subtitle_size=11, subtitle_margin=4, 
                          axis_title_size = 8, axis_text_size=8, axis_title_face=
                            "bold", plot_margin = margin(4, 4, 4, 4))
 
-gg1 <- highlight(ggplotly(c1),        
-                "plotly_selected")  
-
 gg2 <- highlight(ggplotly(c2),
                  "plotly_selected")
 
-fig <- subplot(gg2, gg1, widths = c(0.3, 0.7)) %>% 
-  layout(title = 'Daily Temperature in the Month of August',
-         subtitle = "Years: 1983, 1993, 2003, 2013, 2023 \nWeather Station: Changi \nQuantile Intervals: 95% and 99% of Daily Temperature",
-         caption = "Data from Weather.gov.sg")
 
-fig
+crosstalk::bscols(widths = c(7,5), gg2,               
+                  datatable(d1, caption = "Daily Temperature over the Years", class='compact', rownames = FALSE )) 
+
 
 ```
 
-:::{.callout-note appearance = "simple"}
+::: {.callout-note appearance="simple"}
 ## Observations
 
-From the line graph, the distributions of the daily temperature for all five years seem to be similar due to the daily temperature being broken down into days. 
+From the previous line graph, the distributions of the daily temperature for all five years seem to be similar due to the daily temperature being broken down into days.
 
-From the boxplot, we see that the median is different for different years, with some years having differences of more than 0.5 degree Celsius. The median  was 28.5 degree Celsius in 1983, it was 28.8 in 1993, 28.3 in 2003, 28.1 in 2013 and 28.8 in 2023.The difference in median between 2013 and 2023 was 0.7 degree celsius. 
+From the boxplot, we see that the median is different for different years, with some years having differences of more than 0.5 Degree Celsius. The median was 28.5 Degree Celsius in 1983, it was 28.8 in 1993, 28.3 in 2003, 28.1 in 2013 and 28.8 in 2023.The difference in median between 2013 and 2023 was 0.7 Degree Celsius.
 
-In addition, from the boxplot, we also see that the temperature ranges for each year was different. For example, it seems that the daily temperature for 2003, 2013 and 2023 have similar temperature range, where the lowest daily temperature is around 26.5 to 26.7 degrees Celsius, and the highest daily temperature is around 29 to 29.5 degree Celsius. Interestingly, 1993 experienced a wide range of daily mean temperature. 1993 had the lowest temperature of 25.5 degrees Celsius and also experienced the highest temperature of 30.1 degree Celsius. These two temperatures were also the lowest and highest temperatures out of these five years.
+In addition, from the boxplot, we also see that the temperature ranges for each year was different. For example, it seems that the daily temperature for 2003, 2013 and 2023 have similar temperature range, where the lowest daily temperature is around 26.5 to 26.7 Degree Celsius, and the highest daily temperature is around 29 to 29.5 Degree Celsius. Interestingly, 1993 experienced a wide range of daily mean temperature. 1993 had the lowest temperature of 25.5 Degree Celsius and also experienced the highest temperature of 30.1 Degree Celsius. These two temperatures were also the lowest and highest temperatures out of these five years.
 
 Although the temperature range for 2023 is similar to 2003, we observe that 2023 has more days (as indicated by the jitter) where temperature are higher than its median, which could indicate that temperatures were raising over the years.
 
 In the next section, we will perform confirmatory data analysis to confirm if the daily temperature is increasing over the years.
-
 :::
 
 # Confirmatory Data Analysis
@@ -319,9 +317,9 @@ datatable(resultlist, rownames = FALSE, caption = "Table 3 - p-value for each Ye
 
 Based on the result above, the null hypothesis (i.e. distribution is normally distributed) is rejected because the p-value for Years 1983, 1993, 2013 and 2023 are below the 0.05 critical value. As such, we are unable to confirm normality assumption for the distribution of daily temperature.
 
-## ANOVA Test 
+## ANOVA Test
 
-As we are comparing the point estimates between more than 2 groups, we will use ggstatsplot's `ggbetweenstats()` to visualise the ANOVA Test results. When visualising the ANOVA test results using `ggbetweenstats()`, non-parametric test is considered, hence `type = "np"` argument because we were unable to confirm the normality assumption for the distribution of daily temperature. In addition, we wanted to make pairwise comparisons e between significant pairs since we are interested to know those pairs with significant difference between them. Hence, `pairwise.display = "s"`. 
+As we are comparing the point estimates between more than 2 groups, we will use ggstatsplot's `ggbetweenstats()` to visualise the ANOVA Test results. When visualising the ANOVA test results using `ggbetweenstats()`, non-parametric test is considered, hence `type = "np"` argument because we were unable to confirm the normality assumption for the distribution of daily temperature. In addition, we wanted to make pairwise comparisons e between significant pairs since we are interested to know those pairs with significant difference between them. Hence, `pairwise.display = "s"`.
 
 ```{r}
 #| code-fold: true
@@ -356,16 +354,19 @@ H0 : There is no difference between median daily temperatures between years.
 H1 : There is difference between median daily temperatures between years.
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 extract_stats(test1)
 ```
 
-:::{.callout-note appearance = "simple"}
-## Observations 
+::: {.callout-note appearance="simple"}
+## Observations
 
 Since the p-value (0.0008444241) is less than the critical value of 0.05, there is statistical evidence to reject the null hypothesis. We can conclude that there is difference between median daily temperature.
 
 In the above plot, we observed that there are certain pairs of years with p-value less than 0.05. These pairs are: 1983 and 2023, 1993 and 2013, 2013 and 2023. This suggests that the differences between the medians of these pairs are statistically significant.
 
+Looking at the significant differences between 1983 and 2023 and 2013 and 2023, based on the medians, it seems that there was indeed a temperature rise from 1983 to 2023 and from 2013 and 2023. However, the differences between the medians were small, which were different from the figures quoted. We would need more years of data to ascertain the projectation that daily mean temperature would increase by 1.4 to 4.6 Degree Celsius.
 :::
 
 ## Visualising Uncertainty
@@ -374,9 +375,12 @@ As we are using point estimates (i.e. median), there are uncertainties surroundi
 
 For the following plot, we will use median point estimates instead of mean due to outliers and skewness of data. In addition, using median also allows to user to relate to the above one-way ANOVA analysis
 
-With median as point estimate, quantile intervals are used instead of confidence interval. We use 95% and 99% intervals because they are commonly associated with 5% and 1% error rate, which are commonly used in hypothesis testing. 
+With median as the point estimate, quantile intervals are used instead of confidence interval. We use 95% and 99% intervals because they are commonly associated with 5% and 1% error rate, which are commonly used in hypothesis testing.
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
 #Base ggplot
 p2 <- ggplot(
   data = changitemp,
@@ -397,7 +401,7 @@ p2 <- ggplot(
   labs(title = "Uncertainty in Median Daily Temperature in the Month of August",
 subtitle = "Years: 1983, 1993, 2003, 2013, 2023 \nWeather Station: Changi \nQuantile Intervals: 95% and 99% of Daily Temperature") +
   xlab("Year") + 
-  ylab("Daily Temperature (Degrees celsius)")+
+  ylab("Daily Temperature (Degree Celsius)")+
   
   #Add a theme 
   theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4, subtitle_size=11, subtitle_margin=4, 
@@ -407,31 +411,38 @@ p2
 
 ```
 
-:::{.callout-note appearance = "simple}
-## Observations 
+::: {.callout-note appearance="\"simple"}
+## Observations
 
-The length of the error bars indicates the amount of uncertainty. For those years with more outliers or more varied temperatures, they have higher uncertainities, hence longer length of error bar. For example Year 1993 had a wide range of daily temperatures as compared to other years. In contrast, 2013 had a relatively smaller range of temperatures and less outliers, hence a shorter length of error bar because it had lower uncertainties. 
+The length of the error bars indicates the amount of uncertainty. For those years with more outliers or more varied temperatures, they have higher uncertainities, hence longer length of error bar. For example Year 1993 had a wide range of daily temperatures as compared to other years. In contrast, 2013 had a relatively smaller range of temperatures and less outliers, hence a shorter length of error bar because it had lower uncertainties.
+:::
 
-::: 
+# Visualising Daily Temperature Over The Years
 
-# Visualising Daily Temperature Over The Years 
+To help users to explore the data, based on the experience from the above sections, it seems more useful to look at the spread of the temperature and the central tendency (i.e. median) since we are for increasing trend over the years. As such, we will conclude this exercise by plotting a raincloud plot to visualise the distribution and uncertainty of the temperature data.
 
+To visualise a raincloud plot, we:
 
-
-To plot this raincloud plot, we:
+-   plot the stat_slab from ggdist package to show the probability distribution of the data
 
 -   use ggiraph to create an interactive box plot and interactive dotplot via `geom_barplot_interactive()` and `geom_dotplot_interactive()`
+
 -   customise tooltip for the dotplot and barplot using the `tooltip =` so that when users' mouse hover on a particular dot, they could see the day, year and temperature of the day.
+
 -   allow the dots from the same year to be highlighted together using `data_id = Year` so that users can see how the temperature are distributed as compared to the other years.
+
 -   add title, subtitle, x-axis label to provide information on the chart
+
 -   add a theme from hrbrthemes to further format the chart so that it is publication ready.
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 
-# intialise the plot 
-c1 <- ggplot(data=changitemp, 
+d1 <- highlight_key(changitemp) 
+
+# base plot 
+c1 <- ggplot(data=d1, 
        aes(x = Year,
            y = DailyTemp)) +
   #slab
@@ -456,6 +467,8 @@ c1 <- ggplot(data=changitemp,
     position= position_nudge(x=0),
     outlier.shape = NA,
    show.legend = FALSE) + 
+   stat_summary(fun = mean, geom = "point", shape = 16, size = 1.5, color = "red",
+               position = position_nudge(x = 0.0)) +
   
   #dotplot 
   geom_dotplot_interactive(        
@@ -473,7 +486,7 @@ c1 <- ggplot(data=changitemp,
   labs(title = "Distribution of Daily Temperature in the Month of August",
 subtitle = "Years: 1983, 1993, 2003, 2013, 2023 \n Weather Station: Changi") +
   xlab("Year") + 
-  ylab("Daily Temperature (Degrees celsius)")+
+  ylab("Daily Temperature (Degree Celsius)")+
   coord_flip()+ 
   
   #Add a theme 
@@ -493,160 +506,12 @@ girafe(
 
 ```
 
-
-
-
-
-```{r}
-
-d2 <- highlight_key(changitemp_transformed)
-
-c4 <- plot_ly(data = d2,
-        x = ~Day,
-        y = ~Year2023,
-        type = "scatter",
-        mode = "lines+markers") |>
-  layout(title = "Temperature observed by \nChangi Weather Station in August",
-       xaxis = list(title = "Day"),
-       yaxis = list(title = "", range = c(0,35)),
-      theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4, subtitle_size=11, subtitle_margin=4, 
-                 axis_title_size = 8, axis_text_size=8, axis_title_face= "bold", plot_margin = margin(4, 4, 4, 4)), 
-       updatemenus = list(list(type = 'dropdown',
-                               xref = "paper",
-                               yref = "paper",
-                               xanchor = "left",
-                                x = 0.04, 
-                                 y = 0.95,
-                                 buttons = list(
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year1983)),
-                                                    list(yaxis = list(title = "Temperature in 1983", range = c(0,35)))),label = "1983"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year1993)),
-                                                    list(yaxis = list(title = "Temperature in 1993", range = c(0,35)))),label = "1993"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year2003)),
-                                                    list(yaxis = list(title = "Temperature  in 2003", range = c(0,35)))),label = "2003"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year2013)),
-                                                    list(yaxis = list(title = "Temperature  in 2013", range = c(0,35)))),label = "2013"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year2023)),
-                                                    list(yaxis = list(title = "Temperature  in 2023", range = c(0,35)))),label = "2023")
-                                   
-                               )))) 
-
-
-c5 <- plot_ly(data = d2,
-        x = ~Day,
-        y = ~Year2023,
-        type = "scatter",
-        mode = "lines+markers") |>
-layout(title = "Temperature observed by \nChangi Weather Station in August",
-       xaxis = list(title = "Day"),
-       yaxis = list(title = "", range = c(0,35)),
-       updatemenus = list(list(type = 'dropdown',
-                               xref = "paper",
-                               yref = "paper",
-                               xanchor = "left",
-                                x = 0.04, 
-                                 y = 0.95,
-                                 buttons = list(
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year1983)),
-                                                    list(yaxis = list(title = "Temperature in 1983", range = c(0,35)))),label = "1983"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year1993)),
-                                                    list(yaxis = list(title = "Temperature in 1993", range = c(0,35)))),label = "1993"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year2003)),
-                                                    list(yaxis = list(title = "Temperature  in 2003", range = c(0,35)))),label = "2003"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year2013)),
-                                                    list(yaxis = list(title = "Temperature  in 2013", range = c(0,35)))),label = "2013"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year2023)),
-                                                    list(yaxis = list(title = "Temperature  in 2023", range = c(0,35)))),label = "2023")
-                                   
-                               ))))
-
-gg4 <- highlight(ggplotly(c4),        
-                "plotly_selected")  
-
-gg5 <- highlight(ggplotly(c5),
-                 "plotly_selected")
-
-crosstalk::bscols(widths = c(6,6), gg4, gg5)  
-
-```
-
-```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
-
-
-d3 <- highlight_key(changitemp_transformed) 
-
-c1 <- ggplot(data = d3, 
-             aes(x = Day, 
-                 y = Year1983)) +
-  geom_line(color="black") + 
-  geom_point() + 
-  ylim(0,35) +
-  labs(title = "Daily Temperature in the Month of August",
-       subtitle = "Years: 1983, 1993, 2003, 2013, 2023 \nWeather Station: Changi",
-       caption = "Data from Weather.gov.sg") +
-  xlab("Day") + 
-  ylab("Daily Temperature (Degrees celsius)") +
-  guides(color = FALSE, size = FALSE) +
-  
-  theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4,
-                         subtitle_size=11, subtitle_margin=4, 
-                         axis_title_size = 8, axis_text_size=8,
-                 axis_title_face="bold", plot_margin = margin(30, 30, 30, 30)) + 
-   theme(panel.grid.major = element_line(size = 0.8, color = "grey90")) +
-  theme(panel.grid.minor = element_line(size = 0.8, color = "grey90"))
-
-
-p1 <- ggplotly(c1)
-
-p1 <- p1 %>%
-  layout(updatemenus = list(list(type = 'dropdown',
-                               xref = "paper",
-                               yref = "paper",
-                               xanchor = "right",
-                                x = 0.9, 
-                                 y = 1,
-                                 buttons = list(
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year1983)),
-                                                    list(yaxis = list(title = "Temperature in 1983", range = c(0,35)))),label = "1983"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year1993)),
-                                                    list(yaxis = list(title = "Temperature in 1993", range = c(0,35)))),label = "1993"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year2003)),
-                                                    list(yaxis = list(title = "Temperature  in 2003", range = c(0,35)))),label = "2003"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year2013)),
-                                                    list(yaxis = list(title = "Temperature  in 2013", range = c(0,35)))),label = "2013"),
-                                   list(method = "update",
-                                        args = list(list(y = list(changitemp_transformed$Year2023)),
-                                                    list(yaxis = list(title = "Temperature  in 2023", range = c(0,35)))),label = "2023")
-                                   
-                               ))))
-
-p1
-```
-gg1 <- highlight(ggplotly(c1),        
-                "plotly_selected")  
-
-crosstalk::bscols(widths = c(7,5), gg1,               
-                  datatable(d1, caption = "Daily Temperature over the Years", class='compact'))      
-
-
-
-
-# My Takeaways
-
 # References
+
+Kam, T. S. (2023). R for Visual Analytics \[Web-book\]. https://r4va.netlify.app/.
+
+Kay M (2024). “ggdist: Visualizations of Distributions and Uncertainty in the Grammar of Graphics.” IEEE Transactions on Visualization and Computer Graphics, 1–11. doi:10.1109/TVCG.2023.3327195.
+
+Meterological Service Singapore. (n.d.). Home \| \[Dataset\]. Meterological Service Singapore. https://www.weather.gov.sg/home/
+
+Wickham, H., Navarro, D., & Pedersen, T. L. (2024). ggplot2: Elegant Graphics for Data Analysis (3rd ed.). https://ggplot2-book.org/.
