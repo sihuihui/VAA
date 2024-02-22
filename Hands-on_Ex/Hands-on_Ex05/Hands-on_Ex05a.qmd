@@ -57,7 +57,7 @@ The following code chunk uses `read_csv()` function of **readr** package to impo
 popdata <- read_csv("data/respopagsex2000to2018_tidy.csv")
 ```
 
-:::{.panel-tabset}
+::: panel-tabset
 ## The Data
 
 ```{r}
@@ -98,7 +98,7 @@ agpop_mutated <- popdata %>%
   filter(TOTAL > 0)
 ```
 
-:::{.panel-tabset}
+::: panel-tabset
 ## The Data
 
 ```{r}

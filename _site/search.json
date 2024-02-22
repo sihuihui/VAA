@@ -1995,5 +1995,47 @@
     "title": "Take-home Exercise 3: Be Weatherwise or Otherwise",
     "section": "4.4 Observations",
     "text": "4.4 Observations\nThe length of the error bars indicates the amount of uncertainty. For those years with more outliers or more varied temperatures, they have higher uncertainities, hence longer length of error bar. For example Year 1993 had a wide range of daily temperatures as compared to other years. In contrast, 2013 had a relatively smaller range of temperatures and less outliers, hence a shorter length of error bar because it had lower uncertainties.\n:::"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html",
+    "title": "Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data",
+    "section": "",
+    "text": "In this exercise, we will be learning how to create the following visualisations:\n\na calendar heatmap using ggplot2 functions\na cycle plot using ggplot2 function\na slopegraph"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#installing-and-loading-the-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#installing-and-loading-the-packages",
+    "title": "Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data",
+    "section": "2.1 Installing and Loading the Packages",
+    "text": "2.1 Installing and Loading the Packages\nFor this exercise, other than tidyverse, we will use the following packages:\n\nscales\nviridis\nlubridate\nggthemes\ngridExtra\nreadxl\nknitr\ndata.table\n\n\n\nShow the code\npacman::p_load(tidyverse, scales, viridis, lubridate, ggthemes, gridExtra, readxl,knitr, data.table, CGPfunctions, ggHoriPlot)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#importing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#importing-the-data",
+    "title": "Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data",
+    "section": "3.1 Importing the Data",
+    "text": "3.1 Importing the Data\nFor the purpose of this hands-on exercise, eventlog.csv file will be used. This data file consists of 199,999 rows of time-series cyber attack records by country.\nFirst, we will use the code chunk below to import eventlog.csv file into R environment and called the data frame as attacks.\n\n\nShow the code\nattacks &lt;- read_csv(\"data/eventlog.csv\")"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#examining-the-data-structure",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#examining-the-data-structure",
+    "title": "Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data",
+    "section": "3.2 Examining the Data Structure",
+    "text": "3.2 Examining the Data Structure\nWe will use kable() to review the structure of the imported data frame.\n\nkable(head(attacks))\n\n\n\n\ntimestamp\nsource_country\ntz\n\n\n\n\n2015-03-12 15:59:16\nCN\nAsia/Shanghai\n\n\n2015-03-12 16:00:48\nFR\nEurope/Paris\n\n\n2015-03-12 16:02:26\nCN\nAsia/Shanghai\n\n\n2015-03-12 16:02:38\nUS\nAmerica/Chicago\n\n\n2015-03-12 16:03:22\nCN\nAsia/Shanghai\n\n\n2015-03-12 16:03:45\nCN\nAsia/Shanghai\n\n\n\n\n\nFrom the output, we see there there are three columns in the attack dataset: timestamp, source_country and tz.\n\ntimestamp: stores datetime vales in POSIXct format\nsource_country: stores the source of the attack. It is in ISO 3166-1 alpha-2 country code\ntz: stores time zone of the source IP address."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#data-preparation",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#data-preparation",
+    "title": "Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data",
+    "section": "3.3 Data Preparation",
+    "text": "3.3 Data Preparation"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#building-calendar-heatmaps",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#building-calendar-heatmaps",
+    "title": "Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data",
+    "section": "3.4 Building Calendar Heatmaps",
+    "text": "3.4 Building Calendar Heatmaps"
   }
 ]

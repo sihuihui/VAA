@@ -1,0 +1,93 @@
+---
+title: "Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data"
+author: "Goh Si Hui"
+date: 2024/02/20
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+# About this exercise 
+
+In this exercise, we will be learning how to create the following visualisations:
+
+-   a calendar heatmap using ggplot2 functions
+
+-   a cycle plot using ggplot2 function
+
+-   a slopegraph
+
+
+# Getting Started 
+
+## Installing and Loading the Packages
+
+For this exercise, other than tidyverse, we will use the following packages:
+
+-   scales
+
+-   viridis
+
+-   lubridate
+
+-   ggthemes
+
+-   gridExtra
+
+-   readxl
+
+-   knitr
+
+-   data.table 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+pacman::p_load(tidyverse, scales, viridis, lubridate, ggthemes, gridExtra, readxl,knitr, data.table, CGPfunctions, ggHoriPlot)
+
+```
+
+# Calendar Heatmap 
+In this section, we will learn how to plot a calender heatmap programmatically using ggplot2 package. 
+
+## Importing the Data 
+For the purpose of this hands-on exercise, `eventlog.csv` file will be used. This data file consists of 199,999 rows of time-series cyber attack records by country.
+
+First, we will use the code chunk below to import `eventlog.csv` file into R environment and called the data frame as attacks.
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+attacks <- read_csv("data/eventlog.csv")
+
+```
+
+## Examining the Data Structure 
+We will use `kable()` to review the structure of the imported data frame.  
+
+```{r}
+kable(head(attacks))
+
+```
+
+From the output, we see there there are three columns in the `attack` dataset: `timestamp`, `source_country` and `tz`.
+
+-   timestamp: stores datetime vales in POSIXct format 
+-   source_country: stores the source of the attack. It is in ISO 3166-1 alpha-2 country code 
+-   tz: stores time zone of the source IP address. 
+
+
+## Data Preparation 
+
+## Building Calendar Heatmaps 
+
+# Cycle Plot 
+
+# Slopegraph 
+
+
