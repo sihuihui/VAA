@@ -12,7 +12,7 @@ execute:
 editor: visual 
 ---
 
-# About this exercise 
+# About this exercise
 
 In this exercise, we will be learning how to create the following visualisations:
 
@@ -22,8 +22,7 @@ In this exercise, we will be learning how to create the following visualisations
 
 -   a slopegraph
 
-
-# Getting Started 
+# Getting Started
 
 ## Installing and Loading the Packages
 
@@ -43,7 +42,7 @@ For this exercise, other than tidyverse, we will use the following packages:
 
 -   knitr
 
--   data.table 
+-   data.table
 
 ```{r}
 #| code-fold: true
@@ -52,13 +51,16 @@ pacman::p_load(tidyverse, scales, viridis, lubridate, ggthemes, gridExtra, readx
 
 ```
 
-# Calendar Heatmap 
-In this section, we will learn how to plot a calender heatmap programmatically using ggplot2 package. 
+# Calendar Heatmap
 
-## Importing the Data 
+In this section, we will learn how to plot a calender heatmap programmatically using ggplot2 package.
+
+## Importing the Data
+
 For the purpose of this hands-on exercise, `eventlog.csv` file will be used. This data file consists of 199,999 rows of time-series cyber attack records by country.
 
 First, we will use the code chunk below to import `eventlog.csv` file into R environment and called the data frame as attacks.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -67,27 +69,333 @@ attacks <- read_csv("data/eventlog.csv")
 
 ```
 
-## Examining the Data Structure 
-We will use `kable()` to review the structure of the imported data frame.  
+## Examining the Data Structure
+
+We will use `kable()` to review the structure of the imported data frame.
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
 kable(head(attacks))
 
 ```
 
-From the output, we see there there are three columns in the `attack` dataset: `timestamp`, `source_country` and `tz`.
+From the above output, we see there there are three columns in the `attack` dataset: `timestamp`, `source_country` and `tz`.
 
--   timestamp: stores datetime vales in POSIXct format 
--   source_country: stores the source of the attack. It is in ISO 3166-1 alpha-2 country code 
--   tz: stores time zone of the source IP address. 
+-   timestamp: stores datetime vales in POSIXct format
+-   source_country: stores the source of the attack. It is in ISO 3166-1 alpha-2 country code
+-   tz: stores time zone of the source IP address.
+
+## Data Preparation
+
+### Step 1 
+
+Before we can plot the calendar heatmap, we need to derive two new fields: `wkday` and `hour` using a function. To get the hour function, we will make use of `hour()` from **lubridate** package. To get the `wkday` field, we will make use of `weekdays()`, which is a base R function.
+
+::: panel-tabset
+## Method 1: Using lubridate and base R function
+
+```{r}
+make_hr_wkday <- function(ts,sc,tz){
+  real_times <- ymd_hms(ts,
+                        tz = tz[1],
+                        quiet = TRUE)
+  
+  dt <- data.table(source_country = sc,
+                   wkday = weekdays(real_times),
+                   hour = hour(real_times))
+  return(dt)
+}
+
+```
+
+:::{.callout-note}
+## About the code chunk
+
+-   `ymd_hms()` and `hour()` are from lubridate package.
+
+    -   Note! before using ymd_hms(), we should examine the date/time format on our laptops. The date/time format on our laptops should be yyyy-mm-dd hh:mm:ss before using ymd_hms(). If the print date/time format is different, then we should either (1) use different function or (2) change the date/time format of our computer.
+
+-   `weekdays()` is a base R function.
+:::
+
+## Method 2: Using lubridate package
+
+```{r}
+
+attacks1 <- attacks %>%
+  mutate(wkday = lubridate:: wday(timestamp,
+                       label = TRUE,
+                      abbr = FALSE, # to display the day of the week 
+                       week_start = 7), #Sun is the first level 
+         hr = hour(timestamp))
+```
+
+:::{.callout-note}
+## About the code chunk
+
+-   `hour()` and `wday()` are from lubridate package.
+
+    -   Note: these two functions are relatively more efficient than Base R function. 
+
+:::
 
 
-## Data Preparation 
+:::
 
-## Building Calendar Heatmaps 
+### Step 2 
 
-# Cycle Plot 
+We will now derive the attacks tibble data frame using the following code chunk. 
 
-# Slopegraph 
+:::{.panel-tabset}
+
+## Method 1 
+After creating the function in earlier section, we will now use it to derive the `wkday` and `hour` columns. After that we will also use `mutate()` to convert `wkday` and `hour` fields into factor so that they will be ordered when plotting. 
+```{r}
+
+wkday_levels <- c('Saturday', 'Friday', 
+                  'Thursday', 'Wednesday', 
+                  'Tuesday', 'Monday', 
+                  'Sunday')
+
+attacks2 <- attacks %>%
+  group_by(tz) %>%
+  do(make_hr_wkday(.$timestamp,
+                   .$source_country,
+                   .$tz)) %>%
+  ungroup() %>%
+  mutate(wkday = factor(
+    wkday, levels = wkday_levels),
+    hour = factor(hour, levels = 0:23))
 
 
+```
+
+## Method 2
+Using the `attacks1` dataframe from previous section's method 2, we will just select the columns that we want and convert the `wkday` and `hr` columns into factors using `as.factor()`. 
+```{r}
+attacks3 <- attacks1 %>%
+  select(tz, source_country, wkday, hr)
+
+attacks3$wkday <- as.factor(attacks3$wkday)
+
+attacks3$hr <- as.factor(attacks3$hr)
+
+```
+:::
+
+### Step 3 - Building Calendar Heatmaps
+
+```{r}
+grouped <- attacks2 %>%
+  count(wkday, hour) %>%
+  ungroup %>%
+  na.omit()
+
+ggplot(grouped,
+       aes(hour, 
+           wkday, 
+           fill = n)) +
+  geom_tile(color = "white", 
+            size = 0.1) +
+  
+  theme_tufte(base_family = "sans serif") + 
+  coord_equal() +
+  scale_fill_gradient(name = "# of attacks",
+                    low = "lavender", 
+                    high = "maroon4") +
+  labs(x = NULL, 
+       y = NULL, 
+       title = "Attacks by Weekday and Time of Day") +
+  
+  theme(axis.ticks = element_blank(),
+      plot.title = element_text(hjust = 0.5),
+      legend.title = element_text(size = 8),
+      legend.text = element_text(size = 6) )
+
+```
+
+:::{.callout-note}
+## About the code chunk 
+-   A tibble data table called `grouped` is derived by aggregating the attack by `wkday` and `hour` fields 
+-   A new field called `n` is derived by using `group_by()` and `count()` functions.
+-   `na.omit()` is used to exclude missing value. 
+-   `geom_tile()` is used to plot tiles(grids) at each x and y positions. `color` and `size` arguments are used to specify the border color and line size of the tiles. In this case, the border color is white and the line size is 0.1. 
+-   `theme_tufte()` of ggthemes package is used to remove unnecessary chart junk. 
+-   `coord_equal()` is used to ensure the plot will have an aspect ratio of 1:1
+-   `scale_fill_gradient()` function is used to create a two color gradient (low-high)
+    
+::: 
+
+## Plotting Multiple Calendar Heatmaps 
+
+We can also plot multiple calendar heatmaps for the top four countries with the highest number of attacks. 
+
+### Step 1: Deriving Attack by Country Object 
+First we need to identify the top 4 countries with the highest number of attacks: 
+-   count the number of attacks by country 
+-   calculate the percent of attacks by country, and
+-   save the results in a tibble data frame 
+
+```{r}
+attacks_by_cty <- count(
+  attacks, source_country) %>%
+  mutate(percent = percent(n/sum(n))) %>%
+  arrange(desc(n))
+
+
+```
+
+### Step 2: Preparing the tidy data frame 
+
+Now we will extract the attack records of the top 4 countries from `attacks2`data frame. Then save the data in a new tibble data frame (i.e. top4_attacks).
+
+```{r}
+top4 <- attacks_by_cty$source_country[1:4]
+
+top4_attacks <- attacks2 %>%
+  filter(source_country %in% top4) %>%
+  count(source_country, wkday, hour) %>%
+  ungroup() %>%
+  mutate(source_country = factor(
+    source_country, levels = top4)) %>%
+  na.omit()
+
+```
+
+### Step 3: Plotting the Multiple Calendar Heatmap using ggplot2 package 
+
+Now, we are ready to plot multiple calendar heatmap! 
+```{r}
+
+# New facet label names
+cty.labs <- c("CHINA", "UNITED STATES", "KOREA", "NETHERLANDS")
+names(cty.labs) <- c("CN", "US", "KR", "NL")
+
+
+#baseplot 
+ggplot(top4_attacks,
+       aes(hour,
+           wkday,
+           fill = n)) +
+  geom_tile(color = "white",
+            size = 0.1) +
+  theme_tufte(base_family = "sans serif") + 
+  coord_equal() +
+  scale_fill_gradient(name = "# of attacks",
+                    low = "grey80", 
+                    high = "maroon4") +
+  #plot for each country using facet_wrap 
+  facet_wrap(~source_country, ncol = 2, 
+             labeller = labeller(source_country = cty.labs)) + 
+  labs(x = NULL, y = NULL,
+       title = "Attacks on Top 4 Countries by Weekday and Time of Day") + 
+   theme(axis.ticks = element_blank(),
+        axis.text.x = element_text(size = 7),
+        plot.title = element_text(hjust = 0.5),
+        legend.title = element_text(size = 8),
+        legend.text = element_text(size = 6))
+
+```
+
+# Cycle Plot
+In this section, we will learn how to plot a cycle plot showing the time-series patterns and trend of visitor arrivals from Vietnam programmatically using ggplot2 functions. 
+
+:::{.callout-note}
+## Why use Cycle Plot?
+
+A Cycle Plot is used when we want to visualize how a trend, or a cycle correlated with the day-of-the-week or the month-of-the-year evolved. A Cycle Plot is made to capture visually how certain values have advanced over a period. This type of chart is especially useful for identifying certain intervals or periods in which the best results are recorded. 
+
+[Source](https://btprovider.com/cycle-plot-tableau/#:~:text=A%20Cycle%20Plot%20is%20made,the%20best%20results%20are%20recorded.)
+
+::: 
+
+
+## Importing the Data 
+For the purpose of this hands-on exercise, `arrivals_by_air.xlsx` will be used.  This data file consists of 199,999 rows of time-series cyber attack records by country.
+
+First, we will use the code chunk below to import `arrivals_by_air.xlsx` file into R environment and call the tibble data frame as `air`.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+air <- read_excel("data/arrivals_by_air.xlsx")
+kable(head(air))
+
+```
+
+## Deriving month and year fields 
+We will now derive two new fields `month` and `year` from the `Month-Year` field. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+air$month <- factor(month(air$`Month-Year`),
+                    levels = 1:12,
+                    labels = month.abb,
+                    ordered = TRUE)
+
+air$year <- year(ymd(air$`Month-Year`))
+
+kable(head(air))
+```
+
+## Extracting the target country 
+
+Next, we will extract the data for the target country (i.e. Vietnam) and data beyond year 2010 using the following code chunk. 
+
+```{r}
+
+viet <- air %>% 
+  select(Vietnam, month, year) %>%
+  filter(year >= 2010)
+
+
+```
+
+
+## Computing year average arrivals by month 
+Now we will use `group_by()` and `summarise()` of dplyr to compute average arrivals by month across all years. 
+
+```{r}
+
+hline.data <- viet %>%
+  group_by(month) %>%
+  summarise(avgvalue = mean(Vietnam))
+
+```
+
+## Plotting the cycle plot 
+
+```{r fig.width=15, fig.height=8}
+ggplot() +
+  geom_line(data = viet,
+            aes(x = year,
+                y = `Vietnam`,
+                group = month),
+            color = "black") +
+  geom_hline(aes(yintercept =avgvalue),
+             data = hline.data,
+             linetype = 6,
+             color = "red",
+             size = 0.5) +
+  facet_grid(~month) + 
+  labs(axis.text.x = element_blank(),
+       title = "Visitor Arrivals from Vietnam by Air, Jan 2010 - Dec 2019") +
+  xlab("") +
+  ylab("No. of Visitors") +
+  theme_tufte(base_family = "sans serif")
+
+
+```
+
+
+
+# Slopegraph
+
+
+
+
+# Reference 
