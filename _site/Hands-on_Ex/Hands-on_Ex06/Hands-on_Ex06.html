@@ -455,7 +455,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#computing-year-average-arrivals-by-month" id="toc-computing-year-average-arrivals-by-month" class="nav-link" data-scroll-target="#computing-year-average-arrivals-by-month"><span class="header-section-number">4.4</span> Computing year average arrivals by month</a></li>
   <li><a href="#plotting-the-cycle-plot" id="toc-plotting-the-cycle-plot" class="nav-link" data-scroll-target="#plotting-the-cycle-plot"><span class="header-section-number">4.5</span> Plotting the cycle plot</a></li>
   </ul></li>
-  <li><a href="#slopegraph" id="toc-slopegraph" class="nav-link" data-scroll-target="#slopegraph"><span class="header-section-number">5</span> Slopegraph</a></li>
+  <li><a href="#slopegraph" id="toc-slopegraph" class="nav-link" data-scroll-target="#slopegraph"><span class="header-section-number">5</span> Slopegraph</a>
+  <ul class="collapse">
+  <li><a href="#importing-the-data-2" id="toc-importing-the-data-2" class="nav-link" data-scroll-target="#importing-the-data-2"><span class="header-section-number">5.1</span> Importing the Data</a></li>
+  <li><a href="#plotting-the-slopegraph" id="toc-plotting-the-slopegraph" class="nav-link" data-scroll-target="#plotting-the-slopegraph"><span class="header-section-number">5.2</span> Plotting the slopegraph</a></li>
+  </ul></li>
   <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference"><span class="header-section-number">6</span> Reference</a></li>
   </ul>
 </nav>
@@ -489,7 +493,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 22, 2024</p>
+      <p class="date-modified">February 23, 2024</p>
     </div>
   </div>
     
@@ -864,7 +868,7 @@ Why use Cycle Plot?
 </div>
 <section id="importing-the-data-1" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="importing-the-data-1"><span class="header-section-number">4.1</span> Importing the Data</h2>
-<p>For the purpose of this hands-on exercise, <code>arrivals_by_air.xlsx</code> will be used. This data file consists of 199,999 rows of time-series cyber attack records by country.</p>
+<p>For the purpose of this hands-on exercise, <code>arrivals_by_air.xlsx</code> will be used.</p>
 <p>First, we will use the code chunk below to import <code>arrivals_by_air.xlsx</code> file into R environment and call the tibble data frame as <code>air</code>.</p>
 <div class="cell">
 <details class="code-fold">
@@ -1568,7 +1572,9 @@ Why use Cycle Plot?
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Visitor Arrivals from Vietnam by Air, Jan 2010 - Dec 2019"</span>) <span class="sc">+</span></span>
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">""</span>) <span class="sc">+</span></span>
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"No. of Visitors"</span>) <span class="sc">+</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_tufte</span>(<span class="at">base_family =</span> <span class="st">"sans serif"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_binned</span>(<span class="at">guide =</span> <span class="fu">guide_axis</span>(<span class="at">angle =</span> <span class="dv">45</span>)) <span class="sc">+</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">0.75</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1581,9 +1587,123 @@ Why use Cycle Plot?
 </section>
 <section id="slopegraph" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Slopegraph</h1>
+<p>In this section, we will learn how to plot a slopegraph using the package CGPfunctions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why do we use slopegraph?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When we use slopegraphs, we are trying to show the amount of change and the direction of change between two data points. - The steeper the slope, the bigger the change; and, if one thing is going up more dramatically than its neighbors, a slopegraph will make that easier to see than a traditional line graph would.</p>
+<p><a href="https://www.storytellingwithdata.com/blog/2020/7/27/what-is-a-slopegraph">Source</a></p>
+</div>
+</div>
+<section id="importing-the-data-2" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="importing-the-data-2"><span class="header-section-number">5.1</span> Importing the Data</h2>
+<p>For the purpose of this hands-on exercise, `rice.csv`` will be used.</p>
+<p>First, we will use the code chunk below to import <code>rice.csv</code> file into R environment and call the tibble data frame as `rice``.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>rice <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/rice.csv"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(rice))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Country</th>
+<th style="text-align: right;">Year</th>
+<th style="text-align: right;">Yield</th>
+<th style="text-align: right;">Production</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">China</td>
+<td style="text-align: right;">1961</td>
+<td style="text-align: right;">20787</td>
+<td style="text-align: right;">56217601</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">China</td>
+<td style="text-align: right;">1962</td>
+<td style="text-align: right;">23700</td>
+<td style="text-align: right;">65675288</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">China</td>
+<td style="text-align: right;">1963</td>
+<td style="text-align: right;">26833</td>
+<td style="text-align: right;">76439280</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">China</td>
+<td style="text-align: right;">1964</td>
+<td style="text-align: right;">28289</td>
+<td style="text-align: right;">85853780</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">China</td>
+<td style="text-align: right;">1965</td>
+<td style="text-align: right;">29667</td>
+<td style="text-align: right;">90705630</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">China</td>
+<td style="text-align: right;">1966</td>
+<td style="text-align: right;">31445</td>
+<td style="text-align: right;">98403990</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="plotting-the-slopegraph" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="plotting-the-slopegraph"><span class="header-section-number">5.2</span> Plotting the slopegraph</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>rice <span class="ot">&lt;-</span> rice <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">factor</span>(Year)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1961</span>, <span class="dv">1980</span>)) </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(rice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 22
+Columns: 4
+$ Country    &lt;chr&gt; "China", "China", "India", "India", "Indonesia", "Indonesia…
+$ Year       &lt;fct&gt; 1961, 1980, 1961, 1980, 1961, 1980, 1961, 1980, 1961, 1980,…
+$ Yield      &lt;dbl&gt; 20787, 41435, 15419, 20002, 17623, 32928, 48793, 51279, 414…
+$ Production &lt;dbl&gt; 56217601, 142876520, 53494500, 80312000, 12084000, 29651900…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">newggslopegraph</span>(rice,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                Year, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                Yield, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                Country,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">Title =</span> <span class="st">"Rice Yield of Top 11 Asian Countries"</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">SubTitle =</span> <span class="st">"1961 - 1980"</span>,</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">Caption =</span> <span class="st">"Prepared by: Goh Si Hui"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">DataLabelPadding =</span> <span class="fl">0.05</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Hands-on_Ex06_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="reference" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Reference</h1>
+<p>Kam, T. S. (2023). R for Visual Analytics [Web-book]. https://r4va.netlify.app/.</p>
 
 
 </section>

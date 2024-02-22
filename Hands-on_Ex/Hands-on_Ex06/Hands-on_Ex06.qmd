@@ -313,7 +313,7 @@ A Cycle Plot is used when we want to visualize how a trend, or a cycle correlate
 
 
 ## Importing the Data 
-For the purpose of this hands-on exercise, `arrivals_by_air.xlsx` will be used.  This data file consists of 199,999 rows of time-series cyber attack records by country.
+For the purpose of this hands-on exercise, `arrivals_by_air.xlsx` will be used.
 
 First, we will use the code chunk below to import `arrivals_by_air.xlsx` file into R environment and call the tibble data frame as `air`.
 
@@ -386,7 +386,9 @@ ggplot() +
        title = "Visitor Arrivals from Vietnam by Air, Jan 2010 - Dec 2019") +
   xlab("") +
   ylab("No. of Visitors") +
-  theme_tufte(base_family = "sans serif")
+  theme_minimal() +
+  scale_x_binned(guide = guide_axis(angle = 45)) +
+  theme(axis.text.x = element_text(size = rel(0.75)))
 
 
 ```
@@ -394,8 +396,56 @@ ggplot() +
 
 
 # Slopegraph
+In this section, we will learn how to plot a slopegraph using the package CGPfunctions. 
 
+:::{.callout-note}
+## Why do we use slopegraph?
+When we use slopegraphs, we are trying to show the amount of change and the direction of change between two data points. 
+-   The steeper the slope, the bigger the change; and, if one thing is going up more dramatically than its neighbors, a slopegraph will make that easier to see than a traditional line graph would.
 
+[Source](https://www.storytellingwithdata.com/blog/2020/7/27/what-is-a-slopegraph)
 
+:::
+
+## Importing the Data
+For the purpose of this hands-on exercise, `rice.csv`` will be used.
+
+First, we will use the code chunk below to import `rice.csv` file into R environment and call the tibble data frame as `rice``.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+rice <- read_csv("data/rice.csv")
+kable(head(rice))
+
+```
+
+## Plotting the slopegraph 
+
+```{r}
+rice <- rice %>%
+  mutate(Year = factor(Year)) %>%
+  filter(Year %in% c(1961, 1980)) 
+
+glimpse(rice)
+```
+
+```{r fig.height=8}
+
+newggslopegraph(rice,
+                Year, 
+                Yield, 
+                Country,
+                Title = "Rice Yield of Top 11 Asian Countries",
+                SubTitle = "1961 - 1980",
+                Caption = "Prepared by: Goh Si Hui",
+                DataLabelPadding = 0.05
+                )
+
+```
 
 # Reference 
+
+Kam, T. S. (2023). R for Visual Analytics [Web-book]. https://r4va.netlify.app/.
+
