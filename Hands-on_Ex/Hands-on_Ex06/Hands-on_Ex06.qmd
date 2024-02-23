@@ -369,6 +369,8 @@ hline.data <- viet %>%
 
 ## Plotting the cycle plot 
 
+To plot a cycle plot for each month, we will make use of `geom_line()` to plot the number of visitors in each year for every month. Then, we will use `geom_hline()`to plot out the "average value" for each month. To have a chart for every month, we will make use of `facet_grid()`. 
+
 ```{r fig.width=15, fig.height=8}
 ggplot() +
   geom_line(data = viet,
@@ -423,24 +425,40 @@ kable(head(rice))
 
 ## Plotting the slopegraph 
 
+Let us convert the `Year` to a factor so that the years will be arranged in levels. Then we filter the rows where the Years are 1961 and 1980. 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 rice <- rice %>%
   mutate(Year = factor(Year)) %>%
   filter(Year %in% c(1961, 1980)) 
 
 glimpse(rice)
 ```
+Using the filtered data, we will plot the slopegraph using `newggslopegraph()`. We will indicate the `dataframe` argument as `rice`, which is the tibble dataframe that we have prepared in the earlier step. The `Times` argument refers to the column inside the dataframe that will be plotted on the x axis. Traditionally this `Times` argument is some measure of time. However, `newggslopegraph()` accepts a column of class ordered, factor or character. The `Measurement` argument refers to the column inside the dataframe that will be plotted on the y axis. Traditionally this `Measurement` argument is some measure  such as a percentage. Currently, the function accepts a column of type integer or number. The `Grouping` argument refers to a column inside the dataframe that will be used to group and distinguish measurements. 
 
-```{r fig.height=8}
+:::{.callout-note}
+## About the code chunk
+In the following code chunk we also:
+-   Added a title using the argument `Title`. Note that `Title = ""` will provide an empty title but retain the spacing.
+-   Added a subtitle using the argument `SubTitle`. Note that `SubTitle = ""` will provide and empty title but retain the spacing.
+-   Added a caption using the argument `Caption`. Note that `Caption = ""` will provide and empty title but retain the spacing.
+-   tried to space out the data labels by adjusting the `DataLabelPadding` argument. 
+-   changed the theme to `wsj` using `ThemeChoice` argument.Note that by default ThemeChoice is set to "bw" and the other choices are "ipsum", "econ", "wsj", "gdocs", and "tufte". 
 
-newggslopegraph(rice,
-                Year, 
-                Yield, 
-                Country,
+:::
+
+```{r}
+
+newggslopegraph(dataframe = rice,
+                Times = Year, 
+                Measurement = Yield, 
+                Grouping = Country,
                 Title = "Rice Yield of Top 11 Asian Countries",
                 SubTitle = "1961 - 1980",
                 Caption = "Prepared by: Goh Si Hui",
-                DataLabelPadding = 0.05
+                DataLabelPadding = 0.07,
+                ThemeChoice = "wsj"
                 )
 
 ```

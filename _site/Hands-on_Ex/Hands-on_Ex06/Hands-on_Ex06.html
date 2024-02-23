@@ -182,6 +182,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html">
  <span class="dropdown-text">Hands-on Exercise 5e</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html">
+ <span class="dropdown-text">Hands-on Exercise 6</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -243,7 +247,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html">Hands-on Exercises</a></li><li class="breadcrumb-item"><a href="../../Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html">Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -348,6 +352,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../../Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Hands-on Exercise 5e - Treemap Visualisation with R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data</span></a>
   </div>
 </li>
       </ul>
@@ -467,7 +477,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html">Hands-on Exercises</a></li><li class="breadcrumb-item"><a href="../../Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html">Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data</h1>
 </div>
@@ -1555,6 +1565,7 @@ Why use Cycle Plot?
 </section>
 <section id="plotting-the-cycle-plot" class="level2" data-number="4.5">
 <h2 data-number="4.5" class="anchored" data-anchor-id="plotting-the-cycle-plot"><span class="header-section-number">4.5</span> Plotting the cycle plot</h2>
+<p>To plot a cycle plot for each month, we will make use of <code>geom_line()</code> to plot the number of visitors in each year for every month. Then, we will use <code>geom_hline()</code>to plot out the “average value” for each month. To have a chart for every month, we will make use of <code>facet_grid()</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> viet,</span>
@@ -1666,12 +1677,16 @@ Why do we use slopegraph?
 </section>
 <section id="plotting-the-slopegraph" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="plotting-the-slopegraph"><span class="header-section-number">5.2</span> Plotting the slopegraph</h2>
+<p>Let us convert the <code>Year</code> to a factor so that the years will be arranged in levels. Then we filter the rows where the Years are 1961 and 1980.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>rice <span class="ot">&lt;-</span> rice <span class="sc">%&gt;%</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Year =</span> <span class="fu">factor</span>(Year)) <span class="sc">%&gt;%</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Year <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">1961</span>, <span class="dv">1980</span>)) </span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(rice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 22
 Columns: 4
@@ -1681,16 +1696,31 @@ $ Yield      &lt;dbl&gt; 20787, 41435, 15419, 20002, 17623, 32928, 48793, 51279,
 $ Production &lt;dbl&gt; 56217601, 142876520, 53494500, 80312000, 12084000, 29651900…</code></pre>
 </div>
 </div>
+<p>Using the filtered data, we will plot the slopegraph using <code>newggslopegraph()</code>. We will indicate the <code>dataframe</code> argument as <code>rice</code>, which is the tibble dataframe that we have prepared in the earlier step. The <code>Times</code> argument refers to the column inside the dataframe that will be plotted on the x axis. Traditionally this <code>Times</code> argument is some measure of time. However, <code>newggslopegraph()</code> accepts a column of class ordered, factor or character. The <code>Measurement</code> argument refers to the column inside the dataframe that will be plotted on the y axis. Traditionally this <code>Measurement</code> argument is some measure such as a percentage. Currently, the function accepts a column of type integer or number. The <code>Grouping</code> argument refers to a column inside the dataframe that will be used to group and distinguish measurements.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+About the code chunk
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the following code chunk we also: - Added a title using the argument <code>Title</code>. Note that <code>Title = ""</code> will provide an empty title but retain the spacing. - Added a subtitle using the argument <code>SubTitle</code>. Note that <code>SubTitle = ""</code> will provide and empty title but retain the spacing. - Added a caption using the argument <code>Caption</code>. Note that <code>Caption = ""</code> will provide and empty title but retain the spacing. - tried to space out the data labels by adjusting the <code>DataLabelPadding</code> argument. - changed the theme to <code>wsj</code> using <code>ThemeChoice</code> argument.Note that by default ThemeChoice is set to “bw” and the other choices are “ipsum”, “econ”, “wsj”, “gdocs”, and “tufte”.</p>
+</div>
+</div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">newggslopegraph</span>(rice,</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                Year, </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                Yield, </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                Country,</span>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">newggslopegraph</span>(<span class="at">dataframe =</span> rice,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">Times =</span> Year, </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">Measurement =</span> Yield, </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">Grouping =</span> Country,</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">Title =</span> <span class="st">"Rice Yield of Top 11 Asian Countries"</span>,</span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">SubTitle =</span> <span class="st">"1961 - 1980"</span>,</span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">Caption =</span> <span class="st">"Prepared by: Goh Si Hui"</span>,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">DataLabelPadding =</span> <span class="fl">0.05</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">DataLabelPadding =</span> <span class="fl">0.07</span>,</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">ThemeChoice =</span> <span class="st">"wsj"</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
