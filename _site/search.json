@@ -2012,7 +2012,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html#installing-and-loading-the-packages",
     "title": "Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data",
     "section": "2.1 Installing and Loading the Packages",
-    "text": "2.1 Installing and Loading the Packages\nFor this exercise, other than tidyverse, we will use the following packages:\n\nscales\nviridis\nlubridate\nggthemes\ngridExtra\nreadxl\nknitr\ndata.table\n\n\n\nShow the code\npacman::p_load(tidyverse, scales, viridis, lubridate, ggthemes, gridExtra, readxl,knitr, data.table, CGPfunctions, ggHoriPlot)",
+    "text": "2.1 Installing and Loading the Packages\nFor this exercise, other than tidyverse, we will use the following packages:\n\nscales\nviridis\nlubridate\nggthemes\ngridExtra\nreadxl\nknitr\ndata.table\nCGPfunctions\n\n\n\nShow the code\npacman::p_load(tidyverse, scales, viridis, lubridate, ggthemes, gridExtra, readxl,knitr, data.table, CGPfunctions)",
     "crumbs": [
       "Hands-on Exercises",
       "Take-home Exercise 6 - Visualing and Analysing Time-Oriented Data"

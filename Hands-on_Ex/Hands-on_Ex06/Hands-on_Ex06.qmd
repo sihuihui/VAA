@@ -28,26 +28,28 @@ In this exercise, we will be learning how to create the following visualisations
 
 For this exercise, other than tidyverse, we will use the following packages:
 
--   scales
+-   [scales](https://scales.r-lib.org/)
 
--   viridis
+-   [viridis](https://cran.r-project.org/web/packages/viridis/index.html)
 
--   lubridate
+-   [lubridate](https://lubridate.tidyverse.org/)
 
--   ggthemes
+-   [ggthemes](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/)
 
--   gridExtra
+-   [gridExtra](https://cran.r-project.org/web/packages/gridExtra/index.html)
 
--   readxl
+-   [readxl](https://readxl.tidyverse.org/)
 
--   knitr
+-   [knitr](https://yihui.org/knitr/)
 
--   data.table
+-   [data.table](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html)
+
+-   [CGPfunctions](https://cran.r-project.org/web/packages/CGPfunctions/vignettes/Using-newggslopegraph.html)
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-pacman::p_load(tidyverse, scales, viridis, lubridate, ggthemes, gridExtra, readxl,knitr, data.table, CGPfunctions, ggHoriPlot)
+pacman::p_load(tidyverse, scales, viridis, lubridate, ggthemes, gridExtra, readxl,knitr, data.table, CGPfunctions)
 
 ```
 
