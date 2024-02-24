@@ -57,6 +57,7 @@ website:
       menu: 
         - text: Post-Lesson Thoughts 1
           href: "Extra/Post-Lesson_01/Post-Lesson_01.qmd"
+        - text: Post-Lesson Thoughts 2 (coming soon!)
     right:
       - icon: linkedin 
         href: https://www.linkedin.com/in/gohsihui/ 

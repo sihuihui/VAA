@@ -1,0 +1,25 @@
+---
+title: "Post-Lesson Thoughts 2: More uses of Plotly!"
+author: "Goh Si Hui"
+date: 2024/02/23
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  warning: false
+editor: visual 
+---
+
+# About Plotly R
+
+In Hands-on Exercises and Take Home Exercise 3,
+
+# Creating Dropdown list
+
+# Creating Heatmaps
+
+# Creating Mixed Subplots
+
+# 
