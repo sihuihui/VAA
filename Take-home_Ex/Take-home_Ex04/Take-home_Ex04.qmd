@@ -1,0 +1,15 @@
+---
+title: "Take-home Exercise 4"
+author: "Goh Si Hui"
+date: 2024/02/12
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  freeze: true
+  warning: false
+  message: false
+editor: visual 
+---

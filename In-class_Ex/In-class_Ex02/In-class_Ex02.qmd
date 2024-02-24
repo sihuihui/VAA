@@ -1,13 +1,94 @@
 ---
-title: "In-class Exercise 2"
+title: "In-class Exercise 2: Horizon Plot"
 author: "Goh Si Hui"
-date: 2024/02/17
+date: 2024/02/24
 date-format: long
 date-modified: "last-modified"
 format: html 
 execute: 
   echo: true
   eval: true
+  freeze: true
   warning: false
+  message: false
 editor: visual 
 ---
+
+# Getting Started
+First, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
+
+## Installing the R Packages 
+
+For this in-class exercise, we will be using the following two packages:
+
+-   [tidyverse](https://www.tidyverse.org/)
+-   [ggHoriPlot](https://rivasiker.github.io/ggHoriPlot/)
+-   [ggthemes](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/)
+
+The code chunk below uses `p_load()` of [**pacman**](https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html) package to check if **tidyverse** packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
+
+```{r}
+pacman::p_load(tidyverse, ggHoriPlot, ggthemes)
+
+```
+
+## Importing the Data 
+We will use `read_csv()` to import the csv file into R and use `glimpse()` to check the imported data. 
+
+```{r}
+averp <- read_csv("data/AVERP.csv")
+glimpse(averp)
+```
+
+From the above output, we noted that the Date field was read as character data type. We will use Lubriate package to change the Date field to Date data type. 
+
+```{r}
+averp <- averp %>%
+  mutate(Date = dmy(Date)) %>%
+  rename(ConsumerItem = `Consumer Items`)
+glimpse(averp)
+```
+
+# Plotting Horizon Plot
+
+We will plot out data from 2018-01-01 onwards by filtering the `Date` field from averp datatable. To plot the horizon plot, we will use `geom_horizon()` and `facet_grid()`. Then we will add theme using `theme_few()` from ggthemes, customise a diverging colour scheme using `scale_fill_hcl()`. 
+
+```{r}
+#| fig-width: 12
+#| fig-height: 10
+
+averp %>%
+  filter(Date >= "2018-01-01") %>%
+  ggplot() +
+  geom_horizon(aes(x = Date, y= Values),
+               origin = "midpoint",
+               horizonscale = 6) +
+  facet_grid(ConsumerItem~.) + 
+  theme_few() +
+  scale_fill_hcl(palette = 'RdBu') +
+  theme(panel.spacing.y=unit(0, "lines"), strip.text.y = element_text(
+    size = 5, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(size=7),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+    scale_x_date(expand=c(0,0), date_breaks = "3 month", date_labels = "%b%y") +
+  ggtitle('Average Retail Prices of Selected Consumer Items (Jan 2018 to Dec 2022)')
+
+
+
+```
+
+:::{.callout-note}
+## Tips!
+
+-   If there are positive and negative values, use a diverging colour scheme
+
+-   Tried using hrbrthemes instead of ggthemes to beautify the horizon plot but it didn't work out well :( 
+
+
+:::

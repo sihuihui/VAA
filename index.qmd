@@ -19,6 +19,7 @@ listing:
   - id: in-class
     contents:
     - "In-class_Ex/In-class_Ex01/*.qmd"
+    - "In-class_Ex/In-class_Ex02/*.qmd"
     type: grid
     sort: "date"
     

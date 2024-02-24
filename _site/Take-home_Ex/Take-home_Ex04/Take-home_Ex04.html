@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Goh Si Hui">
-<meta name="dcterms.date" content="2024-01-13">
+<meta name="dcterms.date" content="2024-02-12">
 
-<title>Post-Lesson Thoughts 1: Annotations</title>
+<title>Take-home Exercise 4</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,40 +21,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -108,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-sidebar floating nav-fixed slimcontent">
+<body class="nav-sidebar floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -248,7 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Extra/Post-Lesson_01/Post-Lesson_01.html">Extra Stuff</a></li><li class="breadcrumb-item"><a href="../../Extra/Post-Lesson_01/Post-Lesson_01.html">Post-Lesson Thoughts 1: Annotations</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Take-home Exercise 4</li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -420,7 +386,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../Extra/Post-Lesson_01/Post-Lesson_01.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../Extra/Post-Lesson_01/Post-Lesson_01.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Post-Lesson Thoughts 1: Annotations</span></a>
   </div>
 </li>
@@ -432,34 +398,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="3">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#oh-no-i-forgot-about-annotations" id="toc-oh-no-i-forgot-about-annotations" class="nav-link active" data-scroll-target="#oh-no-i-forgot-about-annotations"><span class="header-section-number">1</span> Oh no I forgot about Annotations!</a></li>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">2</span> Getting Started</a>
-  <ul class="collapse">
-  <li><a href="#import-packages" id="toc-import-packages" class="nav-link" data-scroll-target="#import-packages"><span class="header-section-number">2.1</span> Import Packages</a></li>
-  <li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data"><span class="header-section-number">2.2</span> Import Data</a></li>
-  </ul></li>
-  <li><a href="#adding-text-to-charts-using-geom_text-and-geom_label" id="toc-adding-text-to-charts-using-geom_text-and-geom_label" class="nav-link" data-scroll-target="#adding-text-to-charts-using-geom_text-and-geom_label"><span class="header-section-number">3</span> Adding text to charts using geom_text() and geom_label()</a>
-  <ul class="collapse">
-  <li><a href="#using-geom_text" id="toc-using-geom_text" class="nav-link" data-scroll-target="#using-geom_text"><span class="header-section-number">3.1</span> Using geom_text()</a></li>
-  <li><a href="#using-geom_label" id="toc-using-geom_label" class="nav-link" data-scroll-target="#using-geom_label"><span class="header-section-number">3.2</span> Using geom_label()</a></li>
-  </ul></li>
-  <li><a href="#adding-shapes-and-texts-using-annotate" id="toc-adding-shapes-and-texts-using-annotate" class="nav-link" data-scroll-target="#adding-shapes-and-texts-using-annotate"><span class="header-section-number">4</span> Adding Shapes and Texts Using annotate()</a></li>
-  <li><a href="#adding-abline-with-geom_hline-and-geom_vline" id="toc-adding-abline-with-geom_hline-and-geom_vline" class="nav-link" data-scroll-target="#adding-abline-with-geom_hline-and-geom_vline"><span class="header-section-number">5</span> Adding abline with geom_hline and geom_vline</a></li>
-  <li><a href="#takeaways" id="toc-takeaways" class="nav-link" data-scroll-target="#takeaways"><span class="header-section-number">6</span> Takeaways</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">7</span> References</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../Extra/Post-Lesson_01/Post-Lesson_01.html">Extra Stuff</a></li><li class="breadcrumb-item"><a href="../../Extra/Post-Lesson_01/Post-Lesson_01.html">Post-Lesson Thoughts 1: Annotations</a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Post-Lesson Thoughts 1: Annotations</h1>
+<h1 class="title">Take-home Exercise 4</h1>
 </div>
 
 
@@ -476,7 +422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 13, 2024</p>
+      <p class="date">February 12, 2024</p>
     </div>
   </div>
   
@@ -494,216 +440,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><em>[Updated with references on 16 Jan 2024]</em></p>
-<section id="oh-no-i-forgot-about-annotations" class="level1 page-columns page-full" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Oh no I forgot about Annotations!</h1>
-<p>After attending my first visual analytics class and taking a peek at Lesson 2’s Hands-on Exercise, I realised I did not annotate my charts!</p>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>I will update Hands-on Exercise 1 with annotations soon!</p>
-</div></div><div class="{callout-note}">
-<p>Why is annotation important? Annotation is a crucial component of good data visualisation. It can help to conveny information and grab viewer’s attention. Using keywords, shapes, colours and other visuals help them go straight to the point.</p>
-</div>
-<p>Now that we have an idea how to create charts using ggplot, let us talk about how to annotate our ggplot2 charts.</p>
-<p>Based on what I read, we can add annotations using the following methods:</p>
-<ul>
-<li><p>Adding text with <code>geom_text()</code> or <code>geom_label()</code></p></li>
-<li><p>Adding shapes, text with <code>annotate()</code></p></li>
-<li><p>Adding ablines with <code>geom_hline()</code> and <code>geom_vline()</code></p></li>
-</ul>
-<p>I will share more about each method in the following sections.</p>
-</section>
-<section id="getting-started" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Getting Started</h1>
-<p>First, let us import the relevant packages and data.</p>
-<section id="import-packages" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="import-packages"><span class="header-section-number">2.1</span> Import Packages</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-<section id="import-data" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="import-data"><span class="header-section-number">2.2</span> Import Data</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>exam_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Exam_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-</section>
-<section id="adding-text-to-charts-using-geom_text-and-geom_label" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Adding text to charts using geom_text() and geom_label()</h1>
-<p>Text (words or numerical values) is the most common kind of annotation. It can provide more important on the important parts of the chart. Using <strong>ggplot2</strong>, the 2 main functions for text annotation are: <code>geom_text</code> to add a simple piece of text <code>geom_label</code> to add a label: framed text</p>
-<div class="{callout-note}">
-<p>Note that the <code>annotate()</code> function is a good alternative and we will cover more about this function in the following section. The <code>annotate()</code> function reduces code length for simple cases.</p>
-</div>
-<section id="using-geom_text" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="using-geom_text"><span class="header-section-number">3.1</span> Using geom_text()</h2>
-<p>For example, we want to find out how the students did overall for math as compared to the mean Math score. So we will first calculate the mean Math score.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mean_MATHS <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(exam_data<span class="sc">$</span>MATHS),<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(exam_data, <span class="fu">aes</span>(<span class="at">x =</span> MATHS)) <span class="sc">+</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">x =</span> mean_MATHS, <span class="at">y =</span> <span class="dv">20</span>, </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"mean</span><span class="sc">\n</span><span class="st">"</span>, mean_MATHS),</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Post-Lesson_01_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Now we realised that the number is just floating around, so let us draw a line using <code>geom_segment</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(exam_data, <span class="fu">aes</span>(<span class="at">x =</span> MATHS)) <span class="sc">+</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">x =</span> mean_MATHS, <span class="at">y =</span> <span class="dv">20</span>, </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"mean</span><span class="sc">\n</span><span class="st">"</span>, mean_MATHS),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> mean_MATHS, <span class="at">xend =</span> mean_MATHS,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="dv">18</span>, <span class="at">color=</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Post-Lesson_01_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="using-geom_label" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="using-geom_label"><span class="header-section-number">3.2</span> Using geom_label()</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(exam_data, <span class="fu">aes</span>(<span class="at">x =</span> MATHS)) <span class="sc">+</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="at">x =</span> mean_MATHS, <span class="at">y =</span> <span class="dv">20</span>, </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"mean="</span>, mean_MATHS),</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">fill =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span> </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">x =</span> mean_MATHS, <span class="at">xend =</span> mean_MATHS,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="dv">18</span>, <span class="at">color=</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Post-Lesson_01_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Currently <code>geom_label()</code> does not support the <code>check_overlap</code> argument or the <code>angle</code> aesthetic. Also, it is considerably slower than <code>geom_text()</code>. The <code>fill</code> aesthetic controls the background colour of the label.</p>
-</div>
-</div>
-</section>
-</section>
-<section id="adding-shapes-and-texts-using-annotate" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Adding Shapes and Texts Using annotate()</h1>
-<p>The <code>annotate()</code> function allows us to add text and shapes on a ggplot2 chart. The first argument allow us to specify if we want to add text or a specific kind of shape. The following examples shows how to add text, line (segment) and a pointrange.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(exam_data, <span class="fu">aes</span>(<span class="at">x =</span> MATHS)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">x=</span> mean_MATHS, <span class="at">y =</span> <span class="dv">20</span>, </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"mean="</span>, mean_MATHS),</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"segment"</span>, </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">x=</span> mean_MATHS, <span class="at">xend =</span> mean_MATHS,</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="dv">0</span>, <span class="at">yend =</span> <span class="dv">18</span>, <span class="at">color=</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Post-Lesson_01_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Using annotate() to box out an area by drawing a rectangle.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(exam_data, <span class="fu">aes</span>(<span class="at">x =</span> MATHS)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"rect"</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">xmin =</span> <span class="dv">0</span>, <span class="at">xmax=</span><span class="dv">27</span>, </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> <span class="dv">10</span>,</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">fill =</span> <span class="st">"pink"</span>, <span class="at">alpha=</span>.<span class="dv">2</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Post-Lesson_01_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Using annotate to draw a point range (i.e.&nbsp;a point and a segment to define the range)</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> exam_data,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> MATHS,</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> ENGLISH)) <span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"pointrange"</span>, <span class="at">x =</span> <span class="dv">50</span>, <span class="at">y =</span><span class="dv">50</span>, <span class="at">ymin=</span> <span class="dv">30</span>, <span class="at">ymax=</span><span class="dv">70</span>, <span class="at">color=</span> <span class="st">"orange"</span>, <span class="at">size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Post-Lesson_01_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="{callout-note}">
-<p>Due to their special nature, reference line geoms geom_abline(), geom_hline(), and geom_vline() can’t be used with annotate(). You can use these geoms directory for annotations.</p>
-</div>
-</section>
-<section id="adding-abline-with-geom_hline-and-geom_vline" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Adding abline with geom_hline and geom_vline</h1>
-<p>An abline is a segment that goes from 1 chart extremity to the other. <code>ggplot2</code> offers the <code>geom_hline()</code> and <code>geom_vline()</code> functions to draw hortizonal and vertical ablines.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> exam_data,</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> MATHS,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> ENGLISH)) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">#hortizonal </span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">50</span>, <span class="at">color=</span><span class="st">"orange"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">#vertical </span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">50</span>, <span class="at">color=</span><span class="st">"orange"</span>, <span class="at">size =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Post-Lesson_01_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="takeaways" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Takeaways</h1>
-<p>After exploring these methods, I realised that there are actually a lot more to learn about annotations. These examples are just scratching the surface. There are so many ways to annotate, and customise the annotations in ways which I have not thought of previously.</p>
-<p>Watch out for my future exercises as I attempt to practise my annotation skills!</p>
-</section>
-<section id="references" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> References</h1>
-<ul>
-<li>Holtz, Y. (n.d.-a). Annotation is Crucial for Your Dataviz. From Data to Viz. Retrieved January 14, 2024, from <a href="https://www.data-to-viz.com/caveat/annotation.html" class="uri">https://www.data-to-viz.com/caveat/annotation.html</a></li>
-<li>Holtz, Y. (n.d.-b). How to annotate a plot in ggplot2. <a href="https://r-graph-gallery.com/233-add-annotations-on-ggplot2-chart.html" class="uri">https://r-graph-gallery.com/233-add-annotations-on-ggplot2-chart.html</a></li>
-<li>How to Compute Summary Statistics by Group in R (3 Examples). (2022, March 18). Statistics Globe. Retrieved January 14, 2024, from <a href="https://statisticsglobe.com/summary-statistics-by-group-in-r" class="uri">https://statisticsglobe.com/summary-statistics-by-group-in-r</a></li>
-<li>Johnson, A. L. (n.d.). 6 Summary Statistics | R Training for SSDS. <a href="https://bookdown.org/ajohnso6/r_training_public/summary-statistics.html" class="uri">https://bookdown.org/ajohnso6/r_training_public/summary-statistics.html</a></li>
-<li>Kam, T. S. (2023). R for Visual Analytics [Web-book]. <a href="https://r4va.netlify.app/" class="uri">https://r4va.netlify.app/</a></li>
-<li>Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., &amp; Dunnington, D. (n.d.-a). Create an annotation layer — annotate. Ggplot2. Retrieved January 14, 2024, from <a href="https://ggplot2.tidyverse.org/reference/annotate.html" class="uri">https://ggplot2.tidyverse.org/reference/annotate.html</a></li>
-<li>Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., &amp; Dunnington, D. (n.d.-b). Reference lines: Horizontal, vertical, and diagonal. Ggplot2. Retrieved January 14, 2024, from <a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="uri">https://ggplot2.tidyverse.org/reference/geom_abline.html</a></li>
-<li>Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., &amp; Dunnington, D. (n.d.-c). Text. Ggplot2. Retrieved January 14, 2024, from <a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="uri">https://ggplot2.tidyverse.org/reference/geom_text.html</a></li>
-<li>Wickham, H., Navarro, D., &amp; Pedersen, T. L. (n.d.). Annotations [Web-book]. In ggplot2: Elegant Graphics for Data Analysis (3rd ed.). <a href="https://ggplot2-book.org/annotations" class="uri">https://ggplot2-book.org/annotations</a></li>
-</ul>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
