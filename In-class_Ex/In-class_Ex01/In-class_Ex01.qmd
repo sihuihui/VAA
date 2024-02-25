@@ -8,7 +8,9 @@ format: html
 execute: 
   echo: true
   eval: true
+  freeze: true
   warning: false
+  message: false
 editor: visual 
 ---
 
