@@ -1,5 +1,5 @@
 ---
-title: "Hands-on Exercise 1 - A Layered Grammar of Graphics: ggplot2 methods"
+title: "Hands-on Exercise 1: A Layered Grammar of Graphics: ggplot2 methods"
 author: "Goh Si Hui"
 date: 2024/01/11
 date-format: long
@@ -8,7 +8,9 @@ format: html
 execute: 
   echo: true
   eval: true
+  freeze: true
   warning: false
+  message: false
 editor: visual 
 ---
 
