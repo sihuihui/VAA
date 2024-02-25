@@ -1,5 +1,5 @@
 ---
-title: "Hands-On Exercise 2 - Beyond ggplot2 Fundamentals"
+title: "Hands-On Exercise 2: Beyond ggplot2 Fundamentals"
 author: "Goh Si Hui"
 date: 2024/01/13
 date-format: long
@@ -8,7 +8,9 @@ format: html
 execute: 
   echo: true
   eval: true
+  freeze: true
   warning: false
+  message: false
 editor: visual 
 ---
 
