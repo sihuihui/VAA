@@ -1,0 +1,468 @@
+---
+title: "Take-home Exercise 7a: Choropleth Mapping with R"
+author: "Goh Si Hui"
+date: 2024/02/25
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  freeze: true
+  warning: false
+  message: false
+editor: visual 
+---
+
+# About this Exercise 
+In this exercise, we will learn how to plot functional and truthful choropleth maps using [tmap](https://cran.r-project.org/web/packages/tmap/) package. 
+
+:::{.callout-note}
+## What is choropleth mapping?
+
+Choropleth mapping involves the symbolisation of enumeration units, such as countries, provinces, states, counties or census units, using area patterns or graduated colors. For example, a social scientist may need to use a choropleth map to portray the spatial distribution of aged population of Singapore by Master Plan 2014 Subzone Boundary.
+::: 
+
+# Getting Started 
+
+## Installing and Loading R Packages
+
+For this exercise, other than tmap, we will use the following packages:
+
+-   readr for importing delimited text file
+-   tidyr for tidying data 
+-   dplyr for wrangling data
+-   sf for handling geospatial data 
+
+:::{.callout-note}
+Among the four packages, readr, tidyr and dplyr are part of tidyverse package.So, we only need to install tidyverse instead of readr, tidyr and dplyr individually. 
+:::
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+pacman::p_load(tidyverse, sf, tmap)
+```
+
+## Importing the Data into R 
+For this exercise, we will use two datasets to create the choropleth map: 
+
+-   Geospatial Data: Master Plan 2014 Subzone Boundary (Web) in ESRI shapefile format (`MP14_SUBZONE_WEB_PL`). It can be downloaded at [data.gov.sg](www.data.gov.sg).This dataset contains the geographical boundary of Singapore at the planning subzone level. The data is based on URA Master Plan 2014.
+
+-   Aspatial Data: Singapore Residents by Planning Area/Subzone, Age Group, Sex and Type of Dwelling, June 2011-2020 in csv format (`respopagesextod2011to2020.csv``). It can be downloaded from [Department of Statistics, Singapore](https://www.singstat.gov.sg/). Although it does not contain any coordinates values, but it’s PA and SZ fields can be used as unique identifiers to geocode to `MP14_SUBZONE_WEB_PL` shapefile.
+
+
+:::{.panel-tabset}
+## Geospatial Data 
+The code chunk below uses the `st_read()` function of `sf` package to import `MP14_SUBZONE_WEB_PL` shapefile into R as a simple feature data frame called `mpsz`.
+
+```{r}
+mpsz <- st_read(dsn = "data/geospatial",
+                layer = "MP14_SUBZONE_WEB_PL")
+
+mpsz
+```
+The message above also tells us that mpsz’s geometry type is multipolygon, there are a total of 323 multipolygon features and 15 fields in mpsz and it is in svy21 projected coordinates systems.
+
+
+## Aspatial Data 
+
+We will import `respopagesextod2011to2020.csv` file using `read_csv()` function of `readr` package. 
+
+```{r}
+popdata <- read_csv("data/aspatial/respopagesextod2011to2020.csv")
+
+head(popdata)
+
+```
+From the above output, we see that there are 7 columns in the datatable, namely: Planning area (PA), Subzone (SZ), Age Group (AG), Sex, Type of Dwelling (TOD), Population (Pop), Year (Time). 
+
+:::
+
+
+## Data Preparation 
+Before a thematic map can be prepared, we need to prepare a data table with year 2020 values. The data table should include the variables: PA, SZ, YOUNG(AG 0 to 4 until AG 20 to 24), ECONOMY ACTIVE (AG 25 to 29 until AG 60 - 64), AGED (AG 65 and above), TOTAL (All AG), DEPENDENCY (ratio between young and aged against economy active group).
+
+### Data Wrangling
+
+:::{.panel-tabset}
+
+First, we will filter the data from year 2020, summarise the population count by grouping at PA, SZ and AG levels. 
+Then we will pivot the table using pivot_wider so that the rows become columns. 
+
+## Transforming the Data 
+```{r}
+popdata2020 <- popdata %>%
+  filter(Time == 2020) %>%
+  group_by(PA, SZ, AG) %>%
+  summarise(Pop = sum(Pop)) %>%
+  ungroup() %>%
+  pivot_wider(names_from = AG, 
+               values_from = Pop) 
+
+glimpse(popdata2020)
+```
+## Data Table 
+
+```{r}
+head(popdata2020, 10)
+
+```
+::: 
+
+Then we will group the various AG to create YOUNG, ECONOMY ACTIVE, AGED, TOTAL and also calculate the ratio DEPENDENCY using `mutate()` of `dplyr` package. 
+
+:::{.panel-tabset}
+
+## Transforming the Data 
+```{r}
+popdata2020 <- popdata2020 %>%
+  mutate(YOUNG = rowSums(.[3:6]) + rowSums(.[14])) %>%
+  mutate(ECONOMYACTIVE = rowSums(.[7:13]) + rowSums(.[15])) %>%
+  mutate(AGED = rowSums(.[16:21])) %>%
+  mutate(TOTAL = rowSums(.[3:21])) %>%
+  mutate(DEPENDENCY = (YOUNG + AGED) / ECONOMYACTIVE) %>%
+  select(PA, SZ, YOUNG, ECONOMYACTIVE, AGED, TOTAL, DEPENDENCY)
+
+```
+## Data Table 
+
+```{r}
+head(popdata2020, 10)
+
+```
+:::
+
+### Joining the aspatial data and geospatial data
+Before we can perform the georelational join, we need to convert the values in PA and SZ fields to uppercase. This is because the values of PA and SZ fields are made up of upper- and lowercase. On the other, hand the SUBZONE_N and PLN_AREA_N are in uppercase. We will also retain those rows where 
+ECONOMYACTIVE is more than 0 using `filter()`.
+
+```{r}
+popdata2020 <- popdata2020 %>%
+  mutate_at(.vars = vars(PA, SZ), 
+          .funs = funs(toupper)) %>%
+  filter(ECONOMYACTIVE > 0)
+
+```
+Then we will use `left_join()` of dplyr to join the geospatial and aspatial data using planning subzone name (i.e. SUBZONE_N and SZ) as the common identifier. 
+
+```{r}
+mpsz_pop2020 <- left_join(mpsz, popdata2020,
+                          by = c("SUBZONE_N" = "SZ"))
+
+```
+
+:::{.callout-note}
+Note! The mpsz simple feature data frame is the left data table in the left_join. This is to ensure that the output will be a simple features data frame.
+
+::: 
+
+Then we will write mpsz_pop2020 into an rds file for easy retrieval in future. 
+
+```{r}
+write_rds(mpsz_pop2020, "data/rds/mpszpop2020.rds")
+
+```
+
+# Choropleth Mapping Geospatial Data using tmap 
+Two approaches can be used to prepare thematic map using tmap, they are:
+
+-   Plotting a thematic map quickly by using qtm().
+-   Plotting highly customisable thematic map by using tmap elements.
+
+## Plotting a choropleth map quickly using qtm()
+
+:::{.panel-tabset}
+## Static Map 
+```{r}
+tmap_mode("plot")
+qtm(mpsz_pop2020, 
+    fill = "DEPENDENCY")
+```
+
+## Interactive Map 
+
+```{r}
+tmap_options(check.and.fix = TRUE)
+tmap_mode("view")
+qtm(mpsz_pop2020, fill = "DEPENDENCY")
+
+```
+:::
+
+Things to learn from the code chunk above:
+
+`tmap_mode()` with “plot” option is used to produce a static map. For interactive mode, “view” option should be used.
+`fill` argument is used to map the attribute (i.e. DEPENDENCY)
+
+## Creating a choropleth map using tmap's elements
+
+### Drawing a base map 
+```{r}
+tmap_mode("plot")
+tm_shape(mpsz_pop2020) +
+  tm_polygons()
+```
+
+### Drawing a choropleth map using tm_polygons() 
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_polygons("DEPENDENCY")
+```
+
+### Drawing a choropleth map using tm_fill() and tm_border()
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_fill("DEPENDENCY")
+```
+
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_fill("DEPENDENCY") +
+  tm_borders(lwd = 0.1, alpha = 1)
+```
+
+### Data Classification Methods of tmap 
+
+#### Plotting choropleth maps with built-in classification methods
+
+:::{.panel-tabset}
+## Jenkins 
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_fill("DEPENDENCY",
+          n = 5, 
+          style = "jenks") +
+  tm_borders(alpha = 0.5)
+
+```
+## Equal 
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_fill("DEPENDENCY",
+          n = 5, 
+          style = "equal") +
+  tm_borders(alpha = 0.5)
+
+```
+## quantile
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_fill("DEPENDENCY",
+          n = 5, 
+          style = "quantile") +
+  tm_borders(alpha = 0.5)
+
+```
+:::
+
+#### Plotting choropleth map with custom breaks
+
+```{r}
+summary(mpsz_pop2020$DEPENDENCY)
+```
+
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          breaks = c(0, 0.60, 0.70, 0.80, 0.90, 1.00)) +
+  tm_borders(alpha = 0.5)
+
+``` 
+
+### Color Scheme 
+
+#### Using ColourBrewer Palette
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          n = 6,
+          style = "quantile",
+          palette = "Blues") +
+  tm_borders(alpha = 0.5)
+
+``` 
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY",
+          style = "quantile",
+          palette = "-Reds") +
+  tm_borders(alpha = 0.5)
+
+```
+
+### Map Layouts 
+
+#### Map Legend
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY", 
+          style = "jenks", 
+          palette = "Greens", 
+          legend.hist = TRUE, 
+          legend.is.portrait = TRUE,
+          legend.hist.z = 0.1) +
+  tm_layout(main.title = "Distribution of Dependency Ratio by planning subzone \n(Jenks classification)",
+            main.title.position = "center",
+            main.title.size = 1,
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            legend.outside = FALSE,
+            legend.position = c("right", "bottom"),
+            frame = FALSE) +
+  tm_borders(alpha = 0.5)
+
+```
+
+#### Map Style 
+
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY", 
+          style = "quantile", 
+          palette = "-Greens") +
+  tm_borders(alpha = 0.5) +
+  tmap_style("classic") +
+  tm_layout(main.title = "Distribution of Dependency Ratio by planning subzone \n(Quantile classification)",
+            main.title.position = "center",
+            main.title.size = 1,
+            legend.height = 0.4, 
+            legend.width = 0.35,)
+
+```
+#### Cartographic Furniture
+```{r}
+tm_shape(mpsz_pop2020)+
+  tm_fill("DEPENDENCY", 
+          style = "quantile", 
+          palette = "Blues",
+          title = "No. of persons") +
+  tm_layout(main.title = "Distribution of Dependency Ratio \nby planning subzone",
+            main.title.position = "center",
+            main.title.size = 1,
+            legend.height = 0.4, 
+            legend.width = 0.35,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar(width = 0.15) +
+  tm_grid(lwd = 0.1, alpha = 0.2) +
+  tm_credits("Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\n and Population data from Department of Statistics DOS", 
+             position = c("left", "bottom"))
+```
+
+
+```{r}
+tmap_style("white")
+```
+
+### Drawing Multiple Small Choropleth Maps
+
+#### By assigning multiple values to at least one of the aesthetic arguments
+
+```{r}
+tm_shape(mpsz_pop2020) + 
+  tm_fill(c("YOUNG", "AGED"),
+          style = "equal",
+          palette = "Blues") +  
+  tm_borders(alpha = 0.5) + 
+  tm_layout(main.title = "Distribution of Young and Old",
+            main.title.position = "center",
+            main.title.size = 1,
+            legend.height = 0.4, 
+            legend.width = 0.35,
+            legend.position = c("right", "bottom"),
+            frame = TRUE)
+```
+
+
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_polygons(c("DEPENDENCY", "AGED"),
+              style = c("equal", "quantile"),
+              palette = list("Blues", "Greens")) +
+   tm_layout(main.title = "Distribution of Young and Old",
+            main.title.position = "center",
+            main.title.size = 1,
+            legend.height = 0.4, 
+            legend.width = 0.35,
+            legend.position = c("right", "bottom"),
+            frame = TRUE)
+
+```
+#### By defining a group-by variable in tm_facets()
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_fill("DEPENDENCY",
+          style = "quantile",
+          palette = "Greens",
+          thres.poly = 0) + 
+  tm_facets(by="REGION_N", 
+            free.coords=TRUE, 
+            drop.shapes=FALSE) +
+  tm_layout(main.title = "Dependency Ratio by Regions",
+            main.title.size = 1,
+            legend.show = FALSE,
+            title.position = c("center", "center"), 
+            title.size = 20) +
+  tm_borders(alpha = 0.5) +
+  tm_credits("Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\n and Population data from Department of Statistics DOS", 
+             position = c("left", "bottom"))
+
+```
+
+#### By creating multiple stand-alone maps with tmap_arrange()
+
+```{r}
+youngmap <- tm_shape(mpsz_pop2020) +
+  tm_polygons("YOUNG",
+              style = "quantile",
+              palette = "Reds") +
+   tm_layout(legend.height = 0.4, 
+            legend.width = 0.35,
+            legend.position = c("right", "bottom"),
+            frame = TRUE)
+  
+
+agedmap <- tm_shape(mpsz_pop2020) +
+  tm_polygons("AGED",
+              style = "quantile",
+              palette = "Reds") +
+   tm_layout(legend.height = 0.4, 
+            legend.width = 0.35,
+            legend.position = c("right", "bottom"),
+            frame = TRUE)
+
+tmap_arrange(youngmap, agedmap, asp = 1, ncol = 2)
+```
+
+### Mapping Spatial Object Meeting a Selection Criterion 
+
+Instead of creating small multiple choropleth map, you can also use selection function to map spatial objects meeting the selection criterion.
+
+In the following code chunk, we select the Central Region's dependency ratio. 
+
+```{r}
+tm_shape(mpsz_pop2020[mpsz_pop2020$REGION_N=="CENTRAL REGION", ])+
+  tm_fill("DEPENDENCY", 
+          style = "quantile", 
+          palette = "Blues", 
+          legend.hist = TRUE, 
+          legend.is.portrait = TRUE,
+          legend.hist.z = 0.1) +
+  tm_layout(legend.outside = TRUE,
+            legend.height = 0.45, 
+            legend.width = 5.0,
+            legend.position = c("right", "bottom"),
+            frame = FALSE) +
+  tm_borders(alpha = 0.5)
+```
+

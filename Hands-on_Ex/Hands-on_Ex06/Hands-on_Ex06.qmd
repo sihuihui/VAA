@@ -8,7 +8,9 @@ format: html
 execute: 
   echo: true
   eval: true
+  freeze: true
   warning: false
+  message: false
 editor: visual 
 ---
 
@@ -91,7 +93,7 @@ From the above output, we see there there are three columns in the `attack` data
 
 ## Data Preparation
 
-### Step 1 
+### Step 1
 
 Before we can plot the calendar heatmap, we need to derive two new fields: `wkday` and `hour` using a function. To get the hour function, we will make use of `hour()` from **lubridate** package. To get the `wkday` field, we will make use of `weekdays()`, which is a base R function.
 
@@ -112,7 +114,7 @@ make_hr_wkday <- function(ts,sc,tz){
 
 ```
 
-:::{.callout-note}
+::: callout-note
 ## About the code chunk
 
 -   `ymd_hms()` and `hour()` are from lubridate package.
@@ -134,26 +136,24 @@ attacks1 <- attacks %>%
          hr = hour(timestamp))
 ```
 
-:::{.callout-note}
+::: callout-note
 ## About the code chunk
 
 -   `hour()` and `wday()` are from lubridate package.
 
-    -   Note: these two functions are relatively more efficient than Base R function. 
-
+    -   Note: these two functions are relatively more efficient than Base R function.
+:::
 :::
 
+### Step 2
 
-:::
+We will now derive the attacks tibble data frame using the following code chunk.
 
-### Step 2 
+::: panel-tabset
+## Method 1
 
-We will now derive the attacks tibble data frame using the following code chunk. 
+After creating the function in earlier section, we will now use it to derive the `wkday` and `hour` columns. After that we will also use `mutate()` to convert `wkday` and `hour` fields into factor so that they will be ordered when plotting.
 
-:::{.panel-tabset}
-
-## Method 1 
-After creating the function in earlier section, we will now use it to derive the `wkday` and `hour` columns. After that we will also use `mutate()` to convert `wkday` and `hour` fields into factor so that they will be ordered when plotting. 
 ```{r}
 
 wkday_levels <- c('Saturday', 'Friday', 
@@ -175,7 +175,9 @@ attacks2 <- attacks %>%
 ```
 
 ## Method 2
-Using the `attacks1` dataframe from previous section's method 2, we will just select the columns that we want and convert the `wkday` and `hr` columns into factors using `as.factor()`. 
+
+Using the `attacks1` dataframe from previous section's method 2, we will just select the columns that we want and convert the `wkday` and `hr` columns into factors using `as.factor()`.
+
 ```{r}
 attacks3 <- attacks1 %>%
   select(tz, source_country, wkday, hr)
@@ -218,27 +220,25 @@ ggplot(grouped,
 
 ```
 
-:::{.callout-note}
-## About the code chunk 
--   A tibble data table called `grouped` is derived by aggregating the attack by `wkday` and `hour` fields 
+::: callout-note
+## About the code chunk
+
+-   A tibble data table called `grouped` is derived by aggregating the attack by `wkday` and `hour` fields
 -   A new field called `n` is derived by using `group_by()` and `count()` functions.
--   `na.omit()` is used to exclude missing value. 
--   `geom_tile()` is used to plot tiles(grids) at each x and y positions. `color` and `size` arguments are used to specify the border color and line size of the tiles. In this case, the border color is white and the line size is 0.1. 
--   `theme_tufte()` of ggthemes package is used to remove unnecessary chart junk. 
+-   `na.omit()` is used to exclude missing value.
+-   `geom_tile()` is used to plot tiles(grids) at each x and y positions. `color` and `size` arguments are used to specify the border color and line size of the tiles. In this case, the border color is white and the line size is 0.1.
+-   `theme_tufte()` of ggthemes package is used to remove unnecessary chart junk.
 -   `coord_equal()` is used to ensure the plot will have an aspect ratio of 1:1
 -   `scale_fill_gradient()` function is used to create a two color gradient (low-high)
-    
-::: 
+:::
 
-## Plotting Multiple Calendar Heatmaps 
+## Plotting Multiple Calendar Heatmaps
 
-We can also plot multiple calendar heatmaps for the top four countries with the highest number of attacks. 
+We can also plot multiple calendar heatmaps for the top four countries with the highest number of attacks.
 
-### Step 1: Deriving Attack by Country Object 
-First we need to identify the top 4 countries with the highest number of attacks: 
--   count the number of attacks by country 
--   calculate the percent of attacks by country, and
--   save the results in a tibble data frame 
+### Step 1: Deriving Attack by Country Object
+
+First we need to identify the top 4 countries with the highest number of attacks: - count the number of attacks by country - calculate the percent of attacks by country, and - save the results in a tibble data frame
 
 ```{r}
 attacks_by_cty <- count(
@@ -249,7 +249,7 @@ attacks_by_cty <- count(
 
 ```
 
-### Step 2: Preparing the tidy data frame 
+### Step 2: Preparing the tidy data frame
 
 Now we will extract the attack records of the top 4 countries from `attacks2`data frame. Then save the data in a new tibble data frame (i.e. top4_attacks).
 
@@ -266,9 +266,10 @@ top4_attacks <- attacks2 %>%
 
 ```
 
-### Step 3: Plotting the Multiple Calendar Heatmap using ggplot2 package 
+### Step 3: Plotting the Multiple Calendar Heatmap using ggplot2 package
 
-Now, we are ready to plot multiple calendar heatmap! 
+Now, we are ready to plot multiple calendar heatmap!
+
 ```{r}
 
 # New facet label names
@@ -302,19 +303,19 @@ ggplot(top4_attacks,
 ```
 
 # Cycle Plot
-In this section, we will learn how to plot a cycle plot showing the time-series patterns and trend of visitor arrivals from Vietnam programmatically using ggplot2 functions. 
 
-:::{.callout-note}
+In this section, we will learn how to plot a cycle plot showing the time-series patterns and trend of visitor arrivals from Vietnam programmatically using ggplot2 functions.
+
+::: callout-note
 ## Why use Cycle Plot?
 
-A Cycle Plot is used when we want to visualize how a trend, or a cycle correlated with the day-of-the-week or the month-of-the-year evolved. A Cycle Plot is made to capture visually how certain values have advanced over a period. This type of chart is especially useful for identifying certain intervals or periods in which the best results are recorded. 
+A Cycle Plot is used when we want to visualize how a trend, or a cycle correlated with the day-of-the-week or the month-of-the-year evolved. A Cycle Plot is made to capture visually how certain values have advanced over a period. This type of chart is especially useful for identifying certain intervals or periods in which the best results are recorded.
 
 [Source](https://btprovider.com/cycle-plot-tableau/#:~:text=A%20Cycle%20Plot%20is%20made,the%20best%20results%20are%20recorded.)
+:::
 
-::: 
+## Importing the Data
 
-
-## Importing the Data 
 For the purpose of this hands-on exercise, `arrivals_by_air.xlsx` will be used.
 
 First, we will use the code chunk below to import `arrivals_by_air.xlsx` file into R environment and call the tibble data frame as `air`.
@@ -328,8 +329,9 @@ kable(head(air))
 
 ```
 
-## Deriving month and year fields 
-We will now derive two new fields `month` and `year` from the `Month-Year` field. 
+## Deriving month and year fields
+
+We will now derive two new fields `month` and `year` from the `Month-Year` field.
 
 ```{r}
 #| code-fold: true
@@ -344,9 +346,9 @@ air$year <- year(ymd(air$`Month-Year`))
 kable(head(air))
 ```
 
-## Extracting the target country 
+## Extracting the target country
 
-Next, we will extract the data for the target country (i.e. Vietnam) and data beyond year 2010 using the following code chunk. 
+Next, we will extract the data for the target country (i.e. Vietnam) and data beyond year 2010 using the following code chunk.
 
 ```{r}
 
@@ -357,9 +359,9 @@ viet <- air %>%
 
 ```
 
+## Computing year average arrivals by month
 
-## Computing year average arrivals by month 
-Now we will use `group_by()` and `summarise()` of dplyr to compute average arrivals by month across all years. 
+Now we will use `group_by()` and `summarise()` of dplyr to compute average arrivals by month across all years.
 
 ```{r}
 
@@ -369,9 +371,9 @@ hline.data <- viet %>%
 
 ```
 
-## Plotting the cycle plot 
+## Plotting the cycle plot
 
-To plot a cycle plot for each month, we will make use of `geom_line()` to plot the number of visitors in each year for every month. Then, we will use `geom_hline()`to plot out the "average value" for each month. To have a chart for every month, we will make use of `facet_grid()`. 
+To plot a cycle plot for each month, we will make use of `geom_line()` to plot the number of visitors in each year for every month. Then, we will use `geom_hline()`to plot out the "average value" for each month. To have a chart for every month, we will make use of `facet_grid()`.
 
 ```{r fig.width=15, fig.height=8}
 ggplot() +
@@ -397,24 +399,23 @@ ggplot() +
 
 ```
 
-
-
 # Slopegraph
-In this section, we will learn how to plot a slopegraph using the package CGPfunctions. 
 
-:::{.callout-note}
+In this section, we will learn how to plot a slopegraph using the package CGPfunctions.
+
+::: callout-note
 ## Why do we use slopegraph?
-When we use slopegraphs, we are trying to show the amount of change and the direction of change between two data points. 
--   The steeper the slope, the bigger the change; and, if one thing is going up more dramatically than its neighbors, a slopegraph will make that easier to see than a traditional line graph would.
+
+When we use slopegraphs, we are trying to show the amount of change and the direction of change between two data points. - The steeper the slope, the bigger the change; and, if one thing is going up more dramatically than its neighbors, a slopegraph will make that easier to see than a traditional line graph would.
 
 [Source](https://www.storytellingwithdata.com/blog/2020/7/27/what-is-a-slopegraph)
-
 :::
 
 ## Importing the Data
-For the purpose of this hands-on exercise, `rice.csv`` will be used.
 
-First, we will use the code chunk below to import `rice.csv` file into R environment and call the tibble data frame as `rice``.
+For the purpose of this hands-on exercise, \`rice.csv\`\` will be used.
+
+First, we will use the code chunk below to import `rice.csv` file into R environment and call the tibble data frame as \`rice\`\`.
 
 ```{r}
 #| code-fold: true
@@ -425,9 +426,10 @@ kable(head(rice))
 
 ```
 
-## Plotting the slopegraph 
+## Plotting the slopegraph
 
-Let us convert the `Year` to a factor so that the years will be arranged in levels. Then we filter the rows where the Years are 1961 and 1980. 
+Let us convert the `Year` to a factor so that the years will be arranged in levels. Then we filter the rows where the Years are 1961 and 1980.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -437,17 +439,13 @@ rice <- rice %>%
 
 glimpse(rice)
 ```
-Using the filtered data, we will plot the slopegraph using `newggslopegraph()`. We will indicate the `dataframe` argument as `rice`, which is the tibble dataframe that we have prepared in the earlier step. The `Times` argument refers to the column inside the dataframe that will be plotted on the x axis. Traditionally this `Times` argument is some measure of time. However, `newggslopegraph()` accepts a column of class ordered, factor or character. The `Measurement` argument refers to the column inside the dataframe that will be plotted on the y axis. Traditionally this `Measurement` argument is some measure  such as a percentage. Currently, the function accepts a column of type integer or number. The `Grouping` argument refers to a column inside the dataframe that will be used to group and distinguish measurements. 
 
-:::{.callout-note}
+Using the filtered data, we will plot the slopegraph using `newggslopegraph()`. We will indicate the `dataframe` argument as `rice`, which is the tibble dataframe that we have prepared in the earlier step. The `Times` argument refers to the column inside the dataframe that will be plotted on the x axis. Traditionally this `Times` argument is some measure of time. However, `newggslopegraph()` accepts a column of class ordered, factor or character. The `Measurement` argument refers to the column inside the dataframe that will be plotted on the y axis. Traditionally this `Measurement` argument is some measure such as a percentage. Currently, the function accepts a column of type integer or number. The `Grouping` argument refers to a column inside the dataframe that will be used to group and distinguish measurements.
+
+::: callout-note
 ## About the code chunk
-In the following code chunk we also:
--   Added a title using the argument `Title`. Note that `Title = ""` will provide an empty title but retain the spacing.
--   Added a subtitle using the argument `SubTitle`. Note that `SubTitle = ""` will provide and empty title but retain the spacing.
--   Added a caption using the argument `Caption`. Note that `Caption = ""` will provide and empty title but retain the spacing.
--   tried to space out the data labels by adjusting the `DataLabelPadding` argument. 
--   changed the theme to `wsj` using `ThemeChoice` argument.Note that by default ThemeChoice is set to "bw" and the other choices are "ipsum", "econ", "wsj", "gdocs", and "tufte". 
 
+In the following code chunk we also: - Added a title using the argument `Title`. Note that `Title = ""` will provide an empty title but retain the spacing. - Added a subtitle using the argument `SubTitle`. Note that `SubTitle = ""` will provide and empty title but retain the spacing. - Added a caption using the argument `Caption`. Note that `Caption = ""` will provide and empty title but retain the spacing. - tried to space out the data labels by adjusting the `DataLabelPadding` argument. - changed the theme to `wsj` using `ThemeChoice` argument.Note that by default ThemeChoice is set to "bw" and the other choices are "ipsum", "econ", "wsj", "gdocs", and "tufte".
 :::
 
 ```{r}
@@ -465,7 +463,6 @@ newggslopegraph(dataframe = rice,
 
 ```
 
-# Reference 
+# Reference
 
-Kam, T. S. (2023). R for Visual Analytics [Web-book]. https://r4va.netlify.app/.
-
+Kam, T. S. (2023). R for Visual Analytics \[Web-book\]. https://r4va.netlify.app/.
