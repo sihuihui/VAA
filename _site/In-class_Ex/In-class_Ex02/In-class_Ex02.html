@@ -484,7 +484,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 24, 2024</p>
+      <p class="date-modified">February 25, 2024</p>
     </div>
   </div>
     
@@ -500,19 +500,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>First, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.</p>
 <section id="installing-the-r-packages" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="installing-the-r-packages"><span class="header-section-number">1.1</span> Installing the R Packages</h2>
-<p>For this in-class exercise, we will be using the following two packages:</p>
+<p>For this in-class exercise, we will be using the following packages:</p>
 <ul>
 <li><a href="https://www.tidyverse.org/">tidyverse</a></li>
 <li><a href="https://rivasiker.github.io/ggHoriPlot/">ggHoriPlot</a></li>
 <li><a href="https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/">ggthemes</a></li>
 </ul>
-<p>The code chunk below uses <code>p_load()</code> of <a href="https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html"><strong>pacman</strong></a> package to check if <strong>tidyverse</strong> packages are installed in the computer. If they are, they will be launched in R. Otherwise, <strong>pacman</strong> will install the relevant packages before launching them.</p>
+<p>The code chunk below uses <code>p_load()</code> of <a href="https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html"><strong>pacman</strong></a> package to check if the packages are installed in the computer. If they are, they will be launched in R. Otherwise, <strong>pacman</strong> will install the relevant packages before launching them.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, ggHoriPlot, ggthemes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="importing-the-data" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="importing-the-data"><span class="header-section-number">1.2</span> Importing the Data</h2>
+<p>We will use <code>read_csv()</code> to import the csv file into R and use <code>glimpse()</code> to check the imported data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>averp <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/AVERP.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(averp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -524,7 +525,7 @@ $ `Consumer Items` &lt;chr&gt; "Wholemeal Bread (Per 400 Gram)", "Wholemeal Brea
 $ Values           &lt;dbl&gt; 2.05, 2.05, 2.04, 2.04, 2.05, 2.05, 2.05, 2.05, 2.04,…</code></pre>
 </div>
 </div>
-<p>From the above output, we noted that the Date field was read as character data type. We will use Lubriate package to change the Date field to Date data type.</p>
+<p>From the above output, we noted that the <code>Date</code> field was read as character data type. We will use <strong>Lubriate</strong> package to change the <code>Date</code> field to Date data type.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>averp <span class="ot">&lt;-</span> averp <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Date =</span> <span class="fu">dmy</span>(Date)) <span class="sc">%&gt;%</span></span>
@@ -542,7 +543,7 @@ $ Values       &lt;dbl&gt; 2.05, 2.05, 2.04, 2.04, 2.05, 2.05, 2.05, 2.05, 2.04,
 </section>
 <section id="plotting-horizon-plot" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Plotting Horizon Plot</h1>
-<p>Horizon Plot</p>
+<p>We will plot out data from 2018-01-01 onwards by filtering the <code>Date</code> field from <code>averp</code> datatable. To plot the horizon plot, we will use <code>geom_horizon()</code> and <code>facet_grid()</code>. Then we will add theme using <code>theme_few()</code> from ggthemes, customise a diverging colour scheme using <code>scale_fill_hcl()</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>averp <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Date <span class="sc">&gt;=</span> <span class="st">"2018-01-01"</span>) <span class="sc">%&gt;%</span></span>
@@ -586,6 +587,10 @@ Tips!
 <ul>
 <li><p>If there are positive and negative values, use a diverging colour scheme</p></li>
 <li><p>Tried using hrbrthemes instead of ggthemes to beautify the horizon plot but it didn’t work out well :(</p></li>
+<li><p>Some useful arguments used in the above code chunk:</p></li>
+<li><p>panel.spacing.y: to adjust spacing between facet panels along the y-axis</p></li>
+<li><p>strip.text.y: to adjust the vertical facet labels</p></li>
+<li><p>scale_x_date: to override the default scale for dates along the x-axis.</p></li>
 </ul>
 </div>
 </div>

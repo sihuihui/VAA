@@ -15,32 +15,34 @@ editor: visual
 ---
 
 # Getting Started
+
 First, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
 
-## Installing the R Packages 
+## Installing the R Packages
 
-For this in-class exercise, we will be using the following two packages:
+For this in-class exercise, we will be using the following packages:
 
 -   [tidyverse](https://www.tidyverse.org/)
 -   [ggHoriPlot](https://rivasiker.github.io/ggHoriPlot/)
 -   [ggthemes](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/)
 
-The code chunk below uses `p_load()` of [**pacman**](https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html) package to check if **tidyverse** packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
+The code chunk below uses `p_load()` of [**pacman**](https://trinker.github.io/pacman/vignettes/Introduction_to_pacman.html) package to check if the packages are installed in the computer. If they are, they will be launched in R. Otherwise, **pacman** will install the relevant packages before launching them.
 
 ```{r}
 pacman::p_load(tidyverse, ggHoriPlot, ggthemes)
 
 ```
 
-## Importing the Data 
-We will use `read_csv()` to import the csv file into R and use `glimpse()` to check the imported data. 
+## Importing the Data
+
+We will use `read_csv()` to import the csv file into R and use `glimpse()` to check the imported data.
 
 ```{r}
 averp <- read_csv("data/AVERP.csv")
 glimpse(averp)
 ```
 
-From the above output, we noted that the Date field was read as character data type. We will use Lubriate package to change the Date field to Date data type. 
+From the above output, we noted that the `Date` field was read as character data type. We will use **Lubriate** package to change the `Date` field to Date data type.
 
 ```{r}
 averp <- averp %>%
@@ -51,7 +53,7 @@ glimpse(averp)
 
 # Plotting Horizon Plot
 
-We will plot out data from 2018-01-01 onwards by filtering the `Date` field from averp datatable. To plot the horizon plot, we will use `geom_horizon()` and `facet_grid()`. Then we will add theme using `theme_few()` from ggthemes, customise a diverging colour scheme using `scale_fill_hcl()`. 
+We will plot out data from 2018-01-01 onwards by filtering the `Date` field from `averp` datatable. To plot the horizon plot, we will use `geom_horizon()` and `facet_grid()`. Then we will add theme using `theme_few()` from ggthemes, customise a diverging colour scheme using `scale_fill_hcl()`.
 
 ```{r}
 #| fig-width: 12
@@ -83,12 +85,18 @@ averp %>%
 
 ```
 
-:::{.callout-note}
+::: callout-note
 ## Tips!
 
 -   If there are positive and negative values, use a diverging colour scheme
 
--   Tried using hrbrthemes instead of ggthemes to beautify the horizon plot but it didn't work out well :( 
+-   Tried using hrbrthemes instead of ggthemes to beautify the horizon plot but it didn't work out well :(
 
+-   Some useful arguments used in the above code chunk:
+  -   panel.spacing.y: to adjust spacing between facet panels along the y-axis 
 
+  -    strip.text.y: to adjust the vertical facet labels 
+  
+  -   scale_x_date: to override the default scale for dates along the x-axis. 
+  
 :::
