@@ -18,7 +18,7 @@ In this exercise, we will learn how to:
 -   convert an aspatial data file into simple point feature data frame, and assign it an appropriate projection reference to the newly created simple point feature data frame. 
 -   plot interactive proportional symbol maps. 
 
-We will be creating a proportional symbol map showing the number of Group1 and Group 2 wins by Singapore Pools’ outlets using an R package called tmap.
+We will be creating a proportional symbol map showing the number of Group1 and Group 2 wins by Singapore Pools’ outlets using an tmap package.
 
 :::{.callout-note}
 ## What is proportional symbol map? 

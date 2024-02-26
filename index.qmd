@@ -13,6 +13,7 @@ listing:
     - "Hands-on_Ex/Hands-on_Ex04/*.qmd"
     - "Hands-on_Ex/Hands-on_Ex05/*.qmd"
     - "Hands-on_Ex/Hands-on_Ex06/*.qmd"
+    - "Hands-on_Ex/Hands-on_Ex07/*.qmd"
     type: grid
     sort: "date"
 
