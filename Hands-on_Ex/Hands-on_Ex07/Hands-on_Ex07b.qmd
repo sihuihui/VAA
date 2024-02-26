@@ -1,0 +1,169 @@
+---
+title: "Hands-on Exercise 7b: Visualising Geospatial Point Data "
+author: "Goh Si Hui"
+date: 2024/02/26
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  freeze: true
+  warning: false
+  message: false
+---
+# About this Exercise 
+
+In this exercise, we will learn how to: 
+-   convert an aspatial data file into simple point feature data frame, and assign it an appropriate projection reference to the newly created simple point feature data frame. 
+-   plot interactive proportional symbol maps. 
+
+We will be creating a proportional symbol map showing the number of Group1 and Group 2 wins by Singapore Pools’ outlets using an R package called tmap.
+
+:::{.callout-note}
+## What is proportional symbol map? 
+
+Proportional symbol maps (also known as graduate symbol maps) are a class of maps that use the visual variable of size to represent differences in the magnitude of a discrete, abruptly changing phenomenon, e.g. counts of people. Like choropleth maps, you can create classed or unclassed versions of these maps. The classed ones are known as range-graded or graduated symbols, and the unclassed are called proportional symbols, where the area of the symbols are proportional to the values of the attribute being mapped. 
+
+::: 
+
+# Getting Started 
+
+## Installing and Loading R Packages 
+For this exercise, other than tmap, we will use the following packages:
+
+-   tidyverse for tidying and wrangling data 
+-   sf for handling geospatial data 
+
+The code chunk below uses `p_load()` of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+pacman::p_load(tidyverse, tmap, sf)
+```
+
+## Importing the Data 
+We will be using the data set `SGPools_svy21` for this exercise. The data is in csv file format.
+
+The code chunk below uses read_csv() function of readr package to import `SGPools_svy21.csv` into R as a tibble data frame called `sgpools`.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+sgpools <- read_csv("data/aspatial/SGPools_svy21.csv")
+head(sgpools)
+
+```
+From the above output, we see that the sgpools dataset consists of seven columns. The XCOORD and YCOORD columns are the x-coordinates and y-coordinates of SingPools outlets and branches. They are in Singapore SVY21 Projected Coordinates System.
+
+:::{.callout-note}
+
+## Observations
+
+-   Notice that the sgpools data in tibble data frame and not the common R data frame.
+-   we can also use `list()` instead of `glimpse()`. 
+
+::: 
+
+# Geospatial Data Wrangling 
+
+## Creating an sf dataframe from an aspatial data frame 
+We will convert `sgpools` data frame into a simple feature data frame using `st_as_sf()` of sf package. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+sgpools_sf <- st_as_sf(sgpools, 
+         coords = c("XCOORD", "YCOORD"),
+         crs = 3414)
+sgpools_sf 
+```
+From the above output, we noticed that:
+-   a new column called `geometry` has been added into the data frame.
+-   sgppols_sf is in point feature class. 
+-   its epsg ID is 3414.
+
+:::{.callout-note}
+## About the above code chunk
+
+-   the `coords = ` argument requires us to provide the column name of the x-coordinates first, followed by the column name of the y-coordinates. 
+
+-   the `crs = ` argument requires us to provide the coordinates system in epsg format. From [epsg.io](https://epsg.io/), we know that [EPSG: 3414](https://epsg.io/3414) is Singapore SVY21 Projected Coordinate System.
+
+:::
+
+# Drawing Proportional Symbol Map
+
+## Interactive point symbol map
+
+```{r}
+tmap_mode("view")
+tm_basemap("CartoDB.Positron") +
+  tm_shape(sgpools_sf) +
+  tm_bubbles(col = "red",
+           size = 1,
+           border.col = "black",
+           border.lwd = 1) +
+  tm_layout(title = "Locations of SGPools Branches and Outlets",
+    title.size = 1)
+
+```
+
+To draw a proportional symbol map, we need to assign a numerical variable to the size visual attribute. The code chunks below show that the variable `Gp1Gp2 Winnings` is assigned to size visual attribute.
+
+```{r}
+tm_basemap("CartoDB.Positron") +
+  tm_shape(sgpools_sf) +
+  tm_bubbles(col = "red",
+           size = "Gp1Gp2 Winnings",
+           border.col = "black",
+           border.lwd = 1) +
+  tm_layout(title = "Number of Gp1Gp2 Winnings",
+    title.size = 1)
+
+```
+
+
+The proportional symbol map can be further improved using the colour visual attribute. In the code chunk below, `OUTLET TYPE` variable is used as the colour attribute variable, as such, Singapore Pools Branches and Outlets have different colour representation on the map. 
+
+```{r}
+tm_basemap("CartoDB.Positron") +
+  tm_shape(sgpools_sf) +
+  tm_bubbles(col = "OUTLET TYPE",
+           size = "Gp1Gp2 Winnings",
+           border.col = "black",
+           border.lwd = 1) +
+  tm_layout(title = "Number of Gp1Gp2 Winnings by Outlet Type",
+    title.size = 1)
+
+```
+
+
+# Creating Interactive Faceted Plots 
+
+We can also create interactive facted plots using `tm_facets()` to create multiple maps with synchonised zoom and pan settings. 
+
+```{r}
+tm_basemap("CartoDB.Positron") +
+  tm_shape(sgpools_sf) +
+  tm_bubbles(col = "OUTLET TYPE",
+           size = "Gp1Gp2 Winnings",
+           border.col = "black",
+           border.lwd = 1) +
+  tm_layout(title = c("Number of Gp1Gp2 Winnings by SgPools Branches", "Number of Gp1Gp2 Winnings by Outlets"),
+    title.size = 1) +
+  tm_facets(by = "OUTLET TYPE",
+            nrow = 1,
+            sync = TRUE)
+
+``` 
+
+
+Let us switch back to plot mode to ensure that future visualisations are in plot mode. 
+
+```{r}
+tmap_mode("plot")
+```
