@@ -2435,7 +2435,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html",
     "title": "Hands-on Exercise 7c: Analytical Mapping",
     "section": "",
-    "text": "In this exercise, we will learn how to plot analytical maps.",
+    "text": "In this exercise, we will learn how to plot analytical map such as rate map, percentile map and boxmap.",
     "crumbs": [
       "Hands-on Exercises",
       "Hands-on Exercise 7c: Analytical Mapping"
@@ -2468,7 +2468,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#deriving-proportion-of-functional-water-points-and-non-functional-water-points",
     "title": "Hands-on Exercise 7c: Analytical Mapping",
     "section": "4.1 Deriving Proportion of Functional Water Points and Non-Functional Water Points",
-    "text": "4.1 Deriving Proportion of Functional Water Points and Non-Functional Water Points\n\nnga &lt;- nga %&gt;%\n  mutate(pct_functional = round(wp_functional/total_wp,2)) %&gt;%\n  mutate(pct_nonfunctional = round(wp_nonfunctional/total_wp,2))\n\nglimpse(nga)\n\nRows: 774\nColumns: 11\n$ ADM2_EN           &lt;chr&gt; \"Aba North\", \"Aba South\", \"Abadam\", \"Abaji\", \"Abak\",…\n$ ADM2_PCODE        &lt;chr&gt; \"NG001001\", \"NG001002\", \"NG008001\", \"NG015001\", \"NG0…\n$ ADM1_EN           &lt;chr&gt; \"Abia\", \"Abia\", \"Borno\", \"Federal Capital Territory\"…\n$ ADM1_PCODE        &lt;chr&gt; \"NG001\", \"NG001\", \"NG008\", \"NG015\", \"NG003\", \"NG011\"…\n$ geometry          &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((548795.5 11..., MULTIPO…\n$ total_wp          &lt;int&gt; 17, 71, 0, 57, 48, 233, 34, 119, 152, 66, 39, 135, 6…\n$ wp_functional     &lt;int&gt; 7, 29, 0, 23, 23, 82, 16, 72, 79, 18, 25, 54, 28, 55…\n$ wp_nonfunctional  &lt;int&gt; 9, 35, 0, 34, 25, 42, 15, 33, 62, 26, 13, 73, 35, 36…\n$ wp_unknown        &lt;int&gt; 1, 7, 0, 0, 0, 109, 3, 14, 11, 22, 1, 8, 0, 37, 88, …\n$ pct_functional    &lt;dbl&gt; 0.41, 0.41, NaN, 0.40, 0.48, 0.35, 0.47, 0.61, 0.52,…\n$ pct_nonfunctional &lt;dbl&gt; 0.53, 0.49, NaN, 0.60, 0.52, 0.18, 0.44, 0.28, 0.41,…\n\n\n\nfunctional_rate &lt;- tm_shape(nga) +\n  tm_polygons(\"pct_functional\",\n              n = 10,\n              palette = \"Blues\",\n              style = \"equal\",\n              lwd = 0.1,\n              alpha = 1,\n              legend.hist = TRUE) +\n  tm_layout(main.title = \"Rate Map of Functional Water Points by LGAs\",\n            main.title.size = 1,\n            legend.outside = TRUE)\n\nfunctional_rate",
+    "text": "4.1 Deriving Proportion of Functional Water Points and Non-Functional Water Points\nWe will calculate the proportion of functional and non-functional water points in each LGA. In the following code chunk, mutate() from dplyr package is used to derive two fields, namely pct_functional and pct_nonfunctional. We also used round() to round the proportions into 2 decimal places.\n\nnga &lt;- nga %&gt;%\n  mutate(pct_functional = round(wp_functional/total_wp,2)) %&gt;%\n  mutate(pct_nonfunctional = round(wp_nonfunctional/total_wp,2))\n\nglimpse(nga)\n\nRows: 774\nColumns: 11\n$ ADM2_EN           &lt;chr&gt; \"Aba North\", \"Aba South\", \"Abadam\", \"Abaji\", \"Abak\",…\n$ ADM2_PCODE        &lt;chr&gt; \"NG001001\", \"NG001002\", \"NG008001\", \"NG015001\", \"NG0…\n$ ADM1_EN           &lt;chr&gt; \"Abia\", \"Abia\", \"Borno\", \"Federal Capital Territory\"…\n$ ADM1_PCODE        &lt;chr&gt; \"NG001\", \"NG001\", \"NG008\", \"NG015\", \"NG003\", \"NG011\"…\n$ geometry          &lt;MULTIPOLYGON [m]&gt; MULTIPOLYGON (((548795.5 11..., MULTIPO…\n$ total_wp          &lt;int&gt; 17, 71, 0, 57, 48, 233, 34, 119, 152, 66, 39, 135, 6…\n$ wp_functional     &lt;int&gt; 7, 29, 0, 23, 23, 82, 16, 72, 79, 18, 25, 54, 28, 55…\n$ wp_nonfunctional  &lt;int&gt; 9, 35, 0, 34, 25, 42, 15, 33, 62, 26, 13, 73, 35, 36…\n$ wp_unknown        &lt;int&gt; 1, 7, 0, 0, 0, 109, 3, 14, 11, 22, 1, 8, 0, 37, 88, …\n$ pct_functional    &lt;dbl&gt; 0.41, 0.41, NaN, 0.40, 0.48, 0.35, 0.47, 0.61, 0.52,…\n$ pct_nonfunctional &lt;dbl&gt; 0.53, 0.49, NaN, 0.60, 0.52, 0.18, 0.44, 0.28, 0.41,…",
     "crumbs": [
       "Hands-on Exercises",
       "Hands-on Exercise 7c: Analytical Mapping"
@@ -2479,7 +2479,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#percentile-map",
     "title": "Hands-on Exercise 7c: Analytical Mapping",
     "section": "5.1 Percentile Map",
-    "text": "5.1 Percentile Map\n\n5.1.1 Data Preparation\n\nnga &lt;- nga %&gt;%\n  drop_na()\n\n\npercent &lt;- c(0, 0.01, 0.1, 0.5, 0.9, 0.99, 1)\nvar &lt;- nga[\"pct_functional\"] %&gt;%\n  st_set_geometry(NULL)\n\nquantile(var[,1], percent)\n\n  0%   1%  10%  50%  90%  99% 100% \n0.00 0.00 0.22 0.48 0.86 1.00 1.00",
+    "text": "5.1 Percentile Map\nThe percentile map is a special type of quantile map with six specific categories: - 0-1%,1-10%, - 10-50%, - 50-90%, - 90-99%, and - 99-100%.\nThe corresponding breakpoints can be derived by means of the base R quantile command, passing an explicit vector of cumulative probabilities as c(0,.01,.1,.5,.9,.99,1). Note that the begin and endpoint need to be included.\n\n5.1.1 Data Preparation\n\n5.1.1.1 Step 1: Exclude records with NA using drop_na().\n\nnga &lt;- nga %&gt;%\n  drop_na()\n\n\n\n5.1.1.2 Step 2: Creating customised classification and extracting the values\n\npercent &lt;- c(0, 0.01, 0.1, 0.5, 0.9, 0.99, 1)\nvar &lt;- nga[\"pct_functional\"] %&gt;%\n  st_set_geometry(NULL)\n\nquantile(var[,1], percent)\n\n  0%   1%  10%  50%  90%  99% 100% \n0.00 0.00 0.22 0.48 0.86 1.00 1.00 \n\n\n\n\n\n\n\n\nNote\n\n\n\nWhen variables are extracted from an sf data.frame, the geometry is extracted as well. For mapping and spatial manipulation, this is the expected behavior, but many base R functions cannot deal with the geometry. Specifically, the quantile() would give an error. As a result st_set_geometry(NULL) is used to drop geometry field.\n\n\n\n\n5.1.1.3 Step 3: Creating get.var function\nWe will now write an R function as shown below to extract a variable (i.e. wp_nonfunctional) as a vector out of an sf data.frame.\nThe arguments are: - vname: variable name (as character, in quotes) - df: name of sf data frame\nThe return is: - v: vector with values (without a column name)\n\nget.var &lt;- function(vname, df) {\n  v &lt;- df[vname] %&gt;%\n    st_set_geometry(NULL)\n  v &lt;- unname(v[,1])\n  return(v)\n}\n\n\n\n\n\n\n\nWhy write functions?\n\n\n\nWriting a function has three big advantages over using copy-and-paste:\n\nYou can give a function an evocative name that makes your code easier to understand.\nAs requirements change, you only need to update code in one place, instead of many.\nYou eliminate the chance of making incidental mistakes when you copy and paste (i.e. updating a variable name in one place, but not in another).\n\nSource: Chapter 19: Functions of R for Data Science.\n\n\n\n\n5.1.1.4 Step 4: Percentile Mapping Function\nNext, we will write a percentile mapping function by using the following code chunk.\n\npercentmap &lt;- function(vnam, df, legtitle=NA, mtitle=\"Percentile Map\"){\n  percent &lt;- c(0,.01,.1,.5,.9,.99,1)\n  var &lt;- get.var(vnam, df)\n  bperc &lt;- quantile(var, percent)\n  tm_shape(df) +\n  tm_polygons() +\n  tm_shape(df) +\n     tm_fill(vnam,\n             title=legtitle,\n             breaks=bperc,\n             palette=\"Blues\",\n          labels=c(\"&lt; 1%\", \"1% - 10%\", \"10% - 50%\", \"50% - 90%\", \"90% - 99%\", \"&gt; 99%\"))  +\n  tm_borders() +\n  tm_layout(main.title = mtitle, \n            title.position = c(\"right\",\"bottom\"))\n}\n\n\n\n5.1.1.5 Step 5: Testing the Function\n\npercentmap(\"total_wp\", nga)",
     "crumbs": [
       "Hands-on Exercises",
       "Hands-on Exercise 7c: Analytical Mapping"
@@ -2502,6 +2502,61 @@
     "title": "Hands-on Exercise 7c: Analytical Mapping",
     "section": "5.3 Percentile Mapping Function",
     "text": "5.3 Percentile Mapping Function\n\npercentmap &lt;- function(vnam, df, legtitle=NA, mtitle=\"Percentile Map\"){\n  percent &lt;- c(0,.01,.1,.5,.9,.99,1)\n  var &lt;- get.var(vnam, df)\n  bperc &lt;- quantile(var, percent)\n  tm_shape(df) +\n  tm_polygons() +\n  tm_shape(df) +\n     tm_fill(vnam,\n             title=legtitle,\n             breaks=bperc,\n             palette=\"Blues\",\n          labels=c(\"&lt; 1%\", \"1% - 10%\", \"10% - 50%\", \"50% - 90%\", \"90% - 99%\", \"&gt; 99%\"))  +\n  tm_borders() +\n  tm_layout(main.title = mtitle, \n            title.position = c(\"right\",\"bottom\"))\n}\n\n\npercentmap(\"total_wp\", nga)",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 7c: Analytical Mapping"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#map-of-rate",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#map-of-rate",
+    "title": "Hands-on Exercise 7c: Analytical Mapping",
+    "section": "4.2 Map of Rate",
+    "text": "4.2 Map of Rate\nNow, we will plot a rate map based on the functional water points using the pct_functional values.\n\nfunctional_rate &lt;- tm_shape(nga) +\n  tm_polygons(\"pct_functional\",\n              n = 10,\n              palette = \"Blues\",\n              style = \"equal\",\n              lwd = 0.1,\n              alpha = 1,\n              legend.hist = TRUE) +\n  tm_layout(main.title = \"Rate Map of Functional Water Points by LGAs\",\n            main.title.size = 1,\n            legend.outside = TRUE)\n\nfunctional_rate",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 7c: Analytical Mapping"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#creating-the-boxbreaks-function",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#creating-the-boxbreaks-function",
+    "title": "Hands-on Exercise 7c: Analytical Mapping",
+    "section": "6.1 Creating the boxbreaks function",
+    "text": "6.1 Creating the boxbreaks function\nThe code chunk below is an R function that creating break points for a box map.\nThe arguments are: - v: vector with observations - mult: multiplier for IQR (default 1.5)\nThe returns is: - bb: vector with 7 break points compute quartile and fences\n\nboxbreaks &lt;- function(v,mult=1.5) {\n  qv &lt;- unname(quantile(v))\n  iqr &lt;- qv[4] - qv[2]\n  upfence &lt;- qv[4] + mult * iqr\n  lofence &lt;- qv[2] - mult * iqr\n  # initialize break points vector\n  bb &lt;- vector(mode=\"numeric\",length=7)\n  # logic for lower and upper fences\n  if (lofence &lt; qv[1]) {  # no lower outliers\n    bb[1] &lt;- lofence\n    bb[2] &lt;- floor(qv[1])\n  } else {\n    bb[2] &lt;- lofence\n    bb[1] &lt;- qv[1]\n  }\n  if (upfence &gt; qv[5]) { # no upper outliers\n    bb[7] &lt;- upfence\n    bb[6] &lt;- ceiling(qv[5])\n  } else {\n    bb[6] &lt;- upfence\n    bb[7] &lt;- qv[5]\n  }\n  bb[3:5] &lt;- qv[2:4]\n  return(bb)\n}",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 7c: Analytical Mapping"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#creating-the-get.var-function",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#creating-the-get.var-function",
+    "title": "Hands-on Exercise 7c: Analytical Mapping",
+    "section": "6.2 Creating the get.var function",
+    "text": "6.2 Creating the get.var function\n\nget.var &lt;- function(vname,df) {\n  v &lt;- df[vname] %&gt;% st_set_geometry(NULL)\n  v &lt;- unname(v[,1])\n  return(v)\n}\n\nLet’s test the function we have created.\n\nvar &lt;- get.var(\"wp_nonfunctional\", nga) \nboxbreaks(var)\n\n[1] -56.5   0.0  14.0  34.0  61.0 131.5 278.0",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 7c: Analytical Mapping"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#boxmap-function",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#boxmap-function",
+    "title": "Hands-on Exercise 7c: Analytical Mapping",
+    "section": "6.3 Boxmap Function",
+    "text": "6.3 Boxmap Function\nThe code chunk below is an R function to create a box map. - arguments: - vnam: variable name (as character, in quotes) - df: simple features polygon layer - legtitle: legend title - mtitle: map title - mult: multiplier for IQR - returns: - a tmap-element (plots a map)\n\nboxmap &lt;- function(vnam, df, \n                   legtitle=NA,\n                   mtitle=\"Box Map\",\n                   mult=1.5){\n  var &lt;- get.var(vnam,df)\n  bb &lt;- boxbreaks(var)\n  tm_shape(df) +\n    tm_polygons() +\n  tm_shape(df) +\n     tm_fill(vnam,title=legtitle,\n             breaks=bb,\n             palette=\"Blues\",\n          labels = c(\"lower outlier\", \n                     \"&lt; 25%\", \n                     \"25% - 50%\", \n                     \"50% - 75%\",\n                     \"&gt; 75%\", \n                     \"upper outlier\"))  +\n  tm_borders() +\n  tm_layout(main.title = mtitle, \n            title.position = c(\"left\",\n                               \"top\"))\n}\n\nLet us now plot the boxmap using the function created.\n\ntmap_mode(\"view\")\nboxmap(\"wp_nonfunctional\", nga)\n\n\n\n\n\n\ntmap_mode(\"plot\")",
+    "crumbs": [
+      "Hands-on Exercises",
+      "Hands-on Exercise 7c: Analytical Mapping"
+    ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#box-map",
+    "href": "Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html#box-map",
+    "title": "Hands-on Exercise 7c: Analytical Mapping",
+    "section": "5.2 Box Map",
+    "text": "5.2 Box Map\nA box map is an augmented quartile map, with an additional lower and upper category. When there are lower outliers, then the starting point for the breaks is the minimum value, and the second break is the lower fence. In contrast, when there are no lower outliers, then the starting point for the breaks will be the lower fence, and the second break is the minimum value (there will be no observations that fall in the interval between the lower fence and the minimum value).\n\nggplot(data = nga,\n       aes(x = \"\",\n           y = wp_nonfunctional)) +\n  geom_boxplot()\n\n\n\n\n\n\n\n\n\nDisplaying summary statistics on a choropleth map by using the basic principles of boxplot.\nTo create a box map, a custom breaks specification will be used. However, there is a complication. The break points for the box map vary depending on whether lower or upper outliers are present.\n\n\n5.2.1 Creating the boxbreaks function\nThe code chunk below is an R function that creating break points for a box map.\nThe arguments are: - v: vector with observations - mult: multiplier for IQR (default 1.5)\nThe returns is: - bb: vector with 7 break points compute quartile and fences\n\nboxbreaks &lt;- function(v,mult=1.5) {\n  qv &lt;- unname(quantile(v))\n  iqr &lt;- qv[4] - qv[2]\n  upfence &lt;- qv[4] + mult * iqr\n  lofence &lt;- qv[2] - mult * iqr\n  # initialize break points vector\n  bb &lt;- vector(mode=\"numeric\",length=7)\n  # logic for lower and upper fences\n  if (lofence &lt; qv[1]) {  # no lower outliers\n    bb[1] &lt;- lofence\n    bb[2] &lt;- floor(qv[1])\n  } else {\n    bb[2] &lt;- lofence\n    bb[1] &lt;- qv[1]\n  }\n  if (upfence &gt; qv[5]) { # no upper outliers\n    bb[7] &lt;- upfence\n    bb[6] &lt;- ceiling(qv[5])\n  } else {\n    bb[6] &lt;- upfence\n    bb[7] &lt;- qv[5]\n  }\n  bb[3:5] &lt;- qv[2:4]\n  return(bb)\n}\n\n\n\n5.2.2 Creating the get.var function\n\nget.var &lt;- function(vname,df) {\n  v &lt;- df[vname] %&gt;% st_set_geometry(NULL)\n  v &lt;- unname(v[,1])\n  return(v)\n}\n\nLet’s test the function we have created.\n\nvar &lt;- get.var(\"wp_nonfunctional\", nga) \nboxbreaks(var)\n\n[1] -56.5   0.0  14.0  34.0  61.0 131.5 278.0\n\n\n\n\n5.2.3 Boxmap Function\nThe code chunk below is an R function to create a box map. - arguments: - vnam: variable name (as character, in quotes) - df: simple features polygon layer - legtitle: legend title - mtitle: map title - mult: multiplier for IQR - returns: - a tmap-element (plots a map)\n\nboxmap &lt;- function(vnam, df, \n                   legtitle=NA,\n                   mtitle=\"Box Map\",\n                   mult=1.5){\n  var &lt;- get.var(vnam,df)\n  bb &lt;- boxbreaks(var)\n  tm_shape(df) +\n    tm_polygons() +\n  tm_shape(df) +\n     tm_fill(vnam,title=legtitle,\n             breaks=bb,\n             palette=\"Blues\",\n          labels = c(\"lower outlier\", \n                     \"&lt; 25%\", \n                     \"25% - 50%\", \n                     \"50% - 75%\",\n                     \"&gt; 75%\", \n                     \"upper outlier\"))  +\n  tm_borders() +\n  tm_layout(main.title = mtitle, \n            title.position = c(\"left\",\n                               \"top\"))\n}\n\nLet us now plot the boxmap using the function created.\n\ntmap_mode(\"view\")\nboxmap(\"wp_nonfunctional\", nga)\n\n\n\n\n\n\ntmap_mode(\"plot\")",
     "crumbs": [
       "Hands-on Exercises",
       "Hands-on Exercise 7c: Analytical Mapping"
