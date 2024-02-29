@@ -16,7 +16,9 @@ editor: visual
 
 # About Plotly R
 
-In Hands-on Exercises and Take Home Exercise 3,
+In Hands-on Exercises and Take Home Exercise 3, we explored some of the Plotly Functions.
+
+Today, I will be sharing more about some of the interesting plotly functions that I have explored when working on Take Home Exercise 3.
 
 # Creating Dropdown list
 
