@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -48,7 +48,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -57,6 +63,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -179,6 +186,33 @@ ul.task-list li input[type="checkbox"] {
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -186,9 +220,9 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     <img src="./sihuilearns_logo_h.png" alt="" class="navbar-logo">
     </a>
@@ -200,121 +234,121 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Hands-on Exercises</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercises">    
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html">
  <span class="dropdown-text">Hands-on Exercise 1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html">
  <span class="dropdown-text">Hands-on Exercise 2</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html">
  <span class="dropdown-text">Hands-on Exercise 3a</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html">
  <span class="dropdown-text">Hands-on Exercise 3b</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04a.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04a.html">
  <span class="dropdown-text">Hands-on Exercise 4a</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html">
  <span class="dropdown-text">Hands-on Exercise 4b</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html">
  <span class="dropdown-text">Hands-on Exercise 4c</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04d.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04d.html">
  <span class="dropdown-text">Hands-on Exercise 4d</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html">
  <span class="dropdown-text">Hands-on Exercise 5a</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05b.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05b.html">
  <span class="dropdown-text">Hands-on Exercise 5b</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html">
  <span class="dropdown-text">Hands-on Exercise 5c</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05d.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05d.html">
  <span class="dropdown-text">Hands-on Exercise 5d</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html">
  <span class="dropdown-text">Hands-on Exercise 5e</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html">
  <span class="dropdown-text">Hands-on Exercise 6</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07a.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07a.html">
  <span class="dropdown-text">Hands-on Exercise 7a</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07b.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07b.html">
  <span class="dropdown-text">Hands-on Exercise 7b</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html" rel="" target="">
+    <a class="dropdown-item" href="./Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html">
  <span class="dropdown-text">Hands-on Exercise 7c</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">In-class Exercises</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercises">    
         <li>
-    <a class="dropdown-item" href="./In-class_Ex/In-class_Ex01/In-class_Ex01.html" rel="" target="">
+    <a class="dropdown-item" href="./In-class_Ex/In-class_Ex01/In-class_Ex01.html">
  <span class="dropdown-text">In-class Exercise 1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./In-class_Ex/In-class_Ex02/In-class_Ex02.html" rel="" target="">
+    <a class="dropdown-item" href="./In-class_Ex/In-class_Ex02/In-class_Ex02.html">
  <span class="dropdown-text">In-class Exercise 2</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercises" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Take-home Exercises</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercises">    
         <li>
-    <a class="dropdown-item" href="./Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html" rel="" target="">
+    <a class="dropdown-item" href="./Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html">
  <span class="dropdown-text">Take-home Exercise 1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html" rel="" target="">
+    <a class="dropdown-item" href="./Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html">
  <span class="dropdown-text">Take-home Exercise 2</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./Take-home_Ex/Take-home_Ex03/Take-home_Ex03b.html" rel="" target="">
+    <a class="dropdown-item" href="./Take-home_Ex/Take-home_Ex03/Take-home_Ex03b.html">
  <span class="dropdown-text">Take-home Exercise 3</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-extra-stuff" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-extra-stuff" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Extra Stuff</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-extra-stuff">    
         <li>
-    <a class="dropdown-item" href="./Extra/Post-Lesson_01/Post-Lesson_01.html" rel="" target="">
+    <a class="dropdown-item" href="./Extra/Post-Lesson_01/Post-Lesson_01.html">
  <span class="dropdown-text">Post-Lesson Thoughts 1</span></a>
   </li>  
         <li class="dropdown-header">Post-Lesson Thoughts 2 (coming soon!)</li>
@@ -323,14 +357,14 @@ ul.task-list li input[type="checkbox"] {
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
-    <a class="nav-link" href="https://www.linkedin.com/in/gohsihui/" rel="" target=""><i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
+    <a class="nav-link" href="https://www.linkedin.com/in/gohsihui/"> <i class="bi bi-linkedin" role="img" aria-label="LinkedIn">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -349,7 +383,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-page">
 
     
   
@@ -357,11 +391,13 @@ ul.task-list li input[type="checkbox"] {
   </div>
   
 
+
 </header>
+
 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://giphy.com/gifs/pudgypenguins-surf-surfing-surfboard-ybvZgzU23o0YsN5wIl"><img src="images/surfing_penguin.gif" class="img-fluid figure-img"></a></p>
+<p><a href="https://giphy.com/gifs/pudgypenguins-surf-surfing-surfboard-ybvZgzU23o0YsN5wIl"><img src="images/surfing_penguin.gif" class="img-fluid quarto-figure quarto-figure-center figure-img"></a></p>
 </figure>
 </div>
 <p>Welcome to <strong>SiHui Learns Visual Analytics</strong>! This website documents my learning journey for ISSS608 Visual Analytics and Applications course. Hopefully I can surf through this course smoothly like this penguin!</p>
@@ -370,7 +406,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="hands-on-exercises">Hands-On Exercises</h2>
 <div id="listing-hands-on" class="quarto-listing quarto-listing-container-grid">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-date-sort="1704902400000" data-listing-file-modified-sort="1709165335406" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="21">
+<div class="g-col-1" data-index="0" data-listing-date-sort="1704902400000" data-listing-file-modified-sort="1708826928311" data-listing-date-modified-sort="1708826928000" data-listing-reading-time-sort="21" data-listing-word-count-sort="4031">
 <a href="./Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex01\images\ggplot-grammar-of-graphics-stack-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -393,7 +429,7 @@ Jan 11, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="1" data-listing-date-sort="1705075200000" data-listing-file-modified-sort="1709165335436" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="21">
+<div class="g-col-1" data-index="1" data-listing-date-sort="1705075200000" data-listing-file-modified-sort="1708827107783" data-listing-date-modified-sort="1708827107000" data-listing-reading-time-sort="21" data-listing-word-count-sort="4190">
 <a href="./Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex02\Hands-on_Ex02_files\figure-html\unnamed-chunk-7-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -416,7 +452,7 @@ Jan 13, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="2" data-listing-date-sort="1705852800000" data-listing-file-modified-sort="1709165335440" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="18">
+<div class="g-col-1" data-index="2" data-listing-date-sort="1705852800000" data-listing-file-modified-sort="1708827523021" data-listing-date-modified-sort="1708827523000" data-listing-reading-time-sort="18" data-listing-word-count-sort="3412">
 <a href="./Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
@@ -439,7 +475,7 @@ Jan 22, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="3" data-listing-date-sort="1706025600000" data-listing-file-modified-sort="1709165335440" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="7">
+<div class="g-col-1" data-index="3" data-listing-date-sort="1706025600000" data-listing-file-modified-sort="1708827684398" data-listing-date-modified-sort="1708827684000" data-listing-reading-time-sort="7" data-listing-word-count-sort="1396">
 <a href="./Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03b.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex03\Hands-on_Ex03b_files\figure-html\unnamed-chunk-5-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -448,7 +484,7 @@ Jan 22, 2024
 Hands-On Exercise 3b: Programming Animated Statistical Graphics with R
 </h5>
 <div class="card-text listing-description">
-In this exercise, we will learn how to create animated data visualisation by using <strong>gganimate</strong> and <strong>plotly r</strong> packages.…<strong></strong><strong></strong>
+In this exercise, we will learn how to create animated data visualisation by using <strong>gganimate</strong> and <strong>plotly r</strong> packages. At the same time, we will also learn how to (i) reshape…<strong></strong><strong></strong>
 </div>
 <div class="card-attribution card-text-small justify">
 <div class="listing-author">
@@ -462,7 +498,7 @@ Jan 24, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="4" data-listing-date-sort="1706716800000" data-listing-file-modified-sort="1709165335440" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="15">
+<div class="g-col-1" data-index="4" data-listing-date-sort="1706716800000" data-listing-file-modified-sort="1707306467715" data-listing-date-modified-sort="1707306467000" data-listing-reading-time-sort="15" data-listing-word-count-sort="2905">
 <a href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04a.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex04\Hands-on_Ex04a_files\figure-html\unnamed-chunk-3-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -485,7 +521,7 @@ Feb 1, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="5" data-listing-date-sort="1706716800000" data-listing-file-modified-sort="1709165335441" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="7">
+<div class="g-col-1" data-index="5" data-listing-date-sort="1706716800000" data-listing-file-modified-sort="1706946760618" data-listing-date-modified-sort="1706946760000" data-listing-reading-time-sort="7" data-listing-word-count-sort="1225">
 <a href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04b.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex04\Hands-on_Ex04b_files\figure-html\unnamed-chunk-4-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -508,7 +544,7 @@ Feb 1, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="6" data-listing-date-sort="1706716800000" data-listing-file-modified-sort="1709165335442" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="12">
+<div class="g-col-1" data-index="6" data-listing-date-sort="1706716800000" data-listing-file-modified-sort="1706826164827" data-listing-date-modified-sort="1706826164000" data-listing-reading-time-sort="12" data-listing-word-count-sort="2245">
 <a href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04c.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex04\Hands-on_Ex04c_files\figure-html\unnamed-chunk-6-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -531,7 +567,7 @@ Feb 1, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="7" data-listing-date-sort="1706716800000" data-listing-file-modified-sort="1709165335442" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="8">
+<div class="g-col-1" data-index="7" data-listing-date-sort="1706716800000" data-listing-file-modified-sort="1706828092493" data-listing-date-modified-sort="1706828092000" data-listing-reading-time-sort="8" data-listing-word-count-sort="1414">
 <a href="./Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04d.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex04\Hands-on_Ex04d_files\figure-html\unnamed-chunk-3-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -554,7 +590,7 @@ Feb 1, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="8" data-listing-date-sort="1707235200000" data-listing-file-modified-sort="1709165335443" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="5">
+<div class="g-col-1" data-index="8" data-listing-date-sort="1707235200000" data-listing-file-modified-sort="1708432084584" data-listing-date-modified-sort="1708432084000" data-listing-reading-time-sort="5" data-listing-word-count-sort="870">
 <a href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05a.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex05a_files\figure-html\unnamed-chunk-8-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -577,7 +613,7 @@ Feb 7, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="9" data-listing-date-sort="1707321600000" data-listing-file-modified-sort="1709165335443" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="15">
+<div class="g-col-1" data-index="9" data-listing-date-sort="1707321600000" data-listing-file-modified-sort="1707444599191" data-listing-date-modified-sort="1707444599000" data-listing-reading-time-sort="15" data-listing-word-count-sort="2984">
 <a href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05b.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex05b_files\figure-html\unnamed-chunk-7-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -586,7 +622,7 @@ Feb 7, 2024
 Hands-on Exercise 5b - Visual Correlation Analysis
 </h5>
 <div class="card-text listing-description">
-In…<code></code>
+In this exercise, we will learn how to visualise correlation matrix using R. There are 3 main sections of this exercise. First, we will learn how to create a correlation…<code></code>
 </div>
 <div class="card-attribution card-text-small justify">
 <div class="listing-author">
@@ -600,7 +636,7 @@ Feb 8, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="10" data-listing-date-sort="1707321600000" data-listing-file-modified-sort="1709165335443" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="14">
+<div class="g-col-1" data-index="10" data-listing-date-sort="1707321600000" data-listing-file-modified-sort="1707449589335" data-listing-date-modified-sort="1707449589000" data-listing-reading-time-sort="14" data-listing-word-count-sort="2679">
 <a href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05c.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex05c_files\figure-html\unnamed-chunk-7-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -623,7 +659,7 @@ Feb 8, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="11" data-listing-date-sort="1707321600000" data-listing-file-modified-sort="1709165335443" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="8">
+<div class="g-col-1" data-index="11" data-listing-date-sort="1707321600000" data-listing-file-modified-sort="1707455023255" data-listing-date-modified-sort="1707455023000" data-listing-reading-time-sort="8" data-listing-word-count-sort="1409">
 <a href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05d.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex05d_files\figure-html\unnamed-chunk-3-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -646,7 +682,7 @@ Feb 8, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="12" data-listing-date-sort="1707408000000" data-listing-file-modified-sort="1709165335444" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="14">
+<div class="g-col-1" data-index="12" data-listing-date-sort="1707408000000" data-listing-file-modified-sort="1707472773945" data-listing-date-modified-sort="1707472773000" data-listing-reading-time-sort="14" data-listing-word-count-sort="2703">
 <a href="./Hands-on_Ex/Hands-on_Ex05/Hands-on_Ex05e.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex05\Hands-on_Ex05e_files\figure-html\unnamed-chunk-8-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -655,7 +691,7 @@ Feb 8, 2024
 Hands-on Exercise 5e - Treemap Visualisation with R
 </h5>
 <div class="card-text listing-description">
-In this exercise, we will learn how to design treemap using appropriate R packages.…<strong></strong><strong></strong><strong></strong>
+In this exercise, we will learn how to design treemap using appropriate R packages. The hands-on exercise consists of three main section. First, you will learn how to…<strong></strong><strong></strong><strong></strong>
 </div>
 <div class="card-attribution card-text-small justify">
 <div class="listing-author">
@@ -669,7 +705,7 @@ Feb 9, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="13" data-listing-date-sort="1708358400000" data-listing-file-modified-sort="1709165335444" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="14">
+<div class="g-col-1" data-index="13" data-listing-date-sort="1708358400000" data-listing-file-modified-sort="1708864130389" data-listing-date-modified-sort="1708864130000" data-listing-reading-time-sort="14" data-listing-word-count-sort="2764">
 <a href="./Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex06\Hands-on_Ex06_files\figure-html\unnamed-chunk-8-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -692,7 +728,7 @@ Feb 20, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="14" data-listing-date-sort="1708790400000" data-listing-file-modified-sort="1709165335445" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="19">
+<div class="g-col-1" data-index="14" data-listing-date-sort="1708790400000" data-listing-file-modified-sort="1708962262209" data-listing-date-modified-sort="1708962262000" data-listing-reading-time-sort="19" data-listing-word-count-sort="3661">
 <a href="./Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07a.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex07\Hands-on_Ex07a_files\figure-html\unnamed-chunk-11-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -715,7 +751,7 @@ Feb 25, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="15" data-listing-date-sort="1708876800000" data-listing-file-modified-sort="1709165335445" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="5">
+<div class="g-col-1" data-index="15" data-listing-date-sort="1708876800000" data-listing-file-modified-sort="1708960301425" data-listing-date-modified-sort="1708960301000" data-listing-reading-time-sort="5" data-listing-word-count-sort="944">
 <a href="./Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07b.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
@@ -724,7 +760,7 @@ Feb 25, 2024
 Hands-on Exercise 7b: Visualising Geospatial Point Data
 </h5>
 <div class="card-text listing-description">
-In this exercise, we will learn how to: - convert an aspatial data file into…
+In this exercise, we will learn how to: - convert an aspatial data file into simple point feature data frame, and assign it an appropriate projection reference to the newly…
 </div>
 <div class="card-attribution card-text-small justify">
 <div class="listing-author">
@@ -738,7 +774,7 @@ Feb 26, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="16" data-listing-date-sort="1708876800000" data-listing-file-modified-sort="1709165335446" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="11">
+<div class="g-col-1" data-index="16" data-listing-date-sort="1708876800000" data-listing-file-modified-sort="1709019705716" data-listing-date-modified-sort="1709019705000" data-listing-reading-time-sort="11" data-listing-word-count-sort="2021">
 <a href="./Hands-on_Ex/Hands-on_Ex07/Hands-on_Ex07c.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Hands-on_Ex\Hands-on_Ex07\Hands-on_Ex07c_files\figure-html\unnamed-chunk-3-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -771,7 +807,7 @@ No matching items
 <h2 class="anchored" data-anchor-id="in-class-exercises">In-Class Exercises</h2>
 <div id="listing-in-class" class="quarto-listing quarto-listing-container-grid">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-date-sort="1704988800000" data-listing-file-modified-sort="1709165335446" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="2">
+<div class="g-col-1" data-index="0" data-listing-date-sort="1704988800000" data-listing-file-modified-sort="1708826785385" data-listing-date-modified-sort="1708826785000" data-listing-reading-time-sort="2" data-listing-word-count-sort="292">
 <a href="./In-class_Ex/In-class_Ex01/In-class_Ex01.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="In-class_Ex\In-class_Ex01\images\coding_penguin3.gif" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -794,7 +830,7 @@ Jan 12, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="1" data-listing-date-sort="1708704000000" data-listing-file-modified-sort="1709165335451" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="3">
+<div class="g-col-1" data-index="1" data-listing-date-sort="1708704000000" data-listing-file-modified-sort="1708826689433" data-listing-date-modified-sort="1708826689000" data-listing-reading-time-sort="3" data-listing-word-count-sort="444">
 <a href="./In-class_Ex/In-class_Ex02/In-class_Ex02.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="In-class_Ex\In-class_Ex02\In-class_Ex02_files\figure-html\unnamed-chunk-4-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -827,7 +863,7 @@ No matching items
 <h2 class="anchored" data-anchor-id="take-home-exercises">Take-Home Exercises</h2>
 <div id="listing-take-home" class="quarto-listing quarto-listing-container-grid">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-date-sort="1705161600000" data-listing-file-modified-sort="1709165335453" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="22">
+<div class="g-col-1" data-index="0" data-listing-date-sort="1705161600000" data-listing-file-modified-sort="1706173367072" data-listing-date-modified-sort="1706173367000" data-listing-reading-time-sort="22" data-listing-word-count-sort="4375">
 <a href="./Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Take-home_Ex\Take-home_Ex01\Take-home_Ex01_files\figure-html\unnamed-chunk-22-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -850,7 +886,7 @@ Jan 14, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="1" data-listing-date-sort="1706112000000" data-listing-file-modified-sort="1709165335455" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="28">
+<div class="g-col-1" data-index="1" data-listing-date-sort="1706112000000" data-listing-file-modified-sort="1706456834162" data-listing-date-modified-sort="1706456834000" data-listing-reading-time-sort="28" data-listing-word-count-sort="5545">
 <a href="./Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Take-home_Ex\Take-home_Ex02\images\Chart1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -859,7 +895,7 @@ Jan 14, 2024
 Take-home Exercise 2
 </h5>
 <div class="card-text listing-description">
-…
+In this take-home exercise, I will be using the data visualisation design principles and best practices learnt in ISSS608 Lesson 1 and 2 to improve on my peer’s…
 </div>
 <div class="card-attribution card-text-small justify">
 <div class="listing-author">
@@ -873,7 +909,7 @@ Jan 25, 2024
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="2" data-listing-date-sort="1707667200000" data-listing-file-modified-sort="1709165335571" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="20">
+<div class="g-col-1" data-index="2" data-listing-date-sort="1707667200000" data-listing-file-modified-sort="1708749714846" data-listing-date-modified-sort="1708749714000" data-listing-reading-time-sort="20" data-listing-word-count-sort="3966">
 <a href="./Take-home_Ex/Take-home_Ex03/Take-home_Ex03b.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Take-home_Ex\Take-home_Ex03\Take-home_Ex03b_files\figure-html\unnamed-chunk-16-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -907,7 +943,7 @@ No matching items
 <p>Additional practices and experiments can be found here!</p>
 <div id="listing-extra" class="quarto-listing quarto-listing-container-grid">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-listing-date-sort="1705075200000" data-listing-file-modified-sort="1709165335405" data-listing-date-modified-sort="1709165335000" data-listing-reading-time-sort="6">
+<div class="g-col-1" data-index="0" data-listing-date-sort="1705075200000" data-listing-file-modified-sort="1708749730492" data-listing-date-modified-sort="1708749730000" data-listing-reading-time-sort="6" data-listing-word-count-sort="1174">
 <a href="./Extra/Post-Lesson_01/Post-Lesson_01.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
 <p class="card-img-top"><img src="Extra\Post-Lesson_01\Post-Lesson_01_files\figure-html\unnamed-chunk-4-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
@@ -1020,10 +1056,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1033,8 +1068,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1047,6 +1091,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1090,6 +1253,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1115,6 +1279,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1180,10 +1370,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="https://quarto.org/">Published with Quarto |</a>
+    <a class="nav-link" href="https://quarto.org/">
+<p>Published with Quarto |</p>
+</a>
   </li>  
     <li class="nav-item">
-    <a class="nav-link" href="https://www.netlify.com/">Hosted by Netlify</a>
+    <a class="nav-link" href="https://www.netlify.com/">
+<p>Hosted by Netlify</p>
+</a>
   </li>  
 </ul>
     </div>   
@@ -1195,6 +1389,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+
 
 
 
