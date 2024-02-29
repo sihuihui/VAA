@@ -10,3 +10,20 @@ execute:
   message: false
 editor: visual 
 ---
+
+# About this Exercise 
+
+# Getting Started 
+
+## Loading R Packages 
+```{r}
+pacman::p_load(tidyverse, scales, viridis, ggthemes, lubriate, gridExtra, readxl, knitr, data.table, CGPfunctions, ggHoriplot)
+```
+
+## Importing Data Into R 
+
+
+# Data Preparation 
+
+
+# Data 

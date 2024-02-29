@@ -1,0 +1,14 @@
+{
+  "hash": "7f22b5e86de71b3632ba46ad559189f8",
+  "result": {
+    "markdown": "---\ntitle: \"Take-home Exercise 4: Prototyping Time Series Module for Visual Analytics Shiny Application\" \nauthor: \"Goh Si Hui\"\ndate: 2024/02/25\nexecute: \n  echo: true\n  eval: true\n  freeze: true\n  warning: false\n  message: false\neditor: visual \n---\n\n\n# About this Exercise \n\n# Getting Started \n\n## Loading R Packages \n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(tidyverse, scales, viridis, ggthemes, lubriate, gridExtra, readxl, knitr, data.table, CGPfunctions, ggHoriplot)\n```\n:::\n\n\n## Importing Data Into R \n\n\n# Data Preparation \n\n\n# Data ",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -2561,5 +2561,19 @@
       "Hands-on Exercises",
       "Hands-on Exercise 7c: Analytical Mapping"
     ]
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex04/Take-home_Ex04.html#loading-r-packages",
+    "href": "Take-home_Ex/Take-home_Ex04/Take-home_Ex04.html#loading-r-packages",
+    "title": "Take-home Exercise 4: Prototyping Time Series Module for Visual Analytics Shiny Application",
+    "section": "2.1 Loading R Packages",
+    "text": "2.1 Loading R Packages\n\npacman::p_load(tidyverse, scales, viridis, ggthemes, lubriate, gridExtra, readxl, knitr, data.table, CGPfunctions, ggHoriplot)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex04/Take-home_Ex04.html#importing-data-into-r",
+    "href": "Take-home_Ex/Take-home_Ex04/Take-home_Ex04.html#importing-data-into-r",
+    "title": "Take-home Exercise 4: Prototyping Time Series Module for Visual Analytics Shiny Application",
+    "section": "2.2 Importing Data Into R",
+    "text": "2.2 Importing Data Into R"
   }
 ]
