@@ -8,23 +8,30 @@ execute:
   freeze: true
   warning: false
   message: false
-editor: visual 
 ---
 
-# About this Exercise 
+# About this Exercise
+In this exercise, we will be preparing the time-series forecasting module of the proposed Shiny Application and complete the following task:
 
-# Getting Started 
+-   Evaluate and determine the necessary R packages needed for my group project's Shiny application;
 
-## Loading R Packages 
+-   Prepare and test the specific R codes can be run and returned the correct output as expected; 
+
+-   Determine the parameters and outputs that will be exposed on the Shiny applications; and 
+
+-   Select the appropriate Shiny UI components for exposing the parameters determined above. 
+
+# Getting Started
+
+## Loading R Packages
+
 ```{r}
 pacman::p_load(tidyverse, scales, viridis, ggthemes, lubridate, gridExtra, readxl, knitr, data.table, CGPfunctions, ggHoriPlot, ggplot2)
 ```
 
-## Importing Data Into R 
+## Importing Data Into R
 
-Talk about how we get this data: made use of data.gov.sg's API 
-
-
+Talk about how we get this data: made use of data.gov.sg's API
 
 ```{r}
 data <- read_csv("data/daily_historical.csv")
@@ -34,6 +41,17 @@ data <- read_csv("data/daily_historical.csv")
 glimpse(data)
 
 ```
+# Select rainfall data 
+
+save it into rds 
+
+
+# select temp data
+save it into rds 
+
+# select wind data
+save it into rds 
+
 
 ```{r}
 missingv <- data %>% 
@@ -45,7 +63,6 @@ missingv <- as_tibble(missingv)
 kable(missingv)
 
 ```
-
 
 ```{r}
 
@@ -116,14 +133,18 @@ row.plot <- data %>%
 row.plot
 ```
 
+# Temperature 
 
-# Data Preparation 
+## Data preparation 
+
+
 ```{r}
 data_nomissing <- drop_na(data)
 
 ```
 
-Confirm that there is no missing values 
+Confirm that there is no missing values
+
 ```{r}
 
 # Create a data frame with missing value counts
@@ -144,7 +165,8 @@ missing.values2 %>%
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
-select temperature data 
+
+select temperature data
 
 ```{r}
 
@@ -160,7 +182,6 @@ meantemp$date <- paste(meantemp$year, "-", meantemp$month, "-", meantemp$day)
 glimpse(meantemp)
 ```
 
-
 ```{r}
 meantemp <- meantemp %>%
   mutate(date = ymd(date))
@@ -172,4 +193,3 @@ glimpse(meantemp)
 
 unique(meantemp$station)
 ```
-
