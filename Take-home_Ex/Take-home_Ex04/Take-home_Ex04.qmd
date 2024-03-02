@@ -41,17 +41,58 @@ data <- read_csv("data/daily_historical.csv")
 glimpse(data)
 
 ```
-# Select rainfall data 
+# Temperature Data 
 
 save it into rds 
+## Data Wrangling 
 
 
-# select temp data
+## Time Series Forecasting 
+
+# Rainfall Data 
 save it into rds 
 
-# select wind data
+## Data Wrangling 
+
+### Check for Missing Data 
+
+### Check Data type 
+
+## Time Series Forecasting 
+
+# Wind Data 
 save it into rds 
 
+## Data Wrangling 
+
+
+## Time Series Forecasting 
+
+
+
+
+
+# Shiny Dashboard Prototype - UI and Server Design 
+
+## UI 
+
+### Sketch 
+
+### Details 
+
+
+
+## Server 
+
+### Details 
+
+
+
+
+
+
+
+# To adjust 
 
 ```{r}
 missingv <- data %>% 
@@ -133,9 +174,13 @@ row.plot <- data %>%
 row.plot
 ```
 
-# Temperature 
 
-## Data preparation 
+
+
+
+
+
+
 
 
 ```{r}
