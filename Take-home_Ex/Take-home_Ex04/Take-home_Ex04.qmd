@@ -26,7 +26,7 @@ In this exercise, we will be preparing the time-series forecasting module of the
 ## Loading R Packages
 
 ```{r}
-pacman::p_load(tidyverse, scales, viridis, ggthemes, lubridate, gridExtra, readxl, knitr, data.table, CGPfunctions, ggHoriPlot, ggplot2, forecast, MLmetrics, tsbox, xts, plotly, hrbrthemes)
+pacman::p_load(tidyverse, scales, viridis, ggthemes, lubridate, gridExtra, readxl, knitr, data.table, CGPfunctions, ggHoriPlot, ggplot2, forecast, MLmetrics, tsbox, xts, plotly, hrbrthemes, imputeTS)
 ```
 
 ## Importing Data Into R
@@ -64,28 +64,162 @@ temp <- temp %>%
 glimpse(temp)
 ```
 
+```{r}
+temp_nomissing <- temp %>%
+  drop_na()
+
+```
 
 
 ```{r}
+changi <- temp %>%
+  filter(station == "Changi")
 
-# Create a data frame with missing value counts
-missing.values <- temp %>%
-    gather(key = "key", value = "val") %>%
-    mutate(is.missing = is.na(val)) %>%
-    group_by(key, is.missing) %>%
-    summarise(num.missing = n()) %>%
-    filter(is.missing==T) %>%
-    select(-is.missing) %>%
-    arrange(desc(num.missing)) 
+glimpse(changi)
+```
 
-# Create a bar chart
-missing.values %>%
-  ggplot() +
-    geom_bar(aes(x=key, y=num.missing), stat = 'identity') +
-    labs(x='variable', y="number of missing values", title='Number of missing values') +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```{r}
+adm <- temp %>%
+  filter(station == "Admiralty")
+
+glimpse(adm)
+```
+
+
+```{r}
+adm_meantemp <- adm %>% 
+  select(date, mean_temperature)
+
+ggplot_na_distribution(adm_meantemp)
+```
+
+
+```{r}
+changi <- changi %>%
+  drop_na() %>%
+  select(date, mean_temperature, maximum_temperature, minimum_temperature)
+
+glimpse(changi)
+```
+
+```{r}
+range(changi$date)
+```
+
+
+```{r}
+changits <- xts(changi[,c("mean_temperature","maximum_temperature","minimum_temperature")], order.by=as.Date(changi$date))
 
 ```
+
+```{r}
+ggplot_na_distribution2(changits$minimum_temperature)
+```
+
+```{r}
+changits <- ts_regular(changits)
+changits <- na.fill(changits, "extend")
+changits <- window(changits, start = as.Date("1982-01-01"), end = as.Date("2023-12-31"))
+
+```
+
+```{r}
+plot(ts_ts(changits$maximum_temperature), col="darkred", bty="n", las=1, fg=NA, 
+	ylim=c(20, 40), ylab="Temperature (C)")
+
+lines(ts_ts(changits$minimum_temperature), col="navy")
+
+lines(ts_ts(changits$mean_temperature), col="darkgreen")
+
+grid(nx=NA, ny=NULL, lty=1, col="gray")
+
+legend("topright", fill=c("darkred", "darkgreen", "navy"), cex=0.7,
+	legend=c("MAX", "MEAN", "MIN"), bg="white")
+
+
+```
+
+```{r}
+
+summary(changits)
+
+```
+
+```{r}
+
+changits$MONTH <- format(index(changits), "%m")
+
+months <- split(as.numeric(changits$maximum_temperature), changits$MONTH)
+
+sapply(months, summary)
+```
+
+
+```{r}
+decomposition = stl(ts_ts(changits$maximum_temperature), s.window=365, t.window=7001)
+
+plot(decomposition)
+
+summary(decomposition$time.series[,"trend"])
+
+
+```
+
+
+```{r}
+monthly.tmax <- period.apply(changits$maximum_temperature, INDEX = seq(1, nrow(changits) - 1, 30.4375), FUN = colMeans)
+
+plot(ts_ts(monthly.tmax), col="darkred", ylim=c(20, 40), 
+	lwd=3, bty="n", las=1, fg=NA, ylab="TMAX (C)")
+
+grid(nx=NA, ny=NULL, lty=1)
+
+
+```
+# Time Series Forecasting for Max Temp    
+
+## Holt-Winters 
+
+```{r}
+
+training.data = period.apply(changits$maximum_temperature, seq(1, nrow(changits) - 1, 30.4375), max)
+
+model.tmax = hw(ts_ts(training.data), h=60)
+
+```
+
+```{r}
+
+plot(model.tmax, lwd=3, bty="n", las=1, fg=NA)
+
+grid(nx=NA, ny=NULL, lty=1)
+
+```
+## ARIMA 
+
+```{r}
+training.data <- ts_ts(changits$maximum_temperature)
+
+parameters <- auto.arima(training.data)
+
+print(parameters)
+
+```
+
+```{r}
+
+#arima.model = arima(training.data, order = c(4,1,1), seasonal = list(order = c(4,1,1), period = 365))
+
+arima.tmax = forecast(parameters, h = 10)
+
+plot(arima.tmax, lwd=3, bty="n", las=1, fg=NA, 
+	xlim=c(1982, 2030), ylab="Mean Monthly High Temperature (C)")
+
+grid(nx=NA, ny=NULL, lty=1)
+
+```
+
+# Data Exploration using plotly 
 
 ```{r}
 tempstations <- c("Admiralty", "Ang Mo Kio", "Changi", "Choa Chu Kang (South)", "Clementi", "East Coast Parkway",
@@ -97,6 +231,13 @@ temp_mean_wide <- temp %>%
   pivot_wider(names_from = station, values_from = mean_temperature)
 
 glimpse(temp_mean_wide)
+```
+
+
+```{r}
+ggplot_na_distribution(temp_mean_wide)
+
+
 ```
 
 ```{r}
@@ -168,24 +309,17 @@ plot_ly(data = temp_mean_wide,
 
 ```{r}
 
-temp_clean <- temp %>%
+temp_mean_widec <- temp_mean_wide %>%
   drop_na()
 
-glimpse(temp_clean)
-```
-```{r}
-
-tempc_mean_wide <- temp_clean %>%
-  select(date, station, mean_temperature) %>%
-  pivot_wider(names_from = station, values_from = mean_temperature)
-
-glimpse(tempc_mean_wide)
+glimpse(temp_mean_widec)
 ```
 
+
 ```{r}
-plot_ly(data = tempc_mean_wide, 
+plot_ly(data = temp_mean_widec, 
         x = ~date, 
-        y = ~Admiralty, 
+        y = ~ Admiralty, 
         type = "scatter", 
         mode = "lines+markers") |> 
   layout(title = "Temperature observed by Weather Station", 
@@ -201,21 +335,47 @@ plot_ly(data = tempc_mean_wide,
                                y = 0.95, 
                                buttons = list(
                                  list(method = "update",
-                                      args = list(list(y = list(tempc_mean_wide$`Ang Mo Kio`)), 
+                                      args = list(list(y = list(temp_mean_widec$Admiralty)), 
+                                                    list(yaxis = list(title = "Temperature in Admiralty", range = c(0,40)))),label = "Admiralty"),
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`East Coast Parkway`)), 
+                                                    list(yaxis = list(title = "Temperature in East Coast Parkway", range = c(0,40)))),label = "East Coast Parkway"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Ang Mo Kio`)), 
                                                     list(yaxis = list(title = "Temperature in Ang Mo Kio", range = c(0,40)))),label = "Ang Mo Kio"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$Newton)), 
+                                                    list(yaxis = list(title = "Temperature in Newton", range = c(0,40)))),label = "Newton"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Tuas South`)), 
+                                                    list(yaxis = list(title = "Temperature in Tuas South", range = c(0,40)))),label = "Tuas South"),
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Pasir Panjang`)), 
+                                                    list(yaxis = list(title = "Temperature in Pasir Panjang", range = c(0,40)))),label = "Pasir Panjang"), 
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Jurong Island`)), 
+                                                    list(yaxis = list(title = "Temperature in Jurong Island", range = c(0,40)))),label = "Jurong Island"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Choa Chu Kang (South)`)), 
+                                                    list(yaxis = list(title = "Temperature in Choa Chu Kang", range = c(0,40)))),label = "Choa Chu Kang"), 
+                                 list(method = "update", 
+                                        args = list(list(y = list(temp_mean_widec$Changi)), 
+                                                    list(yaxis = list(title = "Temperature in Changi", range = c(0,40)))),label = "Changi"),
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Tai Seng`)), 
+                                                    list(yaxis = list(title = "Temperature in Tai Seng", range = c(0,40)))),label = "Tai Seng"),
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Jurong (West)`)), 
+                                                    list(yaxis = list(title = "Temperature in Jurong West", range = c(0,40)))),label = "Jurong West"), 
                                    list(method = "update", 
-                                        args = list(list(y = list(tempc_mean_wide$Changi)), 
-                                                    list(yaxis = list(title = "Temperature in Changi", range = c(0,40)))),label = "Changi"), 
-                                   list(method = "update", 
-                                        args = list(list(y = list(tempc_mean_wide$Clementi)), 
+                                        args = list(list(y = list(temp_mean_widec$Clementi)), 
                                                     list(yaxis = list(title = "Temperature  in Clementi", range = c(0,40)))),label = "Clementi"), 
                                    list(method = "update", 
-                                        args = list(list(y = list(tempc_mean_wide$`Macritchie Reservoir`)), 
-                                                    list(yaxis = list(title = "Temperature  in Macritchie", range = c(0,40)))),label = "Macritchie"), 
-                                   list(method = "update", 
-                                        args = list(list(y = list(tempc_mean_wide$`Lower Peirce Reservoir`)), 
-                                                    list(yaxis = list(title = "Temperature  in Lower Peirce", range = c(0,40)))),label = "Lower Peirce") 
+                                        args = list(list(y = list(temp_mean_widec$`Sentosa Island`)), 
+                                                    list(yaxis = list(title = "Temperature  in Sentosa", range = c(0,40)))),label = "Sentosa")
+                                   
                                ))))  
+
 
 
 ```
@@ -226,25 +386,6 @@ plot_ly(data = tempc_mean_wide,
 
 
 
-
-```{r}
-temp %>% 
-  filter(station == "Changi") %>%
-  ggplot() %>%
-  geom_horizon(aes(x = date, y = mean_temperature), 
-               origin = "midpoint", 
-               horizonscale = 6)
-
-
-``` 
-
-
-
-save it into rds 
-## Data Wrangling 
-
-
-## Time Series Forecasting 
 
 # Rainfall Data 
 save it into rds 
