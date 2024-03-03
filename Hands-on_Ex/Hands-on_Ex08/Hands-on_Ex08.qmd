@@ -1,0 +1,20 @@
+---
+title: "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R"
+author: "Goh Si Hui"
+date: 2024/03/03
+execute: 
+  echo: true
+  eval: true
+  freeze: true
+  warning: false
+  message: false
+---
+# About this Exercise 
+
+
+# Getting Started 
+
+## Installing and Loading R Packages 
+
+## Importing Data into R 
+
