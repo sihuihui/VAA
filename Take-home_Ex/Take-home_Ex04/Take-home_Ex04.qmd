@@ -45,7 +45,6 @@ glimpse(data)
 
 ## Selecting the relevant columns for Temperature Data 
 ```{r}
-
 temp <- data %>%
   select(station, year, month, day, mean_temperature, maximum_temperature, minimum_temperature) 
 
@@ -69,6 +68,7 @@ glimpse(temp)
 summary(temp)
 
 ```
+drop those rows where year, month day and date are missing. 
 
 ```{r}
 temp <- temp %>%
@@ -80,14 +80,41 @@ summary(temp)
 unique(temp$station)
 ```
 
-## Further exploration of missing temperature using plotly
+```{r}
+missing.values <- temp %>%
+  gather(key = "key", value = "val") %>%
+  mutate(isna = is.na(val)) %>%
+  group_by(key) %>%
+  mutate(total = n()) %>%
+  group_by(key, total, isna) %>%
+  summarise(num.isna = n()) %>%
+  mutate(pct = num.isna / total * 100)
+
+levels <-
+    (missing.values  %>% filter(isna == T) %>% arrange(desc(pct)))$key
+
+percentage.plot <- missing.values %>%
+      ggplot() +
+        geom_bar(aes(x = reorder(key, desc(pct)), 
+                     y = pct, fill=isna), 
+                 stat = 'identity', alpha=0.8) +
+      scale_x_discrete(limits = levels) +
+      scale_fill_manual(name = "", 
+                        values = c('steelblue', 'tomato3'), labels = c("Present", "Missing")) +
+      coord_flip() +
+      labs(title = "Percentage of missing values", x =
+             'Variable', y = "% of missing values")
+
+percentage.plot
+
+
+```
+## Further exploration of missing mean_temperature using plotly
 
 
 ```{r}
-weatherstations <- c("Macritchie Reservoir", "Lower Peirce Reservoir",  "Admiralty","East Coast Parkway", "Ang Mo Kio","Newton", "Lim Chu Kang","Marine Parade", "Choa Chu Kang (Central)", "Tuas South" , "Pasir Panjang", "Jurong Island", "Nicoll Highway","Botanic Garden", "Choa Chu Kang (South)","Whampoa", "Changi", "Jurong Pier",  "Ulu Pandan", "Mandai", "Tai Seng", "Jurong (West)", "Clementi", "Sentosa Island", "Bukit Panjang","Kranji Reservoir", "Upper Peirce Reservoir", "Kent Ridge", "Queenstown", "Tanjong Katong", "Somerset (Road)", "Punggol", "Simei", "Toa Payoh", "Tuas", "Bukit Timah","Pasir Ris (Central)")
-
 temp_mean_wide <- temp %>%
-  filter(year > 1983 & station %in% weatherstations) %>%
+  filter(year > 1983) %>%
   select(tdate, station, mean_temperature) %>%
   pivot_wider(names_from = station, values_from = mean_temperature)
 
@@ -213,7 +240,7 @@ plot_ly(data = temp_mean_wide,
                                         args = list(list(y = list(temp_mean_wide$`Punggol`)), 
                                                     list(yaxis = list(title = "Temperature at Punggol", range = c(0,40)))),label = "Punggol"),
                                 list(method = "update", 
-                                        args = list(list(y = list(temp_mean_wide$`Simen`)), 
+                                        args = list(list(y = list(temp_mean_wide$`Simei`)), 
                                                     list(yaxis = list(title = "Temperature at Simei", range = c(0,40)))),label = "Simei"),
                                 list(method = "update", 
                                         args = list(list(y = list(temp_mean_wide$`Toa Payoh`)), 
@@ -268,28 +295,38 @@ percentage.plot
 
 ```
 
-Drop the cols with missing values 
+Drop the stations with no weather data at all. 
 
 ```{r}
-temp_nomissing <- temp %>%
-  drop_na()
+notempdata <- missing.values %>%
+  filter(isna == TRUE & pct==100)
 
-glimpse(temp_nomissing)
-```
-
-```{r}
-unique(temp_nomissing$station)
+notempdata$key
 ```
 
 ```{r}
 
-temp_mean_widec <- temp_nomissing %>%
-  filter(year > 1983) %>%
+stationstoremove <- c("Botanic Garden","Bukit Panjang","Bukit Timah","Choa Chu Kang (Central)","Jurong Pier","Kent Ridge", "Kranji Reservoir", "Lim Chu Kang", "Lower Peirce Reservoir", "Macritchie Reservoir","Mandai",                 "Marine Parade","Nicoll Highway", "Pasir Ris (Central)", "Punggol", "Queenstown","Simei", "Somerset (Road)","Tanjong Katong", "Toa Payoh", "Tuas", "Ulu Pandan", "Upper Peirce Reservoir","Whampoa")
+
+#create a operator to exclude things 
+'%!in%' <- function(x,y)!('%in%'(x,y))
+
+#excluded stations that have no temp data at all 
+temp_clean <- temp %>%
+  filter(station %!in% stationstoremove)
+
+glimpse(temp_clean)
+```
+
+```{r}
+
+temp_mean_widec <- temp_clean %>%
   select(tdate, station, mean_temperature) %>%
   pivot_wider(names_from = station, values_from = mean_temperature)
 
-glimpse(temp_mean_wide)
+glimpse(temp_mean_widec)
 ```
+
 ```{r}
 plot_ly(data = temp_mean_widec, 
         x = ~tdate, 
@@ -355,11 +392,11 @@ plot_ly(data = temp_mean_widec,
 ```
 
 There are some missing time gaps in the data. 
+Daily data for data ranging over more than 20 years is too frequent for time series forecasting. 
+
 
 
 ## Preparing for time series forecasting 
-
-
 
 ```{r}
 changi <- temp %>%
@@ -368,45 +405,23 @@ changi <- temp %>%
 glimpse(changi)
 ```
 
-```{r}
-adm <- temp %>%
-  filter(station == "Admiralty")
-
-glimpse(adm)
-```
-
-
-```{r}
-adm_meantemp <- adm %>% 
-  select(date, mean_temperature)
-
-ggplot_na_distribution(adm_meantemp)
-```
 
 
 ```{r}
 changi <- changi %>%
   drop_na() %>%
-  select(date, mean_temperature, maximum_temperature, minimum_temperature)
+  select(tdate, mean_temperature, maximum_temperature, minimum_temperature)
 
 glimpse(changi)
 ```
 
 ```{r}
-range(changi$date)
+range(changi$tdate)
 ```
-
+convert this to a time series object 
 
 ```{r}
-changits <- xts(changi[,c("mean_temperature","maximum_temperature","minimum_temperature")], order.by=as.Date(changi$date))
-
-```
-
-```{r}
-ggplot_na_distribution2(changits$minimum_temperature)
-```
-
-```{r}
+changits <- xts(changi[,c("mean_temperature","maximum_temperature","minimum_temperature")], order.by=as.Date(changi$tdate))
 changits <- ts_regular(changits)
 changits <- na.fill(changits, "extend")
 changits <- window(changits, start = as.Date("1982-01-01"), end = as.Date("2023-12-31"))
@@ -428,13 +443,14 @@ legend("topright", fill=c("darkred", "darkgreen", "navy"), cex=0.7,
 
 
 ```
-
+### Summary Statistics 
+Running the summary() function will give basic descriptive statistics for the time series fields. You can subset the time series with logical conditions to find the dates for extreme conditions.
 ```{r}
 
 summary(changits)
 
 ```
-
+### Seasonal statistics 
 ```{r}
 
 changits$MONTH <- format(index(changits), "%m")
@@ -444,7 +460,7 @@ months <- split(as.numeric(changits$maximum_temperature), changits$MONTH)
 sapply(months, summary)
 ```
 
-
+### Time Series Decomposition 
 ```{r}
 decomposition = stl(ts_ts(changits$maximum_temperature), s.window=365, t.window=7001)
 
@@ -455,6 +471,7 @@ summary(decomposition$time.series[,"trend"])
 
 ```
 
+### Aggregating values by months 
 
 ```{r}
 monthly.tmax <- period.apply(changits$maximum_temperature, INDEX = seq(1, nrow(changits) - 1, 30.4375), FUN = colMeans)
@@ -466,9 +483,22 @@ grid(nx=NA, ny=NULL, lty=1)
 
 
 ```
+```{r}
+decomposition = stl(ts_ts(changits$maximum_temperature), s.window=365, t.window=7001)
+
+plot(decomposition)
+
+summary(decomposition$time.series[,"trend"])
+
+
+```
+
+
+
 # Time Series Forecasting for Max Temp    
 
 ## Holt-Winters 
+h = 60 indicates modeling 5 years into the future 
 
 ```{r}
 
@@ -485,12 +515,26 @@ plot(model.tmax, lwd=3, bty="n", las=1, fg=NA)
 grid(nx=NA, ny=NULL, lty=1)
 
 ```
+
+A plot() of the model shows a forecast of future temperatures.
+
+The dark blue line is the mean seasonal and trend components that are assumed to continue into the future in the same manner as in the past.
+
+The gray lines above and below the seasonal trend represent a range of possible future values based on the random variation in the historical data. Given the amount of variation in the historical data and absence of a clear trend, the exponential smoothing methods used by the Holt-Winters model result in extreme peaks and wide uncertainty as the output extends far into the future.
+
 ## ARIMA 
 
-```{r}
-training.data <- ts_ts(changits$maximum_temperature)
 
-parameters <- auto.arima(training.data)
+
+
+```{r}
+changits_max <- ts_ts(changits$maximum_temperature)
+
+training=window(changits_max, start = c(1982,1), end = c(2006,12))
+validation=window(changits_max, start = c(2007,1))
+
+
+parameters <- auto.arima(training)
 
 print(parameters)
 
@@ -500,10 +544,10 @@ print(parameters)
 
 #arima.model = arima(training.data, order = c(4,1,1), seasonal = list(order = c(4,1,1), period = 365))
 
-arima.tmax = forecast(parameters, h = 10)
+arima.tmax = forecast(parameters)
 
 plot(arima.tmax, lwd=3, bty="n", las=1, fg=NA, 
-	xlim=c(1982, 2030), ylab="Mean Monthly High Temperature (C)")
+ ylab="Mean Monthly High Temperature (C)")
 
 grid(nx=NA, ny=NULL, lty=1)
 
@@ -865,4 +909,40 @@ glimpse(meantemp)
 ```{r}
 
 unique(meantemp$station)
+```
+Confirm that there are no missing data
+
+```{r}
+
+missing.values <- temp_mean_widec %>%
+  gather(key = "key", value = "val") %>%
+  mutate(isna = is.na(val)) %>%
+  group_by(key) %>%
+  mutate(total = n()) %>%
+  group_by(key, total, isna) %>%
+  summarise(num.isna = n()) %>%
+  mutate(pct = num.isna / total * 100)
+
+levels <-
+    (missing.values  %>% filter(isna == T) %>% arrange(desc(pct)))$key
+
+percentage.plot <- missing.values %>%
+      ggplot() +
+        geom_bar(aes(x = reorder(key, desc(pct)), 
+                     y = pct, fill=isna), 
+                 stat = 'identity', alpha=0.8) +
+      scale_x_discrete(limits = levels) +
+      scale_fill_manual(name = "", 
+                        values = c('steelblue', 'tomato3'), labels = c("Present", "Missing")) +
+      coord_flip() +
+      labs(title = "Percentage of missing values", x =
+             'Variable', y = "% of missing values")
+
+percentage.plot
+
+
+```
+
+```{r}
+unique(temp_nomissing$station)
 ```
