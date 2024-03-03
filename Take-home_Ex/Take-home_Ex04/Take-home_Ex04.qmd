@@ -26,7 +26,7 @@ In this exercise, we will be preparing the time-series forecasting module of the
 ## Loading R Packages
 
 ```{r}
-pacman::p_load(tidyverse, lubridate, gridExtra, readxl, knitr, data.table, ggplot2, forecast, MLmetrics, tsbox, xts, plotly, hrbrthemes, astsa)
+pacman::p_load(tidyverse, lubridate, gridExtra, readxl, knitr, data.table, ggplot2, forecast, MLmetrics, tsbox, xts, plotly, hrbrthemes, astsa, ggfortify)
 ```
 
 ## Importing Data Into R
@@ -546,9 +546,9 @@ period.apply() requires a regular (even) interval between periods. Because month
 Because the periods need an even number of observations, the window() dates should be chosen so they encompass even multiples of four years to account for leap years.
 
 ```{r}
-monthly.tmax <- period.apply(changi_ts$maximum_temperature, INDEX = seq(1, nrow(changi_ts) - 1, 30.4375), FUN = colMeans)
+monthly_avgmaxtemp <- period.apply(changi_ts$maximum_temperature, INDEX = seq(1, nrow(changi_ts) - 1, 30.4375), FUN = colMeans)
 
-plot(ts_ts(monthly.tmax), col="darkred", ylim=c(20, 40), 
+plot(ts_ts(monthly_avgmaxtemp), col="darkred", ylim=c(20, 40), 
 	lwd=3, bty="n", las=1, fg=NA, ylab="TMAX (C)")
 
 grid(nx=NA, ny=NULL, lty=1)
@@ -561,54 +561,69 @@ grid(nx=NA, ny=NULL, lty=1)
 # Building Models 
 
 
-## Naive method 
+
 ```{r}
 # create samples 
-training <- window(monthly.tmax, start = as.Date('1983-01-01'), end = as.Date('2006-12-31'))
-validation <- window(monthly.tmax, start = as.Date('2007-01-01'))
+training <- ts_ts(window(monthly_avgmaxtemp, start = as.Date('1983-01-01'), end = as.Date('2015-12-31')))
+validation <- ts_ts(window(monthly_avgmaxtemp, start = as.Date('2016-01-01')))
 
 ```
 
+## Seasonal Naive method 
 ```{r}
-naive_model <- snaive(ts_ts(training), h = length(ts_ts(validation)))
-MAPE(naive$mean, ts_ts(validation)) * 100
+naive_model <- naive(training, h = length(validation))
+MAPE(naive_model$mean, validation) * 100
 
-naive_model
+summary(naive_model)
+```
+
+
+## Seasonal Naive method 
+```{r}
+snaive_model <- snaive(training, h = length(validation))
+MAPE(snaive_model$mean, validation) * 100
+
+summary(snaive_model)
 ```
 ```{r}
-plot(changi_ts_max, col="blue", xlab="Year", ylab="Daily Max Temp", main="Naive Forecast", type='l')
-lines(naive_model$mean, col="red", lwd=2)
+autoplot(monthly_avgmaxtemp, ts.colour = "blue")
+
 
 ```
 
 ## State Space Models
 
 ```{r}
-
-ets_model <- ets(ts_ts(training), allow.multiplicative.trend = TRUE)
-summary(ets_model)
+ets_modelT <- ets(training, allow.multiplicative.trend = TRUE)
+summary(ets_modelT)
 ```
 
 Multiplicative errors 
 No trend 
-Addictive seasibavbikity 
+Addictive seasonnality
 
 ```{r}
-ets_forecast <- forecast(ets_model, h=length(ts_ts(validation)))
-MAPE(ets_forecast$mean, ts_ts(validation)) *100
+ets_forecastT <- forecast(ets_modelT, h=length(validation))
+MAPE(ets_forecastT$mean, validation) *100
+ets_forecastT
 ```
+
+
+
+
 
 ```{r}
-plot(changi_ts_max, col="blue", xlab="Year", ylab="Daily Max Temp", main="ETS Forecast", type='l')
-lines(ets_forecast$mean, col="red", lwd=2)
+plot(monthly_avgmaxtemp, col="blue", xlab="Year", ylab="Daily Max Temp", main="ETS Forecast", type='l') 
+lines(ets_forecastT$mean, col="red", lwd=2)
 
 ```
+
 
 ## Holt-Winters 
 
 ```{r}
-hw_model <- hw(ts_ts(training), h = length(ts_ts(validation)))
-MAPE(hw_model$mean, ts_ts(validation))*100
+hw_model <- hw(training, h = length(validation))
+MAPE(hw_model$mean, validation)*100
 
 ```
 
@@ -617,15 +632,16 @@ MAPE(hw_model$mean, ts_ts(validation))*100
 
 ```{r}
 
-arima_optimal <- auto.arima(ts_ts(training))
+arima_optimal <- auto.arima(training)
 summary(arima_optimal)
 
 ```
 
 ```{r}
-sarima_forecast <- sarima.for(ts_ts(training), n.ahead=length(ts_ts(validation)), 
-                               p=2,d=0,q=0,P=2,D=1,Q=2,S=12)
-MAPE(sarima_forecast$pred, ts_ts(validation))*100
+sarima_forecast <- sarima.for(training, n.ahead=length(validation), 
+                               p=0,d=0,q=1,P=2,D=1,Q=0,S=12)
+sarima_forecast
+MAPE(sarima_forecast$pred, validation)*100
 ```
 
 
@@ -856,3 +872,11 @@ percentage.plot
 ```{r}
 unique(temp_nomissing$station)
 ```
+
+
+# References 
+
+https://michaelminn.net/tutorials/r-weather/index.html
+https://towardsdatascience.com/a-guide-to-forecasting-in-r-6b0c9638c261 
+https://www.singstat.gov.sg/-/media/files/publications/reference/ssnsep05-pg11-14.ashx
+https://otexts.com/fpp2/estimation-and-model-selection.html
