@@ -26,7 +26,7 @@ In this exercise, we will be preparing the time-series forecasting module of the
 ## Loading R Packages
 
 ```{r}
-pacman::p_load(tidyverse, lubridate, gridExtra, readxl, knitr, data.table, ggplot2, forecast, MLmetrics, tsbox, xts, plotly, hrbrthemes, imputeTS)
+pacman::p_load(tidyverse, lubridate, gridExtra, readxl, knitr, data.table, ggplot2, forecast, MLmetrics, tsbox, xts, plotly, hrbrthemes, astsa)
 ```
 
 ## Importing Data Into R
@@ -53,10 +53,6 @@ glimpse(temp)
 ## Creating a date column
 ```{r}
 temp$tdate <- paste(temp$year, "-", temp$month, "-", temp$day)
-glimpse(temp)
-```
-
-```{r}
 temp <- temp %>%
   mutate(tdate = ymd(tdate))
 
@@ -76,6 +72,7 @@ temp <- temp %>%
 
 summary(temp)
 ```
+
 ```{r}
 unique(temp$station)
 ```
@@ -306,7 +303,7 @@ notempdata$key
 
 ```{r}
 
-stationstoremove <- c("Botanic Garden","Bukit Panjang","Bukit Timah","Choa Chu Kang (Central)","Jurong Pier","Kent Ridge", "Kranji Reservoir", "Lim Chu Kang", "Lower Peirce Reservoir", "Macritchie Reservoir","Mandai",                 "Marine Parade","Nicoll Highway", "Pasir Ris (Central)", "Punggol", "Queenstown","Simei", "Somerset (Road)","Tanjong Katong", "Toa Payoh", "Tuas", "Ulu Pandan", "Upper Peirce Reservoir","Whampoa")
+stationstoremove <- c("Botanic Garden","Bukit Panjang","Bukit Timah","Choa Chu Kang (Central)","Jurong Pier","Kent Ridge", "Kranji Reservoir", "Lim Chu Kang", "Lower Peirce Reservoir", "Macritchie Reservoir","Mandai", "Marine Parade","Nicoll Highway", "Pasir Ris (Central)", "Punggol", "Queenstown","Simei", "Somerset (Road)","Tanjong Katong", "Toa Payoh", "Tuas", "Ulu Pandan", "Upper Peirce Reservoir","Whampoa")
 
 #create a operator to exclude things 
 '%!in%' <- function(x,y)!('%in%'(x,y))
@@ -398,6 +395,8 @@ Daily data for data ranging over more than 20 years is too frequent for time ser
 
 ## Preparing for time series forecasting 
 
+We are using changi weather station for now 
+
 ```{r}
 changi <- temp %>%
   filter(station == "Changi")
@@ -409,7 +408,7 @@ glimpse(changi)
 
 ```{r}
 changi <- changi %>%
-  drop_na() %>%
+  drop_na()%>%
   select(tdate, mean_temperature, maximum_temperature, minimum_temperature)
 
 glimpse(changi)
@@ -418,23 +417,39 @@ glimpse(changi)
 ```{r}
 range(changi$tdate)
 ```
-convert this to a time series object 
+convert this to a time series object
+ts)regular gives the time series a regular interval by adding NA values for missing dates 
+na.fill function fills those missing dates by extending values from previous days 
+The window() function clips off the starting and ending dates so the number of years covered is a multiple of four. This will be needed later when the data needs to be aggregated into monthly periods.
+
+
 
 ```{r}
-changits <- xts(changi[,c("mean_temperature","maximum_temperature","minimum_temperature")], order.by=as.Date(changi$tdate))
-changits <- ts_regular(changits)
-changits <- na.fill(changits, "extend")
-changits <- window(changits, start = as.Date("1982-01-01"), end = as.Date("2023-12-31"))
+changi_ts <- xts(changi[,c("mean_temperature", "maximum_temperature", "minimum_temperature")], order.by=as.Date(changi$tdate))
+changi_ts <- ts_regular(changi_ts)
+changi_ts <- na.fill(changi_ts, "extend")
+changi_ts <- window(changi_ts, start = as.Date("1983-01-01"), end = as.Date("2023-12-31"))
+```
+Check the class of changi_ts 
+```{r}
+
+class(changi_ts)
+```
+```{r}
+str(changi_ts)
 
 ```
 
+A plot() of mean, max and min temperatures show the annual cycle of temperatures as well as extreme temperature events that spike above the general curve.
+
+The ts_ts() function is used to plot ts objects rather than xts objects so that more control is available over the formatting of the charts.
 ```{r}
-plot(ts_ts(changits$maximum_temperature), col="darkred", bty="n", las=1, fg=NA, 
+plot(ts_ts(changi_ts$maximum_temperature), col="darkred", bty="n", las=1, fg=NA, 
 	ylim=c(20, 40), ylab="Temperature (C)")
 
-lines(ts_ts(changits$minimum_temperature), col="navy")
+lines(ts_ts(changi_ts$minimum_temperature), col="navy")
 
-lines(ts_ts(changits$mean_temperature), col="darkgreen")
+lines(ts_ts(changi_ts$mean_temperature), col="darkgreen")
 
 grid(nx=NA, ny=NULL, lty=1, col="gray")
 
@@ -447,22 +462,51 @@ legend("topright", fill=c("darkred", "darkgreen", "navy"), cex=0.7,
 Running the summary() function will give basic descriptive statistics for the time series fields. You can subset the time series with logical conditions to find the dates for extreme conditions.
 ```{r}
 
-summary(changits)
+summary(changi_ts)
 
 ```
 ### Seasonal statistics 
+Time series representation also facilitates summary statistics of recurring periods, like months.
+
+The format() function with the %m format descriptor isolates the month portion of the date.
+The split() function breaks a vector into a data frame with separate fields based on a specific factor, in this case the month. The as.numeric() conversion is used to remove the time series date index so that dates are not included in the summaries.
+The sapply() function runs the summary() function on each field in the split data frame.
 ```{r}
 
-changits$MONTH <- format(index(changits), "%m")
+changi_ts$MONTH <- format(index(changi_ts), "%m")
 
-months <- split(as.numeric(changits$maximum_temperature), changits$MONTH)
+months <- split(as.numeric(changi_ts$maximum_temperature), changi_ts$MONTH)
 
 sapply(months, summary)
 ```
 
-### Time Series Decomposition 
 ```{r}
-decomposition = stl(ts_ts(changits$maximum_temperature), s.window=365, t.window=7001)
+months <- split(as.numeric(changi_ts$minimum_temperature), changi_ts$MONTH)
+
+sapply(months, summary)
+
+```
+
+```{r}
+months <- split(as.numeric(changi_ts$mean_temperature), changi_ts$MONTH)
+
+sapply(months, summary)
+
+```
+
+
+### Time Series Decomposition 
+
+Time series decomposition separates a time series into three fundamental components that can be added together to create the original data:
+
+A seasonal component
+A long-term trend component
+A random component
+When using historical data to anticipate what might happen in the future, we often wish to separates the seasonal and random components to see the long term historical trends.
+
+The stl() function performs this decomposition.
+```{r}
+decomposition <- stl(ts_ts(changi_ts$maximum_temperature), s.window=365, t.window = 14001)
 
 plot(decomposition)
 
@@ -470,253 +514,119 @@ summary(decomposition$time.series[,"trend"])
 
 
 ```
+in this example, the trend indicates an increase of around 0.4 degrees celsius in daily maximum temperatures over the period 1983 to 2023. We also see there is some seasonality in (dry to wet seasons) of around 2.5 degrees celsius and random daily variation of around 8 degrees. 
+
+Note: try changing the t.window and see how this would affect! 
+
+```{r}
+decomposition = stl(ts_ts(changi_ts$minimum_temperature), s.window=365, t.window=14001)
+
+plot(decomposition)
+
+summary(decomposition$time.series[,"trend"])
+
+```
+```{r}
+decomposition = stl(ts_ts(changi_ts$mean_temperature), s.window=365, t.window=14001)
+
+plot(decomposition)
+
+summary(decomposition$time.series[,"trend"])
+
+```
 
 ### Aggregating values by months 
 
+Although having daily weather observations is extremely useful for analysis, direct visualization of daily observations relies on inexact (and occasionally deceptive) visual identification of patterns and trends. Visualization of decomposition captures trends, but can be confusing to folks with little or no exprience with time series analysis.
+
+One common technique to address this issue with time series data is to aggregate values by months or years.
+
+With xts time series objects, the period.apply() function can be used to perform operations on blocks of observations across the time series. Those operations are specified with the FUN= parameter and commonly include min(), max(), and mean().
+period.apply() requires a regular (even) interval between periods. Because months are uneven, a seq() of regularly spaced index values is passed to the INDEX= parameter. The INDEX value is is a regular spacing that approximates 12 months per year when leap years are considered (365 + 365 + 365 + 366 / 48 = 30.4375).
+Because the periods need an even number of observations, the window() dates should be chosen so they encompass even multiples of four years to account for leap years.
+
 ```{r}
-monthly.tmax <- period.apply(changits$maximum_temperature, INDEX = seq(1, nrow(changits) - 1, 30.4375), FUN = colMeans)
+monthly.tmax <- period.apply(changi_ts$maximum_temperature, INDEX = seq(1, nrow(changi_ts) - 1, 30.4375), FUN = colMeans)
 
 plot(ts_ts(monthly.tmax), col="darkred", ylim=c(20, 40), 
 	lwd=3, bty="n", las=1, fg=NA, ylab="TMAX (C)")
 
 grid(nx=NA, ny=NULL, lty=1)
 
+```
 
+
+
+
+# Building Models 
+
+
+## Naive method 
+```{r}
+# create samples 
+training <- window(monthly.tmax, start = as.Date('1983-01-01'), end = as.Date('2006-12-31'))
+validation <- window(monthly.tmax, start = as.Date('2007-01-01'))
+
+```
+
+```{r}
+naive_model <- snaive(ts_ts(training), h = length(ts_ts(validation)))
+MAPE(naive$mean, ts_ts(validation)) * 100
+
+naive_model
 ```
 ```{r}
-decomposition = stl(ts_ts(changits$maximum_temperature), s.window=365, t.window=7001)
-
-plot(decomposition)
-
-summary(decomposition$time.series[,"trend"])
-
+plot(changi_ts_max, col="blue", xlab="Year", ylab="Daily Max Temp", main="Naive Forecast", type='l')
+lines(naive_model$mean, col="red", lwd=2)
 
 ```
 
+## State Space Models
 
+```{r}
 
-# Time Series Forecasting for Max Temp    
+ets_model <- ets(ts_ts(training), allow.multiplicative.trend = TRUE)
+summary(ets_model)
+```
+
+Multiplicative errors 
+No trend 
+Addictive seasibavbikity 
+
+```{r}
+ets_forecast <- forecast(ets_model, h=length(ts_ts(validation)))
+MAPE(ets_forecast$mean, ts_ts(validation)) *100
+```
+
+```{r}
+plot(changi_ts_max, col="blue", xlab="Year", ylab="Daily Max Temp", main="ETS Forecast", type='l')
+lines(ets_forecast$mean, col="red", lwd=2)
+
+```
 
 ## Holt-Winters 
-h = 60 indicates modeling 5 years into the future 
 
 ```{r}
-
-training.data = period.apply(changits$maximum_temperature, seq(1, nrow(changits) - 1, 30.4375), max)
-
-model.tmax = hw(ts_ts(training.data), h=60)
+hw_model <- hw(ts_ts(training), h = length(ts_ts(validation)))
+MAPE(hw_model$mean, ts_ts(validation))*100
 
 ```
 
-```{r}
-
-plot(model.tmax, lwd=3, bty="n", las=1, fg=NA)
-
-grid(nx=NA, ny=NULL, lty=1)
-
-```
-
-A plot() of the model shows a forecast of future temperatures.
-
-The dark blue line is the mean seasonal and trend components that are assumed to continue into the future in the same manner as in the past.
-
-The gray lines above and below the seasonal trend represent a range of possible future values based on the random variation in the historical data. Given the amount of variation in the historical data and absence of a clear trend, the exponential smoothing methods used by the Holt-Winters model result in extreme peaks and wide uncertainty as the output extends far into the future.
 
 ## ARIMA 
 
-
-
-
 ```{r}
-changits_max <- ts_ts(changits$maximum_temperature)
 
-training=window(changits_max, start = c(1982,1), end = c(2006,12))
-validation=window(changits_max, start = c(2007,1))
-
-
-parameters <- auto.arima(training)
-
-print(parameters)
+arima_optimal <- auto.arima(ts_ts(training))
+summary(arima_optimal)
 
 ```
 
 ```{r}
-
-#arima.model = arima(training.data, order = c(4,1,1), seasonal = list(order = c(4,1,1), period = 365))
-
-arima.tmax = forecast(parameters)
-
-plot(arima.tmax, lwd=3, bty="n", las=1, fg=NA, 
- ylab="Mean Monthly High Temperature (C)")
-
-grid(nx=NA, ny=NULL, lty=1)
-
+sarima_forecast <- sarima.for(ts_ts(training), n.ahead=length(ts_ts(validation)), 
+                               p=2,d=0,q=0,P=2,D=1,Q=2,S=12)
+MAPE(sarima_forecast$pred, ts_ts(validation))*100
 ```
-
-# Data Exploration using plotly 
-
-```{r}
-tempstations <- c("Admiralty", "Ang Mo Kio", "Changi", "Choa Chu Kang (South)", "Clementi", "East Coast Parkway",
-                      "Jurong (West)", "Jurong Island", "Newton", "Pasir Panjang", "Paya Lebar", 
-                      "Pulau Ubin", "Sembawang", "Sentosa Island", "Tai Seng", "Tuas South")
-temp_mean_wide <- temp %>%
-  filter(year > 1983 & station %in% tempstations) %>%
-  select(date, station, mean_temperature) %>%
-  pivot_wider(names_from = station, values_from = mean_temperature)
-
-glimpse(temp_mean_wide)
-```
-
-
-```{r}
-ggplot_na_distribution(temp_mean_wide)
-
-
-```
-
-```{r}
-plot_ly(data = temp_mean_wide, 
-        x = ~date, 
-        y = ~ Admiralty, 
-        type = "scatter", 
-        mode = "lines+markers") |> 
-  layout(title = "Temperature observed by Weather Station", 
-       xaxis = list(title = "Date"), 
-       yaxis = list(title = "", range = c(0,40)), 
-      theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4, subtitle_size=11, subtitle_margin=4,  
-                 axis_title_size = 8, axis_text_size=8, axis_title_face= "bold", plot_margin = margin(4, 4, 4, 4)),  
-       updatemenus = list(list(type = 'dropdown', 
-                               xref = "paper", 
-                               yref = "paper", 
-                               xanchor = "left",
-                               x = 0.04,
-                               y = 0.95, 
-                               buttons = list(
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_wide$Admiralty)), 
-                                                    list(yaxis = list(title = "Temperature in Admiralty", range = c(0,40)))),label = "Admiralty"),
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_wide$`East Coast Parkway`)), 
-                                                    list(yaxis = list(title = "Temperature in East Coast Parkway", range = c(0,40)))),label = "East Coast Parkway"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_wide$`Ang Mo Kio`)), 
-                                                    list(yaxis = list(title = "Temperature in Ang Mo Kio", range = c(0,40)))),label = "Ang Mo Kio"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_wide$Newton)), 
-                                                    list(yaxis = list(title = "Temperature in Newton", range = c(0,40)))),label = "Newton"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_wide$`Tuas South`)), 
-                                                    list(yaxis = list(title = "Temperature in Tuas South", range = c(0,40)))),label = "Tuas South"),
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_wide$`Pasir Panjang`)), 
-                                                    list(yaxis = list(title = "Temperature in Pasir Panjang", range = c(0,40)))),label = "Pasir Panjang"), 
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_wide$`Jurong Island`)), 
-                                                    list(yaxis = list(title = "Temperature in Jurong Island", range = c(0,40)))),label = "Jurong Island"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_wide$`Choa Chu Kang (South)`)), 
-                                                    list(yaxis = list(title = "Temperature in Choa Chu Kang", range = c(0,40)))),label = "Choa Chu Kang"), 
-                                 list(method = "update", 
-                                        args = list(list(y = list(temp_mean_wide$Changi)), 
-                                                    list(yaxis = list(title = "Temperature in Changi", range = c(0,40)))),label = "Changi"),
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_wide$`Tai Seng`)), 
-                                                    list(yaxis = list(title = "Temperature in Tai Seng", range = c(0,40)))),label = "Tai Seng"),
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_wide$`Jurong (West)`)), 
-                                                    list(yaxis = list(title = "Temperature in Jurong West", range = c(0,40)))),label = "Jurong West"), 
-                                   list(method = "update", 
-                                        args = list(list(y = list(temp_mean_wide$Clementi)), 
-                                                    list(yaxis = list(title = "Temperature  in Clementi", range = c(0,40)))),label = "Clementi"), 
-                                   list(method = "update", 
-                                        args = list(list(y = list(temp_mean_wide$`Sentosa Island`)), 
-                                                    list(yaxis = list(title = "Temperature  in Sentosa", range = c(0,40)))),label = "Sentosa")
-                                   
-                               ))))  
-
-
-
-```
-
-
-
-
-```{r}
-
-temp_mean_widec <- temp_mean_wide %>%
-  drop_na()
-
-glimpse(temp_mean_widec)
-```
-
-
-```{r}
-plot_ly(data = temp_mean_widec, 
-        x = ~date, 
-        y = ~ Admiralty, 
-        type = "scatter", 
-        mode = "lines+markers") |> 
-  layout(title = "Temperature observed by Weather Station", 
-       xaxis = list(title = "Date"), 
-       yaxis = list(title = "", range = c(0,40)), 
-      theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4, subtitle_size=11, subtitle_margin=4,  
-                 axis_title_size = 8, axis_text_size=8, axis_title_face= "bold", plot_margin = margin(4, 4, 4, 4)),  
-       updatemenus = list(list(type = 'dropdown', 
-                               xref = "paper", 
-                               yref = "paper", 
-                               xanchor = "left",
-                               x = 0.04,
-                               y = 0.95, 
-                               buttons = list(
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$Admiralty)), 
-                                                    list(yaxis = list(title = "Temperature in Admiralty", range = c(0,40)))),label = "Admiralty"),
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`East Coast Parkway`)), 
-                                                    list(yaxis = list(title = "Temperature in East Coast Parkway", range = c(0,40)))),label = "East Coast Parkway"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Ang Mo Kio`)), 
-                                                    list(yaxis = list(title = "Temperature in Ang Mo Kio", range = c(0,40)))),label = "Ang Mo Kio"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$Newton)), 
-                                                    list(yaxis = list(title = "Temperature in Newton", range = c(0,40)))),label = "Newton"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Tuas South`)), 
-                                                    list(yaxis = list(title = "Temperature in Tuas South", range = c(0,40)))),label = "Tuas South"),
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Pasir Panjang`)), 
-                                                    list(yaxis = list(title = "Temperature in Pasir Panjang", range = c(0,40)))),label = "Pasir Panjang"), 
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Jurong Island`)), 
-                                                    list(yaxis = list(title = "Temperature in Jurong Island", range = c(0,40)))),label = "Jurong Island"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Choa Chu Kang (South)`)), 
-                                                    list(yaxis = list(title = "Temperature in Choa Chu Kang", range = c(0,40)))),label = "Choa Chu Kang"), 
-                                 list(method = "update", 
-                                        args = list(list(y = list(temp_mean_widec$Changi)), 
-                                                    list(yaxis = list(title = "Temperature in Changi", range = c(0,40)))),label = "Changi"),
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Tai Seng`)), 
-                                                    list(yaxis = list(title = "Temperature in Tai Seng", range = c(0,40)))),label = "Tai Seng"),
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Jurong (West)`)), 
-                                                    list(yaxis = list(title = "Temperature in Jurong West", range = c(0,40)))),label = "Jurong West"), 
-                                   list(method = "update", 
-                                        args = list(list(y = list(temp_mean_widec$Clementi)), 
-                                                    list(yaxis = list(title = "Temperature  in Clementi", range = c(0,40)))),label = "Clementi"), 
-                                   list(method = "update", 
-                                        args = list(list(y = list(temp_mean_widec$`Sentosa Island`)), 
-                                                    list(yaxis = list(title = "Temperature  in Sentosa", range = c(0,40)))),label = "Sentosa")
-                                   
-                               ))))  
-
-
-
-```
-
-
-
-
 
 
 
