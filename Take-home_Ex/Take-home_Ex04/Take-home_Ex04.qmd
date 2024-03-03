@@ -26,7 +26,7 @@ In this exercise, we will be preparing the time-series forecasting module of the
 ## Loading R Packages
 
 ```{r}
-pacman::p_load(tidyverse, scales, viridis, ggthemes, lubridate, gridExtra, readxl, knitr, data.table, CGPfunctions, ggHoriPlot, ggplot2, forecast, MLmetrics, tsbox, xts, plotly, hrbrthemes, imputeTS)
+pacman::p_load(tidyverse, lubridate, gridExtra, readxl, knitr, data.table, ggplot2, forecast, MLmetrics, tsbox, xts, plotly, hrbrthemes, imputeTS)
 ```
 
 ## Importing Data Into R
@@ -43,7 +43,7 @@ glimpse(data)
 ```
 # Temperature Data 
 
-## Selecting the relevant columns
+## Selecting the relevant columns for Temperature Data 
 ```{r}
 
 temp <- data %>%
@@ -51,24 +51,314 @@ temp <- data %>%
 
 glimpse(temp)
 ```
-## Checking data type 
+## Creating a date column
 ```{r}
-
-temp$date <- paste(temp$year, "-", temp$month, "-", temp$day)
-glimpse(meantemp)
+temp$tdate <- paste(temp$year, "-", temp$month, "-", temp$day)
+glimpse(temp)
 ```
+
 ```{r}
 temp <- temp %>%
-  mutate(date = ymd(date))
+  mutate(tdate = ymd(tdate))
 
 glimpse(temp)
 ```
+## Checking for missing values 
+
+```{r}
+summary(temp)
+
+```
+
+```{r}
+temp <- temp %>%
+  drop_na(c(year, month, day, tdate))
+
+summary(temp)
+```
+```{r}
+unique(temp$station)
+```
+
+## Further exploration of missing temperature using plotly
+
+
+```{r}
+weatherstations <- c("Macritchie Reservoir", "Lower Peirce Reservoir",  "Admiralty","East Coast Parkway", "Ang Mo Kio","Newton", "Lim Chu Kang","Marine Parade", "Choa Chu Kang (Central)", "Tuas South" , "Pasir Panjang", "Jurong Island", "Nicoll Highway","Botanic Garden", "Choa Chu Kang (South)","Whampoa", "Changi", "Jurong Pier",  "Ulu Pandan", "Mandai", "Tai Seng", "Jurong (West)", "Clementi", "Sentosa Island", "Bukit Panjang","Kranji Reservoir", "Upper Peirce Reservoir", "Kent Ridge", "Queenstown", "Tanjong Katong", "Somerset (Road)", "Punggol", "Simei", "Toa Payoh", "Tuas", "Bukit Timah","Pasir Ris (Central)")
+
+temp_mean_wide <- temp %>%
+  filter(year > 1983 & station %in% weatherstations) %>%
+  select(tdate, station, mean_temperature) %>%
+  pivot_wider(names_from = station, values_from = mean_temperature)
+
+glimpse(temp_mean_wide)
+```
+
+
+```{r}
+plot_ly(data = temp_mean_wide, 
+        x = ~tdate, 
+        y = ~ Admiralty, 
+        type = "scatter", 
+        mode = "lines+markers") |> 
+  layout(title = "Temperature observed by Weather Station", 
+       xaxis = list(title = "Date"), 
+       yaxis = list(title = "", range = c(0,40)), 
+      theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4, subtitle_size=11, subtitle_margin=4,  
+                 axis_title_size = 8, axis_text_size=8, axis_title_face= "bold", plot_margin = margin(4, 4, 4, 4)),  
+       updatemenus = list(list(type = 'dropdown', 
+                               xref = "paper", 
+                               yref = "paper", 
+                               xanchor = "left",
+                               x = 0.04,
+                               y = 0.95, 
+                               buttons = list(
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_wide$Admiralty)), 
+                                                    list(yaxis = list(title = "Temperature in Admiralty", range = c(0,40)))),label = "Admiralty"),
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_wide$`East Coast Parkway`)), 
+                                                    list(yaxis = list(title = "Temperature in East Coast Parkway", range = c(0,40)))),label = "East Coast Parkway"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_wide$`Ang Mo Kio`)), 
+                                                    list(yaxis = list(title = "Temperature in Ang Mo Kio", range = c(0,40)))),label = "Ang Mo Kio"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_wide$Newton)), 
+                                                    list(yaxis = list(title = "Temperature in Newton", range = c(0,40)))),label = "Newton"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_wide$`Tuas South`)), 
+                                                    list(yaxis = list(title = "Temperature in Tuas South", range = c(0,40)))),label = "Tuas South"),
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_wide$`Pasir Panjang`)), 
+                                                    list(yaxis = list(title = "Temperature in Pasir Panjang", range = c(0,40)))),label = "Pasir Panjang"), 
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_wide$`Jurong Island`)), 
+                                                    list(yaxis = list(title = "Temperature in Jurong Island", range = c(0,40)))),label = "Jurong Island"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_wide$`Choa Chu Kang (South)`)), 
+                                                    list(yaxis = list(title = "Temperature in Choa Chu Kang (South)", range = c(0,40)))),label = "Choa Chu Kang (South)"), 
+                                 list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$Changi)), 
+                                                    list(yaxis = list(title = "Temperature in Changi", range = c(0,40)))),label = "Changi"),
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_wide$`Tai Seng`)), 
+                                                    list(yaxis = list(title = "Temperature in Tai Seng", range = c(0,40)))),label = "Tai Seng"),
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_wide$`Jurong (West)`)), 
+                                                    list(yaxis = list(title = "Temperature in Jurong West", range = c(0,40)))),label = "Jurong West"), 
+                                   list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$Clementi)), 
+                                                    list(yaxis = list(title = "Temperature  in Clementi", range = c(0,40)))),label = "Clementi"), 
+                                   list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Sentosa Island`)), 
+                                                    list(yaxis = list(title = "Temperature  in Sentosa", range = c(0,40)))),label = "Sentosa"), 
+                                 list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Macritchie Reservoir`)), 
+                                                    list(yaxis = list(title = "Temperature  at Macritchie Reservoir", range = c(0,40)))),label = "Macritchie Reservoir"), 
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Lower Peirce Reservoir`)), 
+                                                    list(yaxis = list(title = "Temperature  at Lower Peirce Reservoir", range = c(0,40)))),label = "Lower Peirce Reservoir"),
+                                 list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Lim Chu Kang`)), 
+                                                    list(yaxis = list(title = "Temperature at Lim Chu Kang", range = c(0,40)))),label = "Lim Chu Kang"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Marine Parade`)), 
+                                                    list(yaxis = list(title = "Temperature at Marine Parade", range = c(0,40)))),label = "Marine Parade"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Choa Chu Kang (Central)`)), 
+                                                    list(yaxis = list(title = "Temperature at Choa Chu Kang (Central)", range = c(0,40)))),label = "Choa Chu Kang (Central)"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Choa Chu Kang (Central)`)), 
+                                                    list(yaxis = list(title = "Temperature at Choa Chu Kang (Central)", range = c(0,40)))),label = "Choa Chu Kang (Central)"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Nicoll Highway`)), 
+                                                    list(yaxis = list(title = "Temperature at Nicoll Highway", range = c(0,40)))),label = "Nicoll Highway"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Botanic Garden`)), 
+                                                    list(yaxis = list(title = "Temperature at Botanic Garden", range = c(0,40)))),label = "Botanic Garden"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$Whampoa)), 
+                                                    list(yaxis = list(title = "Temperature at Whampoa", range = c(0,40)))),label = "Whampoa"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Jurong Pier`)), 
+                                                    list(yaxis = list(title = "Temperature at Jurong Pier", range = c(0,40)))),label = "Jurong Pier"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Ulu Pandan`)), 
+                                                    list(yaxis = list(title = "Temperature at Ulu Pandan", range = c(0,40)))),label = "Ulu Pandan"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$Mandai)), 
+                                                    list(yaxis = list(title = "Temperature at Mandai", range = c(0,40)))),label = "Mandai"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Bukit Panjang`)), 
+                                                    list(yaxis = list(title = "Temperature at Bukit Panjang", range = c(0,40)))),label = "Bukit Panjang"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Kranji Reservoir`)), 
+                                                    list(yaxis = list(title = "Temperature at Kranji Reservoir", range = c(0,40)))),label = "Kranji Reservoir"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Upper Peirce Reservoir`)), 
+                                                    list(yaxis = list(title = "Temperature at Upper Peirce Reservoir", range = c(0,40)))),label = "Upper Peirce Reservoir"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Kent Ridge`)), 
+                                                    list(yaxis = list(title = "Temperature at Kent Ridge", range = c(0,40)))),label = "Kent Ridge"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$Queenstown)), 
+                                                    list(yaxis = list(title = "Temperature at Queenstown", range = c(0,40)))),label = "Queenstown"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Tanjong Katong`)), 
+                                                    list(yaxis = list(title = "Temperature at Tanjong Katong", range = c(0,40)))),label = "Tanjong Katong"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Somerset (Road)`)), 
+                                                    list(yaxis = list(title = "Temperature at Somerset (Road)", range = c(0,40)))),label = "Somerset (Road)"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Punggol`)), 
+                                                    list(yaxis = list(title = "Temperature at Punggol", range = c(0,40)))),label = "Punggol"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Simen`)), 
+                                                    list(yaxis = list(title = "Temperature at Simei", range = c(0,40)))),label = "Simei"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Toa Payoh`)), 
+                                                    list(yaxis = list(title = "Temperature at Toa Payoh", range = c(0,40)))),label = "Toa Payoh"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Tuas`)), 
+                                                    list(yaxis = list(title = "Temperature at Tuas", range = c(0,40)))),label = "Tuas"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Bukit Timah`)), 
+                                                    list(yaxis = list(title = "Temperature at Bukit Timah", range = c(0,40)))),label = "Bukit Timah"),
+                                list(method = "update", 
+                                        args = list(list(y = list(temp_mean_wide$`Pasir Ris (Central)`)), 
+                                                    list(yaxis = list(title = "Temperature at Pasir Ris (Central)", range = c(0,40)))),label = "Pasir Ris (Central)")
+                               ))))  
+
+
+
+```
+
+
+Seems like there are some weather stations with no temperature data, some weather stations have temperature data for certain years, and some stations have temperature data from 1984 onwards. 
+
+Let's explore further.
+
+```{r}
+missing.values <- temp_mean_wide %>%
+  gather(key = "key", value = "val") %>%
+  mutate(isna = is.na(val)) %>%
+  group_by(key) %>%
+  mutate(total = n()) %>%
+  group_by(key, total, isna) %>%
+  summarise(num.isna = n()) %>%
+  mutate(pct = num.isna / total * 100)
+
+levels <-
+    (missing.values  %>% filter(isna == T) %>% arrange(desc(pct)))$key
+
+percentage.plot <- missing.values %>%
+      ggplot() +
+        geom_bar(aes(x = reorder(key, desc(pct)), 
+                     y = pct, fill=isna), 
+                 stat = 'identity', alpha=0.8) +
+      scale_x_discrete(limits = levels) +
+      scale_fill_manual(name = "", 
+                        values = c('steelblue', 'tomato3'), labels = c("Present", "Missing")) +
+      coord_flip() +
+      labs(title = "Percentage of missing values", x =
+             'Variable', y = "% of missing values")
+
+percentage.plot
+
+
+```
+
+Drop the cols with missing values 
 
 ```{r}
 temp_nomissing <- temp %>%
   drop_na()
 
+glimpse(temp_nomissing)
 ```
+
+```{r}
+unique(temp_nomissing$station)
+```
+
+```{r}
+
+temp_mean_widec <- temp_nomissing %>%
+  filter(year > 1983) %>%
+  select(tdate, station, mean_temperature) %>%
+  pivot_wider(names_from = station, values_from = mean_temperature)
+
+glimpse(temp_mean_wide)
+```
+```{r}
+plot_ly(data = temp_mean_widec, 
+        x = ~tdate, 
+        y = ~ Admiralty, 
+        type = "scatter", 
+        mode = "lines+markers") |> 
+  layout(title = "Temperature observed by Weather Station", 
+       xaxis = list(title = "Date"), 
+       yaxis = list(title = "", range = c(0,40)), 
+      theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4, subtitle_size=11, subtitle_margin=4,  
+                 axis_title_size = 8, axis_text_size=8, axis_title_face= "bold", plot_margin = margin(4, 4, 4, 4)),  
+       updatemenus = list(list(type = 'dropdown', 
+                               xref = "paper", 
+                               yref = "paper", 
+                               xanchor = "left",
+                               x = 0.04,
+                               y = 0.95, 
+                               buttons = list(
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$Admiralty)), 
+                                                    list(yaxis = list(title = "Temperature in Admiralty", range = c(0,40)))),label = "Admiralty"),
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`East Coast Parkway`)), 
+                                                    list(yaxis = list(title = "Temperature in East Coast Parkway", range = c(0,40)))),label = "East Coast Parkway"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Ang Mo Kio`)), 
+                                                    list(yaxis = list(title = "Temperature in Ang Mo Kio", range = c(0,40)))),label = "Ang Mo Kio"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$Newton)), 
+                                                    list(yaxis = list(title = "Temperature in Newton", range = c(0,40)))),label = "Newton"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Tuas South`)), 
+                                                    list(yaxis = list(title = "Temperature in Tuas South", range = c(0,40)))),label = "Tuas South"),
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Pasir Panjang`)), 
+                                                    list(yaxis = list(title = "Temperature in Pasir Panjang", range = c(0,40)))),label = "Pasir Panjang"), 
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Jurong Island`)), 
+                                                    list(yaxis = list(title = "Temperature in Jurong Island", range = c(0,40)))),label = "Jurong Island"), 
+                                 list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Choa Chu Kang (South)`)), 
+                                                    list(yaxis = list(title = "Temperature in Choa Chu Kang", range = c(0,40)))),label = "Choa Chu Kang"), 
+                                 list(method = "update", 
+                                        args = list(list(y = list(temp_mean_widec$Changi)), 
+                                                    list(yaxis = list(title = "Temperature in Changi", range = c(0,40)))),label = "Changi"),
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Tai Seng`)), 
+                                                    list(yaxis = list(title = "Temperature in Tai Seng", range = c(0,40)))),label = "Tai Seng"),
+                                  list(method = "update",
+                                      args = list(list(y = list(temp_mean_widec$`Jurong (West)`)), 
+                                                    list(yaxis = list(title = "Temperature in Jurong West", range = c(0,40)))),label = "Jurong West"), 
+                                   list(method = "update", 
+                                        args = list(list(y = list(temp_mean_widec$Clementi)), 
+                                                    list(yaxis = list(title = "Temperature  in Clementi", range = c(0,40)))),label = "Clementi"), 
+                                   list(method = "update", 
+                                        args = list(list(y = list(temp_mean_widec$`Sentosa Island`)), 
+                                                    list(yaxis = list(title = "Temperature  in Sentosa", range = c(0,40)))),label = "Sentosa")
+                                   
+                               ))))  
+
+
+
+```
+
+There are some missing time gaps in the data. 
+
+
+## Preparing for time series forecasting 
+
 
 
 ```{r}
