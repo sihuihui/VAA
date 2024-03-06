@@ -26,6 +26,8 @@ In this exercise, we will be learning how to create the following visualisations
 
 # Getting Started
 
+Before we start, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
+
 ## Installing and Loading the Packages
 
 For this exercise, other than tidyverse, we will use the following packages:

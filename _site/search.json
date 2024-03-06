@@ -2426,5 +2426,68 @@
       "Take-home Exercises",
       "Take-home Exercise 3: Be Weatherwise or Otherwise"
     ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "",
+    "text": "In this hands- on exercise, we will learn how to model, analyse and visualise network data using R. In particular, we will learn how to:\n\ncreate graph object data frames, manipulate them using appropriate functions of dplyr, lubridate and tidygraph,\nbuild network visualisation using appropriate functions of ggraph,\ncompute network geometrics using tidygraph,\nbuild advanced graph visualisation by incorporating the network geometrics, and\nbuild interactive network visualisation using visNetwork package."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#installing-and-loading-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#installing-and-loading-r-packages",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "2.1 Installing and Loading R Packages",
+    "text": "2.1 Installing and Loading R Packages\nFor this exercise, other than tidyverse and lubridate, we will use the following packages:\n\nigraph:Routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more.\ntidygraph:provides a tidy API for graph/network manipulation.\nggraph:an extension of ggplot2 aimed at supporting relational data structures such as networks, graphs, and trees.\nvisNetwork:for network visualization, using vis.js javascript library\n\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\npacman::p_load(tidyverse, lubridate, igraph, tidygraph, ggraph, visNetwork)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#importing-data-into-r",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#importing-data-into-r",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "2.2 Importing Data into R",
+    "text": "2.2 Importing Data into R\nThe data sets used in this hands-on exercise are from an oil exploration and extraction company. There are two data sets: one data set contains the nodes data and the other contains the edges (also know as link) data. We will import them using read_csv() of readr package.\n\nnodeedge\n\n\n\nnode &lt;- read_csv(\"data/GAStech_email_node.csv\")\nhead(node)\n\n# A tibble: 6 × 4\n     id label               Department     Title                                \n  &lt;dbl&gt; &lt;chr&gt;               &lt;chr&gt;          &lt;chr&gt;                                \n1     1 Mat.Bramar          Administration Assistant to CEO                     \n2     2 Anda.Ribera         Administration Assistant to CFO                     \n3     3 Rachel.Pantanal     Administration Assistant to CIO                     \n4     4 Linda.Lagos         Administration Assistant to COO                     \n5     5 Ruscella.Mies.Haber Administration Assistant to Engineering Group Manag…\n6     6 Carla.Forluniau     Administration Assistant to IT Group Manager        \n\n\nGAStech_email_nodes.csv consist of the name, department and title of the employees.\n\n\n\nedge &lt;- read_csv(\"data/GAStech_email_edge-v2.csv\")\nhead(edge)\n\n# A tibble: 6 × 8\n  source target SentDate SentTime Subject    MainSubject sourceLabel targetLabel\n   &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;    &lt;time&gt;   &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;      \n1     43     41 6/1/2014 08:39    GT-Seismi… Work relat… Sven.Flecha Isak.Baza  \n2     43     40 6/1/2014 08:39    GT-Seismi… Work relat… Sven.Flecha Lucas.Alca…\n3     44     51 6/1/2014 08:58    Inspectio… Work relat… Kanon.Herr… Felix.Resu…\n4     44     52 6/1/2014 08:58    Inspectio… Work relat… Kanon.Herr… Hideki.Coc…\n5     44     53 6/1/2014 08:58    Inspectio… Work relat… Kanon.Herr… Inga.Ferro \n6     44     45 6/1/2014 08:58    Inspectio… Work relat… Kanon.Herr… Varja.Lagos\n\n\nGAStech-email_edges.csv consists of emails correspondances between the employees."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#data-checks",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#data-checks",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "2.3 Data Checks",
+    "text": "2.3 Data Checks\nWe will now examine the structure of the data frame using glimpse() of dplyr.\n\nnodeedge\n\n\n\nglimpse(node)\n\nRows: 54\nColumns: 4\n$ id         &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 44, 45, 46, 8, 9, 10, 11, 12, 13, 14, …\n$ label      &lt;chr&gt; \"Mat.Bramar\", \"Anda.Ribera\", \"Rachel.Pantanal\", \"Linda.Lago…\n$ Department &lt;chr&gt; \"Administration\", \"Administration\", \"Administration\", \"Admi…\n$ Title      &lt;chr&gt; \"Assistant to CEO\", \"Assistant to CFO\", \"Assistant to CIO\",…\n\n\n\n\n\nglimpse(edge)\n\nRows: 9,063\nColumns: 8\n$ source      &lt;dbl&gt; 43, 43, 44, 44, 44, 44, 44, 44, 44, 44, 44, 44, 26, 26, 26…\n$ target      &lt;dbl&gt; 41, 40, 51, 52, 53, 45, 44, 46, 48, 49, 47, 54, 27, 28, 29…\n$ SentDate    &lt;chr&gt; \"6/1/2014\", \"6/1/2014\", \"6/1/2014\", \"6/1/2014\", \"6/1/2014\"…\n$ SentTime    &lt;time&gt; 08:39:00, 08:39:00, 08:58:00, 08:58:00, 08:58:00, 08:58:0…\n$ Subject     &lt;chr&gt; \"GT-SeismicProcessorPro Bug Report\", \"GT-SeismicProcessorP…\n$ MainSubject &lt;chr&gt; \"Work related\", \"Work related\", \"Work related\", \"Work rela…\n$ sourceLabel &lt;chr&gt; \"Sven.Flecha\", \"Sven.Flecha\", \"Kanon.Herrero\", \"Kanon.Herr…\n$ targetLabel &lt;chr&gt; \"Isak.Baza\", \"Lucas.Alcazar\", \"Felix.Resumir\", \"Hideki.Coc…\n\n\n\n\n\n:::{.callout-note} ## Observations from the abouve"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#tbl_graph-object",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#tbl_graph-object",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "4.1 tbl_graph object",
+    "text": "4.1 tbl_graph object\nGraphs and networks can come from many sources, or be created by simulation or deterministacally. Tidygraph provides conversions from all well-known structures in R, as well as a range of create_() and play_*() functions for creating well-defined or simulated graphs.\nWe can make use of tbl_graph() and as_tbl_graph() to create network objects.\n\ntbl_graph() creates a tbl_graph network object from nodes and edges data.\nas_tbl_graph() converts network data and objects to a tbl_graph network. Below are network data and objects supported by as_tbl_graph()\na node data.frame and an edge data.frame,\ndata.frame, list, matrix from base,\nigraph from igraph,\nnetwork from network,\ndendrogram and hclust from stats,\nNode from data.tree,\nphylo and evonet from ape, and\ngraphNEL, graphAM, graphBAM from graph (in Bioconductor)."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#dplyr-verbs-in-tidygraph",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#dplyr-verbs-in-tidygraph",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "4.2 dplyr verbs in tidygraph",
+    "text": "4.2 dplyr verbs in tidygraph\n\nactivate() verb from tidygraph serves as a switch between tibbles for nodes and edges. All dplyr verbs applied to tbl_graph object are applied to the active tibble.\n.N() function is used to gain access to the node data while manipulating the edge data.\n.E() function is used to gain access to the edge data.\n.G() function is used to give us the tbl_graph object itself."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#building-tidygraph-data-model",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#building-tidygraph-data-model",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "4.3 Building tidygraph data model",
+    "text": "4.3 Building tidygraph data model\nIn this section, we will use tbl_graph() of tinygraph package to build an tidygraph’s network graph data.frame.\n\ngraph &lt;- tbl_graph(nodes = node,\n                   edges = edge_aggregated,\n                   directed = TRUE)\n\ngraph \n\n# A tbl_graph: 54 nodes and 1456 edges\n#\n# A directed multigraph with 1 component\n#\n# Node Data: 54 × 4 (active)\n      id label               Department     Title                               \n   &lt;dbl&gt; &lt;chr&gt;               &lt;chr&gt;          &lt;chr&gt;                               \n 1     1 Mat.Bramar          Administration Assistant to CEO                    \n 2     2 Anda.Ribera         Administration Assistant to CFO                    \n 3     3 Rachel.Pantanal     Administration Assistant to CIO                    \n 4     4 Linda.Lagos         Administration Assistant to COO                    \n 5     5 Ruscella.Mies.Haber Administration Assistant to Engineering Group Mana…\n 6     6 Carla.Forluniau     Administration Assistant to IT Group Manager       \n 7     7 Cornelia.Lais       Administration Assistant to Security Group Manager \n 8    44 Kanon.Herrero       Security       Badging Office                      \n 9    45 Varja.Lagos         Security       Badging Office                      \n10    46 Stenig.Fusil        Security       Building Control                    \n# ℹ 44 more rows\n#\n# Edge Data: 1,456 × 4\n   from    to Weekday   Weight\n  &lt;int&gt; &lt;int&gt; &lt;ord&gt;      &lt;int&gt;\n1     1     2 Monday         4\n2     1     2 Tuesday        3\n3     1     2 Wednesday      5\n# ℹ 1,453 more rows\n\n\n\n\n\n\n\n\nObservations\n\n\n\n\nThe output above reveals that GAStech_graph is a tbl_graph object with 54 nodes and 4541 edges.\nThe command also prints the first six rows of “Node Data” and the first three of “Edge Data”.\nIt states that the Node Data is active. The notion of an active tibble within a tbl_graph object makes it possible to manipulate the data in one tibble at a time."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#changing-the-active-object",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#changing-the-active-object",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "4.4 Changing the active object",
+    "text": "4.4 Changing the active object\nThe nodes tibble data frame is activated by default, but you can change which tibble data frame is active with the activate() function. Thus, if we wanted to rearrange the rows in the edges tibble to list those with the highest “weight” first, we could use activate() and then arrange().\n\ngraph %&gt;% \n  activate(edges) %&gt;%\n  arrange(desc(Weight))\n\n# A tbl_graph: 54 nodes and 1456 edges\n#\n# A directed multigraph with 1 component\n#\n# Edge Data: 1,456 × 4 (active)\n    from    to Weekday   Weight\n   &lt;int&gt; &lt;int&gt; &lt;ord&gt;      &lt;int&gt;\n 1    40    41 Tuesday       23\n 2    40    43 Tuesday       19\n 3    41    43 Tuesday       15\n 4    41    40 Tuesday       14\n 5    42    41 Tuesday       13\n 6    42    40 Tuesday       12\n 7    42    43 Tuesday       11\n 8    43    42 Wednesday     11\n 9    36    32 Wednesday      9\n10    40    41 Monday         9\n# ℹ 1,446 more rows\n#\n# Node Data: 54 × 4\n     id label           Department     Title           \n  &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;          &lt;chr&gt;           \n1     1 Mat.Bramar      Administration Assistant to CEO\n2     2 Anda.Ribera     Administration Assistant to CFO\n3     3 Rachel.Pantanal Administration Assistant to CIO\n# ℹ 51 more rows"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#plotting-a-basic-network-graph",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#plotting-a-basic-network-graph",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "5.1 Plotting a basic network graph",
+    "text": "5.1 Plotting a basic network graph\nThe code chunk below uses ggraph(), geom-edge_link() and geom_node_point() to plot a network graph by using graph which is the tbl_graph object that we created in previous section.\n\nggraph(graph) +\n  geom_edge_link() +\n  geom_node_point()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\n\nThe basic plotting function is ggraph(), which takes the data to be used for the graph and the type of layout desired.\nBoth of the arguments for ggraph() are built around igraph. Therefore, ggraph() can use either an igraph object or a tbl_graph object."
   }
 ]

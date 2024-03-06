@@ -9,12 +9,206 @@ execute:
   warning: false
   message: false
 ---
-# About this Exercise 
+
+# About this Exercise
+
+In this hands- on exercise, we will learn how to model, analyse and visualise network data using R. In particular, we will learn how to:
+
+-   create graph object data frames, manipulate them using appropriate functions of **dplyr**, **lubridate** and **tidygraph,**
+-   build network visualisation using appropriate functions of **ggraph,**
+-   compute network geometrics using **tidygraph**,
+-   build advanced graph visualisation by incorporating the network geometrics, and
+-   build interactive network visualisation using **visNetwork** package.
+
+# Getting Started
+
+Before we start, let us ensure that the required R packages have been installed and import the relevant data for this hands-on exercise.
+
+## Installing and Loading R Packages
+
+For this exercise, other than tidyverse and lubridate, we will use the following packages:
+
+-   [igraph](https://r.igraph.org/):Routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more.
+
+-   [tidygraph](https://tidygraph.data-imaginist.com/):provides a tidy API for graph/network manipulation. 
+
+-   [ggraph](https://ggraph.data-imaginist.com/):an extension of ggplot2 aimed at supporting relational data structures such as networks, graphs, and trees.
+
+-   [visNetwork](https://datastorm-open.github.io/visNetwork/):for network visualization, using vis.js javascript library
+
+The code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.
+
+```{r}
+
+pacman::p_load(tidyverse, lubridate, igraph, tidygraph, ggraph, visNetwork)
+```
+
+## Importing Data into R
+The data sets used in this hands-on exercise are from an oil exploration and extraction company. There are two data sets: one data set contains the nodes data and the other contains the edges (also know as link) data. We will import them using `read_csv()` of **readr** package. 
+
+:::{.panel-tabset}
+## node 
+```{r}
+node <- read_csv("data/GAStech_email_node.csv")
+head(node)
+
+```
+GAStech_email_nodes.csv consist of the name, department and title of the employees.
+
+## edge 
+```{r}
+edge <- read_csv("data/GAStech_email_edge-v2.csv")
+head(edge)
+
+```
+GAStech-email_edges.csv consists of emails correspondances between the employees.
+:::
 
 
-# Getting Started 
+# Data Checks 
+We will now examine the structure of the data frame using `glimpse()` of **dplyr**. 
 
-## Installing and Loading R Packages 
+:::{.panel-tabset}
+## node 
+```{r}
+glimpse(node)
 
-## Importing Data into R 
+```
+
+## edge 
+```{r}
+glimpse(edge)
+
+```
+:::
+
+:::{.callout-note}
+## Observations
+-   From the node table, we see that each employee is given an `id`, which is then used as the `source` and `target` for the edge table. 
+
+-   the edge table's `SentDate` consists of date but it is treated as characters. We should change it to date data type. 
+
+:::
+
+```{r}
+edge <- edge %>%
+  mutate(SentDate = dmy(SentDate)) %>%
+  mutate(Weekday = wday(SentDate,
+                        label = TRUE,
+                        abbr = FALSE))
+
+glimpse(edge)
+```
+
+:::{.callout-note}
+## Observations
+-   `SentDate` is now a Date data type after we use `dmy()` to transform the `SentDate`.
+
+-   A new column `Weekday` has been created using `wday()`, which returns the day of the week as a decimal number or an ordered factor if label is TRUE. The argument abbr is FALSE keep the daya spells in full, i.e. Monday. 
+
+:::
+
+A close examination of edge data frame reveals that it consists of individual e-mail flow records. This is not very useful for visualisation.Hence, we will aggregate the individual by date, senders, receivers, main subject and day of the week. 
+
+```{r}
+edge_aggregated <- edge %>%
+  filter(MainSubject == "Work related") %>%
+  group_by(source, target, Weekday) %>%
+  summarise(Weight = n()) %>%
+  filter(source != target) %>%
+  filter(Weight > 1) %>%
+  ungroup()
+
+glimpse(edge_aggregated)
+```
+
+:::{.callout-note}
+## Observations
+-   We filtered those "Work related" emails using `MainSubject`. Then perform group_by using the source, target and Weekday. Then we create a new field `Weight` by counting the number of emails resulting from the group_by. We also remove those emails where the source and target are the same employees and those weights that are less than 1 to get the resultant table `edge_aggregated`. 
+:::
+
+
+# Creating network objects using tidygraph 
+
+In this section, we will learn how to create a graph data model by using tidygraph package. It provides a tidy API for graph/network manipulation. While network data itself is not tidy, it can be envisioned as two tidy tables, one for node data and one for edge data. tidygraph provides a way to switch between the two tables and provides dplyr verbs for manipulating them. Furthermore it provides access to a lot of graph algorithms with return values that facilitate their use in a tidy workflow.
+
+## tbl_graph object 
+Graphs and networks can come from many sources, or be created by simulation or deterministacally. Tidygraph provides conversions from all well-known structures in R, as well as a range of create_() and play_*() functions for creating well-defined or simulated graphs.
+
+We can make use of `tbl_graph()` and `as_tbl_graph()` to create network objects. 
+
+-   `tbl_graph()` creates a tbl_graph network object from nodes and edges data. 
+-   `as_tbl_graph()` converts network data and objects to a tbl_graph network. Below are network data and objects supported by `as_tbl_graph()`
+
+  -   a node data.frame and an edge data.frame,
+  -   data.frame, list, matrix from base,
+  -   igraph from igraph,
+  -   network from network,
+  -   dendrogram and hclust from stats,
+  -   Node from data.tree,
+  -   phylo and evonet from ape, and
+  -   graphNEL, graphAM, graphBAM from graph (in Bioconductor).
+
+## dplyr verbs in tidygraph
+-   `activate()` verb from tidygraph serves as a switch between tibbles for nodes and edges. All dplyr verbs applied to tbl_graph object are applied to the active tibble.
+-   `.N()` function is used to gain access to the node data while manipulating the edge data.
+-   `.E()` function is used to gain access to the edge data. 
+-   `.G()` function is used to give us the tbl_graph object itself. 
+
+## Building tidygraph data model 
+In this section, we will use `tbl_graph()` of tinygraph package to build an tidygraph’s network graph data.frame.
+
+```{r}
+
+graph <- tbl_graph(nodes = node,
+                   edges = edge_aggregated,
+                   directed = TRUE)
+
+graph 
+```
+
+:::{.callout-note}
+## Observations
+-   The output above reveals that GAStech_graph is a tbl_graph object with 54 nodes and 4541 edges.
+-   The command also prints the first six rows of “Node Data” and the first three of “Edge Data”.
+-   It states that the Node Data is active. The notion of an active tibble within a tbl_graph object makes it possible to manipulate the data in one tibble at a time.
+
+:::
+
+## Changing the active object 
+The nodes tibble data frame is activated by default, but you can change which tibble data frame is active with the activate() function. Thus, if we wanted to rearrange the rows in the edges tibble to list those with the highest “weight” first, we could use activate() and then arrange().
+
+
+```{r}
+graph %>% 
+  activate(edges) %>%
+  arrange(desc(Weight))
+
+```
+
+# Plotting Static Network Graphs using ggraph 
+
+ggraph is an extension of ggplot2, making it easier to carry over basic ggplot skills to the design of network graphs.
+
+As in all network graph, there are three main aspects to a ggraph’s network graph, they are:
+
+-   The Layout defines how nodes are placed on the plot, that is, it is a conversion of the relational structure into an x and y value for each node in the graph. ggraph has access to all layout functions available in igraph and furthermore provides a large selection of its own, such as hive plots, treemaps, and circle packing.
+-   The Nodes are the connected entities in the relational structure. These can be plotted using the geom_node_*() family of geoms. Some node geoms make more sense for certain layouts, e.g. geom_node_tile() for treemaps and icicle plots, while others are more general purpose, e.g. geom_node_point().
+-   The Edges are the connections between the entities in the relational structure. These can be visualized using the geom_edge_*() family of geoms that contain a lot of different edge types for different scenarios. Sometimes the edges are implied by the layout (e.g. with treemaps) and need not be plotted, but often some sort of line is warranted.
+
+
+## Plotting a basic network graph
+The code chunk below uses `ggraph()`, `geom-edge_link()` and `geom_node_point()` to plot a network graph by using `graph` which is the tbl_graph object that we created in previous section. 
+```{r}
+ggraph(graph) +
+  geom_edge_link() +
+  geom_node_point()
+
+```
+
+:::{.callout-note}
+-   The basic plotting function is `ggraph()`, which takes the data to be used for the graph and the type of layout desired. 
+-   Both of the arguments for `ggraph()` are built around igraph. Therefore, `ggraph()` can use either an igraph object or a tbl_graph object.
+
+:::
 
