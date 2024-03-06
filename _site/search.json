@@ -2489,5 +2489,103 @@
     "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
     "section": "5.1 Plotting a basic network graph",
     "text": "5.1 Plotting a basic network graph\nThe code chunk below uses ggraph(), geom-edge_link() and geom_node_point() to plot a network graph by using graph which is the tbl_graph object that we created in previous section.\n\nggraph(graph) +\n  geom_edge_link() +\n  geom_node_point()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\n\nThe basic plotting function is ggraph(), which takes the data to be used for the graph and the type of layout desired.\nBoth of the arguments for ggraph() are built around igraph. Therefore, ggraph() can use either an igraph object or a tbl_graph object."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#customising-ggraphs-network-graphs",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#customising-ggraphs-network-graphs",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "5.2 Customising ggraph’s network graphs",
+    "text": "5.2 Customising ggraph’s network graphs\nWe can use ggraph’s theme_graph() to further customise our network graph. This theme_graph() is tuned for graph visualisations because the coordinate values are often of no importance and axes are thus a distraction. Hence, ggraph has theme_graph(), a built-in theme to remove redundant elements. Furthermore the default behaviour is to use a narrow font so text takes up less space. Theme colour is defined by a background and foreground colour where the background defines the colour of the whole graphics area and the foreground defines the colour of the strip and border. By default strip and border is turned off as it is an unnecessary element unless facetting is used. To add a foreground colour to a plot that is already using theme_graph the th_foreground helper is provided. In order to use this appearance as default use the set_graph_style function. An added benefit of this is that it also changes the default text-related values in the different geoms for a completely coherent look. unset_graph_style can be used to revert the defaults back to their default settings (that is, they are not necessarily reverted back to what they were prior to calling set_graph_style). The th_no_axes() helper is provided to modify an existing theme so that grid and axes are removed.\n\n#create the graph\ng &lt;- ggraph(graph) +\n  geom_edge_link(aes()) +\n  geom_node_point(aes())\n\n#adding the theme\ng + theme_graph()\n\n\n\n\n\n\n\n\n\n5.2.1 Changing the plot colour\ntheme_graph() makes it easy to change the coloring of the plot.\n\ng &lt;- ggraph(graph) + \n  geom_edge_link(aes(colour = 'grey50')) +\n  geom_node_point(aes(colour = 'grey40'))\n\ng + theme_graph(background = 'grey10',\n                text_colour = 'white')"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-ggraphs-layouts",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-ggraphs-layouts",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "5.3 Working with ggraph’s layouts",
+    "text": "5.3 Working with ggraph’s layouts\nggraph support many layout for standard used, they are: star, circle, nicely (default), dh, gem, graphopt, grid, mds, spahere, randomly, fr, kk, drl and lgl. Figures below and on the right show layouts supported by ggraph().\n\nFruchterman and Reingold layoutstar layouteigen layout\n\n\n\ng &lt;- ggraph(graph, \n            layout = \"fr\") +\n  geom_edge_link(aes()) +\n  geom_node_point(aes())\n\ng + theme_graph()\n\n\n\n\n\n\n\n\n\n\n\ng &lt;- ggraph(graph, \n            layout = \"star\") +\n  geom_edge_link(aes()) +\n  geom_node_point(aes())\n\ng + theme_graph()\n\n\n\n\n\n\n\n\n\n\n\ng &lt;- ggraph(graph, \n            layout = \"eigen\") +\n  geom_edge_link(aes()) +\n  geom_node_point(aes())\n\ng + theme_graph()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#modifying-network-nodes",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#modifying-network-nodes",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "5.4 Modifying network nodes",
+    "text": "5.4 Modifying network nodes\nWe can also define the colour each node by referring to their respective departments.\n\ng &lt;- ggraph(graph, \n            layout = \"nicely\") + \n  geom_edge_link(aes()) +\n  geom_node_point(aes(colour = Department, \n                      size = 3))\n\ng + theme_graph()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nObservations\n\n\n\n\ngeom_node_point is equivalent in functionality to geo_point of ggplot2. It allows for simple plotting of nodes in different shapes, colours and sizes. In the codes chnuks above colour and size are used."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#modifying-edges",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#modifying-edges",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "5.5 Modifying Edges",
+    "text": "5.5 Modifying Edges\nWe can also modify the edges such that the thickness of the edges will be mapped with the Weight variable.\n\ng &lt;- ggraph(graph, \n            layout = \"nicely\") +\n  geom_edge_link(aes(width=Weight), \n                 alpha=0.2) +\n  scale_edge_width(range = c(0.1, 5)) +\n  geom_node_point(aes(colour = Department), \n                  size = 3)\n\ng + theme_graph()\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\ngeom_edge_link draws edges in the simplest way - as straight lines between the start and end nodes. But, it can do more that that. In the example above, argument width is used to map the width of the line in proportional to the Weight attribute and argument alpha is used to introduce opacity on the line."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#creating-facet-graphs",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#creating-facet-graphs",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "5.6 Creating Facet Graphs",
+    "text": "5.6 Creating Facet Graphs\n\n5.6.1 facet_edges()\n\n\n5.6.2 facet_nodes()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#computing-centrality-indices",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#computing-centrality-indices",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "6.1 Computing Centrality Indices",
+    "text": "6.1 Computing Centrality Indices"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#visualising-centrality-indices",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#visualising-centrality-indices",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "6.2 Visualising Centrality Indices",
+    "text": "6.2 Visualising Centrality Indices"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#visualising-community",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#visualising-community",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "6.3 Visualising Community",
+    "text": "6.3 Visualising Community"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#data-preparation",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#data-preparation",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "7.1 Data Preparation",
+    "text": "7.1 Data Preparation"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#plotting-the-first-interactive-network-graph",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#plotting-the-first-interactive-network-graph",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "7.2 Plotting the first interactive network graph",
+    "text": "7.2 Plotting the first interactive network graph"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-layout",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-layout",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "7.3 Working with layout",
+    "text": "7.3 Working with layout"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-visual-attributes---notes",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-visual-attributes---notes",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "7.4 Working with visual attributes - Notes",
+    "text": "7.4 Working with visual attributes - Notes"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-visual-attributes---edges",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-visual-attributes---edges",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "7.5 Working with visual attributes - Edges",
+    "text": "7.5 Working with visual attributes - Edges"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#interactivity",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#interactivity",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "7.6 Interactivity",
+    "text": "7.6 Interactivity"
   }
 ]
