@@ -2523,7 +2523,7 @@
     "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#creating-facet-graphs",
     "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
     "section": "5.6 Creating Facet Graphs",
-    "text": "5.6 Creating Facet Graphs\n\n5.6.1 facet_edges()\n\n\n5.6.2 facet_nodes()"
+    "text": "5.6 Creating Facet Graphs\nAnother very useful feature of ggraph is faceting. In visualising network data, this technique can be used to reduce edge over-plotting in a very meaning way by spreading nodes and edges out based on their attributes.\nThere are three functions in ggraph to implement faceting, they are:\n\nfacet_nodes() whereby edges are only draw in a panel if both terminal nodes are present here,\nfacet_edges() whereby nodes are always drawn in a panels even if the node data contains an attribute named the same as the one used for the edge facetting, and\nfacet_graph() faceting on two variables simultaneously.\n\n\n5.6.1 facet_edges()\nThis function creates small multiples based on edge attributes. It is equivalent to ggplot::facet_wrap() but only facet edges. Nodes are repeated in every panel.\n\nset_graph_style()\n\ng &lt;- ggraph(graph, layout = \"nicely\") +\n  geom_edge_link(aes(width=Weight),\n                 alpha = 0.2) +\n  scale_edge_width(range = c(0.1, 5)) + \n  geom_node_point(aes(color = Department),\n                  size = 2)\n\ng + facet_edges(~Weekday)\n\n\n\n\n\n\n\n\nCurrently the legend is on the right side. We can use theme() to change the position of the legend.\n\nset_graph_style()\n\ng &lt;- ggraph(graph, layout = \"nicely\") +\n  geom_edge_link(aes(width=Weight),\n                 alpha = 0.2) +\n  scale_edge_width(range = c(0.1, 5)) + \n  geom_node_point(aes(color = Department),\n                  size = 2) +\n  theme(legend.position = \"bottom\")\n\ng + facet_edges(~Weekday)\n\n\n\n\n\n\n\n\nWe can also add frame to each facet graph using th_foreground().\n\nset_graph_style()\n\ng &lt;- ggraph(graph, layout = \"nicely\") +\n  geom_edge_link(aes(width=Weight),\n                 alpha = 0.2) +\n  scale_edge_width(range = c(0.1, 5)) + \n  geom_node_point(aes(color = Department),\n                  size = 2) +\n  theme(legend.position = \"bottom\")\n\ng + facet_edges(~Weekday) +\n  th_foreground(foreground = \"skyblue\",\n                border = TRUE)\n\n\n\n\n\n\n\n\n\n\n5.6.2 facet_nodes()\nfacet_nodes() creates small multiples based on node attributes. This function is equivalent to ggplot2::facet_wrap() but only facets nodes. Edges are drawn if their terminal nodes are both present in a panel.\n\nset_graph_style()\n\ng &lt;- ggraph(graph, layout = \"nicely\") +\n  geom_edge_link(aes(width=Weight),\n                 alpha = 0.2) +\n  scale_edge_width(range = c(0.1, 5)) + \n  geom_node_point(aes(color = Department),\n                  size = 2) \n\ng + facet_nodes(~Department) +\n  th_foreground(foreground = \"skyblue\",\n                border = TRUE) +\n  theme(legend.position = 'bottom')"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#computing-centrality-indices",
@@ -2543,49 +2543,56 @@
     "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#visualising-community",
     "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#visualising-community",
     "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
-    "section": "6.3 Visualising Community",
-    "text": "6.3 Visualising Community"
+    "section": "6.2 Visualising Community",
+    "text": "6.2 Visualising Community\ntidygraph package inherits many of the community detection algorithms imbedded into igraph and makes them available to us, including Edge-betweenness (group_edge_betweenness), Leading eigenvector (group_leading_eigen), Fast-greedy (group_fast_greedy), Louvain (group_louvain), Walktrap (group_walktrap), Label propagation (group_label_prop), InfoMAP (group_infomap), Spinglass (group_spinglass), and Optimal (group_optimal). Some community algorithms are designed to take into account direction or weight, while others ignore it. Use this link to find out more about community detection functions provided by tidygraph.\nIn the code chunk below group_edge_betweenness() is used.\n\ng &lt;- graph %&gt;%\n  mutate(community = as.factor(group_edge_betweenness(weights = Weight, directed = TRUE))) %&gt;%\n  ggraph(layout = \"fr\") +\n  geom_edge_link(aes(width = Weight),\n                 alpha = 0.2) +\n  scale_edge_width(range = c(0.1, 5)) + \n  geom_node_point(aes(color = community))\n\n  g + theme_graph()"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#data-preparation",
     "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#data-preparation",
     "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
     "section": "7.1 Data Preparation",
-    "text": "7.1 Data Preparation"
+    "text": "7.1 Data Preparation\nBefore we can plot the interactive graph, let us prepare the data using the following code chunk so that it has the required columns.\n\nedge_aggregated2 &lt;- edge %&gt;%\n  left_join(node, by = c(\"sourceLabel\" = \"label\")) %&gt;%\n  rename(from = id) %&gt;%\n  left_join(node, by = c(\"targetLabel\" = \"label\")) %&gt;%\n  rename(to = id) %&gt;%\n  filter(MainSubject == \"Work related\") %&gt;%\n  group_by(from, to) %&gt;%\n  summarise(weight = n()) %&gt;%\n  filter(from != to) %&gt;%\n  filter(weight &gt;1) %&gt;%\n  ungroup()\n\nhead(edge_aggregated2)\n\n# A tibble: 6 × 3\n   from    to weight\n  &lt;dbl&gt; &lt;dbl&gt;  &lt;int&gt;\n1     1     2     21\n2     1     3     21\n3     1     4     21\n4     1     5     21\n5     1     6     21\n6     1     7     21\n\n\n\n\n\n\n\n\nAbout the above code chunk\n\n\n\n\nPerform left join between edge dataframe and node dataframe using the sourceLabel and label columns from the respective dataframe. By doing so, the resulting dataframe have additional information (i.e. id, group and title) about the source employee.\nrename id to from so that we can use this from column later.\nPerform left join between edge dataframe and node dataframe using the targetLabel and label columns from the respective dataframe. By doing so, the resulting dataframe have additional information (i.e. id, group and title) about the target employee.\nrename id to to so that we can use this to column later.\nfilter the rows where the MainSubject is related to work\nThen perform group_by using from and to.\nThen we create a new field Weight by counting the number of emails resulting from the group_by.\nWe also remove those emails where the source and target are the same employees and those weights that are less than 1 to get the resultant table edge_aggregated2."
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#plotting-the-first-interactive-network-graph",
     "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#plotting-the-first-interactive-network-graph",
     "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
     "section": "7.2 Plotting the first interactive network graph",
-    "text": "7.2 Plotting the first interactive network graph"
+    "text": "7.2 Plotting the first interactive network graph\nLet us plot an interactive network graph using the data prepared.\n\nvisNetwork(node, \n           edge_aggregated2)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-layout",
     "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-layout",
     "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
     "section": "7.3 Working with layout",
-    "text": "7.3 Working with layout"
+    "text": "7.3 Working with layout\nWe can change the layout of the network graph by specifying the type of layout we want using the function visIgraphLayout()\n\nvisNetwork(node, \n           edge_aggregated2) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\")"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-visual-attributes---notes",
     "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-visual-attributes---notes",
     "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
     "section": "7.4 Working with visual attributes - Notes",
-    "text": "7.4 Working with visual attributes - Notes"
+    "text": "7.4 Working with visual attributes - Notes\nvisNetwork() looks for a field called “group” in the nodes object and colour the nodes according to the values of the group field.\nThe code chunk below rename Department field to group.\n\nnode &lt;- node %&gt;%\n  rename(group = Department)\n\nWhen we rerun the code chunk below, visNetwork shades the nodes by assigning unique colour to each category in the group field.\n\nvisNetwork(node, \n           edge_aggregated2) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\") %&gt;%\n  visLegend() %&gt;%\n  visLayout(randomSeed = 2024)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-visual-attributes---edges",
     "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#working-with-visual-attributes---edges",
     "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
     "section": "7.5 Working with visual attributes - Edges",
-    "text": "7.5 Working with visual attributes - Edges"
+    "text": "7.5 Working with visual attributes - Edges\nIn the code run below visEdges() is used to symbolise the edges. - The argument arrows is used to define where to place the arrow. - The smooth argument is used to plot the edges using a smooth curve.\n\nvisNetwork(node, \n           edge_aggregated2) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\") %&gt;%\n  visEdges(arrows = \"to\",\n           smooth = list(enables = TRUE,  \n                         type = \"curvedCW\")) %&gt;%\n  visLegend() %&gt;%\n  visLayout(randomSeed = 2024)"
   },
   {
     "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#interactivity",
     "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#interactivity",
     "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
     "section": "7.6 Interactivity",
-    "text": "7.6 Interactivity"
+    "text": "7.6 Interactivity\nIn the code chunk below, visOptions() is used to incorporate interactivity features in the data visualisation.\n\n\n\n\n\n\nAbout the code chunk\n\n\n\nThe argument highlightNearest highlights nearest when clicking a node. The argument nodesIdSelection adds an id node selection creating an HTML select element.\n\n\n\nvisNetwork(node, \n           edge_aggregated2) %&gt;%\n  visIgraphLayout(layout = \"layout_with_fr\") %&gt;%\n  visOptions(highlightNearest = TRUE,\n             nodesIdSelection = TRUE) %&gt;%\n  visLegend() %&gt;%\n  visLayout(randomSeed = 2024)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#computing-and-visualising-centrality-indices",
+    "href": "Hands-on_Ex/Hands-on_Ex08/Hands-on_Ex08.html#computing-and-visualising-centrality-indices",
+    "title": "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R",
+    "section": "6.1 Computing and Visualising Centrality Indices",
+    "text": "6.1 Computing and Visualising Centrality Indices\nIt is important to note that from ggraph v2.0 onward tidygraph algorithms such as centrality measures can be accessed directly in ggraph calls. This means that it is no longer necessary to precompute and store derived node and edge centrality measures on the graph in order to use them in a plot.\nThe code chunks below show how to compute and visualise graphs based on centrality indices before ggraph v2.0 and after ggraph v2.0.\n\nManual Computation (before ggraph v2.0)No Computation (ggraph v2.0 onwards)\n\n\n\ng &lt;- graph %&gt;%\n  mutate(betweenness_centrality = centrality_betweenness()) %&gt;%\n  ggraph(layout = \"fr\") +\n  geom_edge_link(aes(width=Weight),\n                 alpha = 0.2) +\n  scale_edge_width(range = c(0.1, 5)) + \n  geom_node_point(aes(color = Department,\n                  size = betweenness_centrality)) \n\ng + theme_graph() +\n  labs(title = 'The email relationship between employees based on betweenness centrality')\n\n\n\n\n\n\n\n\n\nmutate() of dplyr is used to perform the computation.\nthe algorithm used, on the other hand, is the centrality_betweenness() of tidygraph.\n\n\n\n\ng &lt;- graph %&gt;%\n  ggraph(layout = \"fr\") +\n  geom_edge_link(aes(width=Weight),\n                 alpha = 0.2) +\n  scale_edge_width(range = c(0.1, 5)) + \n  geom_node_point(aes(color = Department,\n                  size = centrality_betweenness()))\n\ng + theme_graph() +\n   labs(title = 'The email relationship between employees based on betweenness centrality')"
   }
 ]
