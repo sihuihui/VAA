@@ -1,0 +1,129 @@
+---
+title: "In-class Exercise 3"
+author: "Goh Si Hui"
+date: 2024/03/09
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  freeze: true
+  warning: false
+  message: false
+---
+
+# About this Exercise 
+In this exercise we will learn how to create an isomap using R. 
+
+# Getting Started 
+
+## Installing the Relevant Packages
+For this exercise, other than tidyverse, we will be using the following packages:
+
+-   sf: allow us to data import and manipulate geospatial data 
+
+-   terra: allow us to handle raster data 
+
+-   gstat: to do spatial interprolation 
+
+-   tmap: 
+
+-   viridis: colour library 
+
+
+```{r}
+
+pacman::p_load(sf,terra, gstat, tmap, viridis, tidyverse)
+
+```
+## Importing the Data 
+
+```{r}
+rfstations <-read_csv("data/aspatial/RainfallStation.csv")
+str(rfstations)
+```
+use readr's read_csv, use 
+
+```{r}
+rfdata <- read_csv("data/aspatial/DAILYDATA_202402.csv") %>%
+  select(c(1,5)) %>% 
+  group_by(Station) %>%
+  summarise(MONTHSUM = sum(`Daily Rainfall Total (mm)`)) %>%
+  ungroup() 
+
+glimpse(rfdata)
+
+```
+Do a left join using rfdata as the reference layer, to ensure that those stations with temperature readings would have the longitude and latitude of the weather stations. join by Station column 
+```{r}
+
+rfdata <- rfdata %>%
+  left_join(rfstations)
+
+glimpse(rfdata)
+```
+
+```{r}
+#check for missing values 
+
+summary(rfdata)
+
+
+```
+
+```{r}
+rfdata_sf <- st_as_sf(rfdata, 
+                      coords = c("Longitude",
+                                 "Latitude"),
+                      crs = 4326) %>%
+  st_transform(crs = 3414) # transform the data into SVY21 as we need distance in meters to do interprolation (otherwise, it will be in decimal degree!)
+
+rfdata_sf
+```
+
+
+```{r}
+mpsz2019 <- st_read(dsn = "data/geospatial",
+                    layer = "MPSZ-2019") %>%
+  st_transform(crs = 3414)
+
+qtm(mpsz2019)
+
+```
+
+
+```{r}
+
+tmap_options(check.and.fix = TRUE)
+tmap_mode("view")
+
+tm_shape(mpsz2019) + #plot boundary map first
+  tm_borders() + #Note: if we use tm_polygons, the entire polygon would be shaded, covering the background plot. 
+  tm_shape(rfdata_sf) + #plot rainfall stations
+  tm_dots(col = "MONTHSUM") #colour the rainfall stations (i.e. the dots) based on the monthly rainfall values 
+
+tmap_mode("plot")
+```
+
+```{r}
+mpsz2019
+
+```
+
+```{r}
+
+grid <- terra::rast(mpsz2019,
+                    nrows = 690,  #from the difference between xmax and xmin of mpsz2019 
+                    ncols = 1075) # from the difference bwtween ymax and ymin of mpsz2019 
+
+xy <- terra::xyFromCell(grid, 
+                        1:ncell(grid))
+
+```
+
+ create an sf layer 
+
+
+ then use gstat to calculate the resolution. inverse distance (nmax is 15) 
+niehgbour u choose, 
