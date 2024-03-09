@@ -31,7 +31,7 @@ Before we start, let us ensure that the required R packages have been installed 
 The code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.
 
 ```{r}
-pacman::p_load(tidyverse, lubridate, knitr, data.table, ggplot2, plotly, ggthemes, ggfortify, forecast, MLmetrics, tsbox, xts, imputeTS, astsa, tseries, hrbrthemes)
+pacman::p_load(tidyverse, lubridate, knitr, DT, ggplot2, plotly, ggthemes, ggfortify, forecast, MLmetrics, tsbox, xts, imputeTS, astsa, tseries, hrbrthemes, autoplotly)
 ```
 
 ## Importing Data Into R
@@ -601,74 +601,114 @@ There are two tests we are use to test for stationarity:
 
 ### Augmented Dickey-Fuller Test 
 
-H0: 
-H1: 
+Null Hypothesis: Series is non-stationary, or series has a unit root.
+Alternative Hypothesis: Series is stationary, or series has no unit root.
 
+If the null hypothesis fails to be rejected, this test may provide evidence that the series is non-stationary.
 ```{r}
 adf.test(adm_imp_movingavg$mean_temperature)
 
 ```
-Since the p-value is 0.01, which is less than critcal value of 0.05, we reject the null hypothesis. This means that the time series does not have a unit root, meaning it is stationary. It does not have a time-dependent structure.
+Since the p-value is 0.01, which is less than critical value of 0.05, we reject the null hypothesis. This means that the time series does not have a unit root, meaning it is stationary. It does not have a time-dependent structure.
 
 ### Kwiatkowski-Phillips-Schmidt-Shin Test
+
+Null Hypothesis: Series is trend stationary or series has no unit root.
+Alternative Hypothesis: Series is non-stationary, or series has a unit root.
+
+:::{.callout-note}
+Note: The hypothesis is reversed in the KPSS test compared to ADF Test.
+
+:::
 
 ```{r}
 kpss.test(adm_imp_movingavg$mean_temperature)
 
 ```
-The p-value is 0.1. Since this value is not less than .05, we fail to reject the null hypothesis of the KPSS test.
+Since the p-value is 0.1, which is greater than the critical value of 0.05, we fail to reject the null hypothesis of the KPSS test.This means we can assume that the time series is trend stationary.
 
-This means we can assume that the time series is trend stationary.
-
-Both tests conclude that the given series is stationary. This means that we can make use of most of the time series forecasting models such as Exponential Smoothing and ARIMA. 
+Both ADF and KPSS tests conclude that the given series is stationary. This means that we can make use of most of the time series forecasting models such as Exponential Smoothing and ARIMA. 
 
 ## Decomposition of Time Series Object 
 
-plot the mean temperature. 
-seems like additive model 
 
 ```{r}
 
+ggplot(adm_imp_movingavg, aes(x = Index, y = mean_temperature)) + 
+  geom_line() + 
+  geom_smooth(method=lm) 
+```
+This plot decomposes a time series into its trend, seasonality, and residuals. It helps in understanding the underlying components of the data. 
+```{r}
 adm_decomposition <- stl(ts_ts(adm_imp_movingavg$mean_temperature), s.window = 12, t.window = 28001)
-plot(adm_decomposition)
+autoplot(adm_decomposition)+ 
+  ggtitle("Decomposition for Monthly Mean Temperature") +
+  xlab("Month-Year") + 
+  theme_clean()
 ```
 
 ## Building Models 
 
-create training and validation data 
+First we will split the data into training and validation data. 
+
+When choosing models, it is common practice to separate the available data into two portions, training and test data, where the training data is used to estimate any parameters of a forecasting method and the test data is used to evaluate its accuracy. Because the test data is not used in determining the forecasts, it should provide a reliable indication of how well the model is likely to forecast on new data.
+
+The size of the test set is typically about 20% of the total sample, although this value depends on how long the sample is and how far ahead you want to forecast. The test set should ideally be at least as large as the maximum forecast horizon required. 
+
+For this section, we will set the test set ~20% of the dataframe we have. However when building the Shiny dashboard, we should allow user input on the duration they want to forecast (e.g. next few months or next few years) because this would affect the size of the test dataset. 
+
 ```{r}
 # create samples 
-training <- ts_ts(window(adm_imp_movingavg$mean_temperature, start = as.Date('2009-01-01'), end = as.Date('2015-12-01')))
-validation <- ts_ts(window(adm_imp_movingavg$mean_temperature, start = as.Date('2016-01-01')))
+trainingtemp <- ts_ts(head(adm_imp_movingavg$mean_temperature, (length(adm_imp_movingavg$mean_temperature)-12*2)))
+validationtemp <- ts_ts(tail(adm_imp_movingavg$mean_temperature, 12*2))
 
 ```
 
-### Naive method 
+### Benchmark models 
+Some forecasting methods are extremely simple and surprisingly effective. We will use the following two forecasting methods (naive and seasonal naive) as benchmarks. 
+
 ```{r}
-naive_model <- naive(training, h = length(validation))
+naive_model <- naive(trainingtemp, h = length(validationtemp))
 MAPE(naive_model$mean, validation) * 100
-
-summary(naive_model)
 ```
-
-
-### Seasonal Naive method 
 ```{r}
-snaive_model <- snaive(training, h = length(validation))
-MAPE(snaive_model$mean, validation) * 100
-
-summary(snaive_model)
+autoplot(naive_model) +
+  ggtitle("Naive Forecasts for Monthly Mean Temperature") +
+  xlab("Month-Year") + 
+  ylab("Temperature (degree celsius)") + 
+  theme_ipsum_rc()
 ```
 
+```{r}
+snaive_model <- snaive(trainingtemp, h = length(validationtemp))
+MAPE(snaive_model$mean, validation) * 100
+datatable(data.frame(snaive_model))
+```
+```{r}
+autoplot(trainingtemp) +
+  autolayer(snaive(trainingtemp, h = length(validationtemp),
+                   series="Seasonal Naive", PI=FALSE)) +
+  ggtitle("Seasonal Naive Forecasts for Monthly Mean Temperature") +
+  xlab("Month-Year") + 
+  ylab("Temperature (degree celsius)") + 
+  hrbrthemes::theme_ipsum_rc()
+```
 ### Simple exponential smooth 
-The simplest of the exponentially smoothing methods is naturally called simple exponential smoothing (SES)14. This method is suitable for forecasting data with no clear trend or seasonal pattern. 
+The simplest of the exponentially smoothing methods is naturally called simple exponential smoothing (SES). This method is suitable for forecasting data with no clear trend or seasonal pattern. 
+
 ```{r}
 ses_modelT <- ses(training, h = length(validation))
 MAPE(ses_modelT$mean, validation) * 100
 
-summary(snaive_model)
+summary(ses_modelT)
 ```
-
+```{r}
+autoplot(ses_modelT) +
+  ggtitle("Simple exponential smoothing Forecasts for \nMonthly Mean Temperature") +
+  xlab("Month-Year") + 
+  ylab("Temperature (degree celsius)") + 
+  theme_ipsum_rc()
+```
 
 ### State Space Models
 
@@ -678,7 +718,11 @@ summary(ets_modelT)
 ```
 
 ```{r}
-autoplot(ets_modelT)
+autoplot(ets_modelT) +
+  ggtitle("ETS Model for Monthly Mean Temperature") +
+  xlab("Month-Year") + 
+  ylab("Temperature (degree celsius)") + 
+  theme_ipsum_rc()
 
 ```
 Additive errors 
@@ -691,18 +735,60 @@ MAPE(ets_forecastT$mean, validation) *100
 ets_forecastT
 ```
 
+```{r}
+autoplot(ets_forecastT) +
+  ggtitle("ETS Forecasts for Monthly Mean Temperature") +
+  xlab("Month-Year") + 
+  ylab("Temperature (degree celsius)") + 
+  theme_ipsum_rc()
 
+```
+
+### Holt-Winters 
+
+```{r}
+hw_model <- hw(training, h = length(validation))
+MAPE(hw_model$mean, validation)*100
+
+```
+
+```{r}
+
+autoplot(hw_model) +
+  ggtitle("Holt-Winters Forecasts for Monthly Mean Temperature") +
+  xlab("Month-Year") + 
+  ylab("Temperature (degree celsius)") + 
+  theme_ipsum_rc()
+```
 ### ARIMA 
 
+```{r}
+arima_optimal <- auto.arima(trainingtemp)
+summary(arima_optimal)
 
+```
+
+```{r}
+arima_model <- forecast(arima_optimal)
+MAPE(arima_model$mean, validation)*100
+```
+```{r}
+autoplot(arima_model) +
+  ggtitle("ARIMA Forecasts for Monthly Mean Temperature") +
+  xlab("Month-Year") + 
+  ylab("Temperature (degree celsius)") + 
+  theme_ipsum_rc()
+```
 ### Comparison of models 
-ETS seems to be the best 
+ETS and HW seems to be the better models 
 
 
 
 
 
 # Rainfall Data 
+
+
 ## Selecting the relevant columns for Temperature Data 
 ```{r}
 rain <- data %>%
@@ -1077,6 +1163,8 @@ fit <- stl(ts_ts(adm_imp_movingavg), s.window=365, t.window = 14001)
 plot(fit)
 
 ```
+
+
 ## Building Models 
 
 
@@ -1086,6 +1174,12 @@ trainingrf <- ts_ts(window(admrf_imp_movingavg, start = as.Date('2009-01-01'), e
 validationrf <- ts_ts(window(admrf_imp_movingavg, start = as.Date('2016-01-01')))
 
 ```
+
+```{r}
+trainingtemp <- subset(adm_imp_movingavg, start=length(admrf_imp_movingavg)-12*2)
+
+```
+
 
 ### Naive method 
 ```{r}
@@ -1133,11 +1227,17 @@ MAPE(hw_model$mean, validationrf)*100
 
 ```{r}
 
-arima_optimal <- auto.arima(trainingrf, seasonal = FALSE, stepwise = FALSE, approximation = FALSE)
+arima_optimal <- auto.arima(training)
 summary(arima_optimal)
 
 ```
+```{r}
+library(astsa)
+sarima_forecast = sarima.for(training, n.ahead=length(validation),
+                              p=0,d=1,q=1,P=1,D=1,Q=0,S=12)
+MAPE(sarima_forecast$pred, validation) * 100
 
+```
 
 
 
@@ -1175,3 +1275,4 @@ https://jtr13.github.io/EDAVold/missingTS.html
 https://cran.r-project.org/web/packages/imputeTS/vignettes/imputeTS-Time-Series-Missing-Value-Imputation-in-R.pdf
 https://www.analyticsvidhya.com/blog/2021/06/statistical-tests-to-check-stationarity-in-time-series-part-1/
 https://hex.tech/blog/stationarity-in-time-series/
+https://pkg.robjhyndman.com/forecast/reference/auto.arima.html

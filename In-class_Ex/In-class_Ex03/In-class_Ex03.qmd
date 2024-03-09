@@ -125,5 +125,5 @@ xy <- terra::xyFromCell(grid,
  create an sf layer 
 
 
- then use gstat to calculate the resolution. inverse distance (nmax is 15) 
+then use gstat to calculate the resolution. inverse distance (nmax is 15) 
 niehgbour u choose, 
