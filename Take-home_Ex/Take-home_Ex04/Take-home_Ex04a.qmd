@@ -11,7 +11,7 @@ execute:
 ---
 
 # About this Exercise
-In this exercise, we will be preparing the time-series forecasting module of the proposed Shiny Application and complete the following task:
+In this exercise, we will be preparing the **time-series forecasting module** of the proposed Shiny Application and complete the following task:
 
 -   Evaluate and determine the necessary R packages needed for my group project's Shiny application;
 
@@ -20,6 +20,7 @@ In this exercise, we will be preparing the time-series forecasting module of the
 -   Determine the parameters and outputs that will be exposed on the Shiny applications; and 
 
 -   Select the appropriate Shiny UI components for exposing the parameters determined above. 
+
 
 # Getting Started
 
@@ -30,7 +31,7 @@ Before we start, let us ensure that the required R packages have been installed 
 The code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.
 
 ```{r}
-pacman::p_load(tidyverse, lubridate, knitr, data.table, ggplot2, plotly, ggthemes, ggfortify, forecast, MLmetrics, tsbox, xts, imputeTS, astsa, tseries)
+pacman::p_load(tidyverse, lubridate, knitr, data.table, ggplot2, plotly, ggthemes, ggfortify, forecast, MLmetrics, tsbox, xts, imputeTS, astsa, tseries, hrbrthemes)
 ```
 
 ## Importing Data Into R
@@ -367,15 +368,18 @@ percentage_plot
 
 
 ```
-The above output is consistent with what we observed when exploring the data using plotly. There are numerous stations without temperature readings and 
-Drop the stations with no weather data at all. 
+The above output is consistent with what we observed when exploring the data using plotly. There are numerous stations without temperature readings throughout all years and there are certain stations with temperature readings during certain time periods. 
+
+Let us find out which stations that have no temperature readings throughout the entire time period using `filter()`.We will filter out those weather stations that have 100% NAs. 
+
 
 ```{r}
-notempdata <- missing.values %>%
+notempdata <- missing_values %>%
   filter(isna == TRUE & pct==100)
 
 notempdata$key
 ```
+From the above output, we know that these 24 weather stations have no temperature readings. We will put them into a list and create an operator to exclude them from the `temp` data using `filter()`. 
 
 ```{r}
 
@@ -390,6 +394,7 @@ temp_clean <- temp %>%
 
 glimpse(temp_clean)
 ```
+We will then pivot the `temp_clean` dataframe wider and plot the daily temperature for the remaining weather stations using plotly. 
 
 ```{r}
 temp_mean_widec <- temp_clean %>%
@@ -463,121 +468,51 @@ plot_ly(data = temp_mean_widec,
 
 ```
 
-There are some missing time gaps in the data, which we need to do imputation. 
-Daily data for data ranging over 40 years is too frequent for time series forecasting. 
+:::{.callout-note}
+## Observations
+
+-   From the above interactive chart, we note that some stations have a longer time period with temperature readings (e.g. Changi). Almost all stations have some missing time gaps in the data, hence we will need to do imputation for this missing values to ensure better accuracy of our temperature forecasting. 
+
+-   Also, we noted that daily temperature readings that range more than 20 years is too frequent for time series forecasting. Hence, we will aggregate the daily temperature readings to monthly temperature readings by calculating the mean in subsequent section. 
 
 
-## Preparing for time series forecasting 
+## Creating Time Series Object 
+
+In the previous sections, we noted that the dataframes were all tibble dataframes. For us to make use of the time series forecasting packages and their functions, we would need to convert the tibble dataframe into a time series object. 
+
+Before we create the time series object, let us first aggregate the daily temperature readings to monthly temperature readings by (1) creating the year-month column for each observation using `floor_date()` and specifying it to derive the year and month of each observation, and (2) aggregate the temperature readings by station and year_month then use `summarise()` to compute the monthly averages for `mean_temperature`, `maximum_temperature` and `minimum_temperature`. 
+
 
 ```{r}
 #create year-month col
-temp$year_month <- floor_date(temp$tdate, "month")
-glimpse(temp)
+temp_clean$year_month <- floor_date(temp_clean$tdate, "month")
+glimpse(temp_clean)
 ```
+
 ```{r}
-monthly_temp <- temp %>%                         # Aggregate data
+monthly_temp <- temp_clean %>%                         
   group_by(station, year_month) %>% 
   summarise(across(c(mean_temperature, maximum_temperature, minimum_temperature), mean))
 
 glimpse(monthly_temp)
 
-
 ```
+With the monthly temperature of all weather stations, let us filter out one weather station (e.g. Admiralty) to create a tibble data frame `adm` so that we can convert it into an xts object, which is a type of time series object. 
 
 
 
 ```{r}
-monthly_temp_wide <- monthly_temp %>%
-  select(year_month, station, mean_temperature) %>%
-  pivot_wider(names_from = station, values_from = mean_temperature)
-
-glimpse(monthly_temp_wide)
-```
-
-
-```{r}
-plot_ly(data = monthly_temp_wide, 
-        x = ~year_month, 
-        y = ~ Admiralty, 
-        type = "scatter",
-        mode = "lines+markers")|> 
-  layout(title = "Temperature observed by Weather Station", 
-       xaxis = list(title = "Date"), 
-       yaxis = list(title = "", range = c(0,40)), 
-      theme_ipsum_rc(plot_title_size = 13, plot_title_margin=4, subtitle_size=11, subtitle_margin=4,  
-                 axis_title_size = 8, axis_text_size=8, axis_title_face= "bold", plot_margin = margin(4, 4, 4, 4)),  
-       updatemenus = list(list(type = 'dropdown', 
-                               xref = "paper", 
-                               yref = "paper", 
-                               xanchor = "left",
-                               x = 0.04,
-                               y = 0.95, 
-                               buttons = list(
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$Admiralty)), 
-                                                    list(yaxis = list(title = "Temperature in Admiralty", range = c(0,40)))),label = "Admiralty"),
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`East Coast Parkway`)), 
-                                                    list(yaxis = list(title = "Temperature in East Coast Parkway", range = c(0,40)))),label = "East Coast Parkway"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Ang Mo Kio`)), 
-                                                    list(yaxis = list(title = "Temperature in Ang Mo Kio", range = c(0,40)))),label = "Ang Mo Kio"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$Newton)), 
-                                                    list(yaxis = list(title = "Temperature in Newton", range = c(0,40)))),label = "Newton"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Tuas South`)), 
-                                                    list(yaxis = list(title = "Temperature in Tuas South", range = c(0,40)))),label = "Tuas South"),
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Pasir Panjang`)), 
-                                                    list(yaxis = list(title = "Temperature in Pasir Panjang", range = c(0,40)))),label = "Pasir Panjang"), 
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Jurong Island`)), 
-                                                    list(yaxis = list(title = "Temperature in Jurong Island", range = c(0,40)))),label = "Jurong Island"), 
-                                 list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Choa Chu Kang (South)`)), 
-                                                    list(yaxis = list(title = "Temperature in Choa Chu Kang", range = c(0,40)))),label = "Choa Chu Kang"), 
-                                 list(method = "update", 
-                                        args = list(list(y = list(temp_mean_widec$Changi)), 
-                                                    list(yaxis = list(title = "Temperature in Changi", range = c(0,40)))),label = "Changi"),
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Tai Seng`)), 
-                                                    list(yaxis = list(title = "Temperature in Tai Seng", range = c(0,40)))),label = "Tai Seng"),
-                                  list(method = "update",
-                                      args = list(list(y = list(temp_mean_widec$`Jurong (West)`)), 
-                                                    list(yaxis = list(title = "Temperature in Jurong West", range = c(0,40)))),label = "Jurong West"), 
-                                   list(method = "update", 
-                                        args = list(list(y = list(temp_mean_widec$Clementi)), 
-                                                    list(yaxis = list(title = "Temperature  in Clementi", range = c(0,40)))),label = "Clementi"), 
-                                   list(method = "update", 
-                                        args = list(list(y = list(temp_mean_widec$`Sentosa Island`)), 
-                                                    list(yaxis = list(title = "Temperature  in Sentosa", range = c(0,40)))),label = "Sentosa")
-                                   
-                               ))))  
-
-
-
-```
-
-Convert the data to timeseries data 
-
-```{r}
-glimpse(monthly_temp)
-
-```
-We are using changi weather station for now 
-
-```{r}
+#filter out Admiralty weather station 
 adm <- monthly_temp %>%
   filter(station == "Admiralty")
 
-glimpse(adm)
+#check the resultant dataframe
+summary(adm)
 ```
 
-```{r}
-range(adm$year_month)
+We will use `xts()` from xts package to create a time series object. The order.by parameter uses the dates from the `adm` dataframe. We then use the `ts_regular()` function to give the time series object `adm_xts` a regular interval by adding NA values for missing dates. 
 
-```
+Just in case there are missing months which we did not detected, we use the `na.fill()` function fills in those missing dates by extending values from previous days. The `window()` function clips off the starting and ending dates of the Admiralty weather station, which we have gotten from the above summary output. 
 
 ```{r}
 adm_xts <- xts(adm[,c("mean_temperature", "maximum_temperature", "minimum_temperature")], order.by=as.Date(adm$year_month))
@@ -585,22 +520,37 @@ adm_xts<- ts_regular(adm_xts)
 adm_xts <- na.fill(adm_xts, "extend")
 adm_xts<- window(adm_xts, start = as.Date("2009-01-01"), end = as.Date("2023-12-01"))
 ```
+Let us plot out the monthly mean temperature of Admiralty weather station using ggplotly. 
 
 ```{r}
-ggplot(adm_xts, aes(x = Index, y = mean_temperature)) + 
-  geom_line()
-```
+p1 <- ggplot(adm_xts, aes(x = Index, y = mean_temperature)) + 
+  geom_line() + theme_clean() +
+  labs(title = "Monthly Mean Temperature of Admiralty Weather Station", caption = "Data from Weather.gov.sg") +
+  xlab("Month-Year") +
+  ylab("Temperature in degrees celsius")
 
+ggplotly(p1)
+```
+From the above output, we see that there are missing temperatures for numerous time periods. 
+
+Let us investigate futher using TSimpute package's `ggplot_na_distribution`, which highlights the missing values in our data. 
 
 ```{r}
-
-ggplot_na_distribution(adm_xts$mean_temperature)
+ggplot_na_distribution(x = adm$mean_temperature,
+                       x_axis_labels = adm$year_month,
+                       ylab = "Temperature in degrees celsius")
 ```
+
+We also use the TSimpute package's `statsNA` to have a report on the number of missing mean temperature readings. 
 ```{r}
 statsNA(adm_xts$mean_temperature)
 
 ```
-### missing values 
+### Missing Value Imputation
+There are several ways to impute missing data in time series objects. 
+
+#### Kalman smoothing with auto.arima
+We can uses Kalman Smoothing on ARIMA model to impute the missing values. 
 ```{r}
 
 adm_imp_kalman <- na_kalman(adm_xts, model = "auto.arima")
@@ -612,28 +562,70 @@ ggplot(adm_imp_kalman, aes(x = Index, y = mean_temperature)) +
 
 ```
 
+From the above output, we see that some of the imputed values are below 0 degrees celsius which is impossible in Singapore. As such, we will not be using this method to impute missing values for temperature readings. 
+
 ```{r}
 
-adm_imp_movingavg <- na_ma(adm_xts)
+adm_imp_kalman_ts <- na_kalman(adm_xts, model = "StructTS")
+
+#plot chart 
+
+ggplot(adm_imp_kalman_ts, aes(x = Index, y = mean_temperature)) + 
+  geom_line()
+
+```
+Works better than auto.arima method. 
+
+
+#### Moving Averages
+
+As this function calculates moving averages based on the last n observations, it will generally be performing better than using mean, mode and median imputation. Moving averages work well when data has a linear trend. This function also allows us to use linear-weighted and exponentially-weighted moving averages.
+```{r}
+
+adm_imp_movingavg <- na_ma(adm_xts, weighting = "exponential") #default is exponential
+
 #plot chart 
 ggplot(adm_imp_movingavg, aes(x = Index, y = mean_temperature)) + 
   geom_line()
 ```
 
+From the above, we note that the imputations by moving average is better than kalman's auto arima since the values imputed are reasonable. 
 
-test if the time series is stationary 
+## Testing if the time series is stationary 
+
+Before we model the time series forecasting model, let us test is our time series data is stationary. Stationarity signifies that the statistical properties of time series, such as mean, variance, and covariance, remain constant over time, which is the fundamental assumption for many time series modeling techniques.It simplifies the complex dynamics within the data, making it more amenable to analysis, modeling, and forecasting.
+
+There are two tests we are use to test for stationarity: 
+-   Augmented Dickey-Fuller (ADF) Test; and 
+-   Kwiatkowski-Phillips-Schmidt-Shin (KPSS) Test
+
+### Augmented Dickey-Fuller Test 
+
+H0: 
+H1: 
 
 ```{r}
 adf.test(adm_imp_movingavg$mean_temperature)
 
 ```
+Since the p-value is 0.01, which is less than critcal value of 0.05, we reject the null hypothesis. This means that the time series does not have a unit root, meaning it is stationary. It does not have a time-dependent structure.
+
+### Kwiatkowski-Phillips-Schmidt-Shin Test
 
 ```{r}
-
-class(adm_imp_movingavg)
-
+kpss.test(adm_imp_movingavg$mean_temperature)
 
 ```
+The p-value is 0.1. Since this value is not less than .05, we fail to reject the null hypothesis of the KPSS test.
+
+This means we can assume that the time series is trend stationary.
+
+Both tests conclude that the given series is stationary. This means that we can make use of most of the time series forecasting models such as Exponential Smoothing and ARIMA. 
+
+## Decomposition of Time Series Object 
+
+plot the mean temperature. 
+seems like additive model 
 
 ```{r}
 
@@ -641,9 +633,9 @@ adm_decomposition <- stl(ts_ts(adm_imp_movingavg$mean_temperature), s.window = 1
 plot(adm_decomposition)
 ```
 
-
 ## Building Models 
 
+create training and validation data 
 ```{r}
 # create samples 
 training <- ts_ts(window(adm_imp_movingavg$mean_temperature, start = as.Date('2009-01-01'), end = as.Date('2015-12-01')))
@@ -668,17 +660,30 @@ MAPE(snaive_model$mean, validation) * 100
 summary(snaive_model)
 ```
 
+### Simple exponential smooth 
+The simplest of the exponentially smoothing methods is naturally called simple exponential smoothing (SES)14. This method is suitable for forecasting data with no clear trend or seasonal pattern. 
+```{r}
+ses_modelT <- ses(training, h = length(validation))
+MAPE(ses_modelT$mean, validation) * 100
+
+summary(snaive_model)
+```
+
 
 ### State Space Models
 
 ```{r}
-ets_modelT <- ets(training, allow.multiplicative.trend = TRUE)
+ets_modelT <- ets(training)
 summary(ets_modelT)
 ```
 
-Adictive errors 
+```{r}
+autoplot(ets_modelT)
+
+```
+Additive errors 
 No trend 
-Addictive seasonnality
+Additive seasonality
 
 ```{r}
 ets_forecastT <- forecast(ets_modelT, h=length(validation))
@@ -687,33 +692,12 @@ ets_forecastT
 ```
 
 
-
-
-
-### Holt-Winters 
-
-```{r}
-hw_model <- hw(training, h = length(validation))
-MAPE(hw_model$mean, validation)*100
-
-```
-
-
 ### ARIMA 
 
-```{r}
 
-arima_optimal <- auto.arima(training)
-summary(arima_optimal)
+### Comparison of models 
+ETS seems to be the best 
 
-```
-
-```{r}
-sarima_forecast <- sarima.for(training, n.ahead=length(validation), 
-                               p=0,d=1,q=1,P=2,D=1,Q=0,S=12)
-sarima_forecast
-MAPE(sarima_forecast$pred, validation)*100
-```
 
 
 
@@ -1186,3 +1170,8 @@ https://michaelminn.net/tutorials/r-weather/index.html
 https://towardsdatascience.com/a-guide-to-forecasting-in-r-6b0c9638c261 
 https://www.singstat.gov.sg/-/media/files/publications/reference/ssnsep05-pg11-14.ashx
 https://otexts.com/fpp2/estimation-and-model-selection.html
+https://www.michaelplazzer.com/weather-forecasting-with-machine-learning-in-r/
+https://jtr13.github.io/EDAVold/missingTS.html
+https://cran.r-project.org/web/packages/imputeTS/vignettes/imputeTS-Time-Series-Missing-Value-Imputation-in-R.pdf
+https://www.analyticsvidhya.com/blog/2021/06/statistical-tests-to-check-stationarity-in-time-series-part-1/
+https://hex.tech/blog/stationarity-in-time-series/
