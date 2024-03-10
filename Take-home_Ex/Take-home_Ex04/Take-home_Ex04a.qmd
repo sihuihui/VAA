@@ -1826,27 +1826,125 @@ autoplot(arima_model) +
 
 ### Comparison of Model Performance
 
-| Model                                     | MAPE (%) |
-|-------------------------------------------|----------|
-| Naive                                     | 39.96%   |
-| Seasonal Naive                            | 69.78%   |
-| Simple Exponential Smoothing              | 42.79%   |
-| Holt-Winters' Additive Seasonality        | 48.54%   |
-| Holt-Winters' Multiplicative Seasonality  | 63.31%   |
-| ARIMA                                     | 40.20%   |
+| Model                                     | MAPE (%)   |
+|-------------------------------------------|------------|
+| **Naive**                                 | **39.96%** |
+| Seasonal Naive                            | 69.78%     |
+| Simple Exponential Smoothing              | 42.79%     |
+| Holt-Winters' Additive Seasonality        | 48.54%     |
+| Holt-Winters' Multiplicative Seasonality  | 63.31%     |
+| **ARIMA**                                 | **40.20%** |
 
 : Comparison of MAPE across Models
 
-From the above table, we see that none of the models outperformed the naive model when it comes to forecasting of rainfall data.
+From the above table, we see that except for ARIMA model which has a MAPE of 40%, none of the models outperformed the naive model when it comes to forecasting of rainfall data. As such, we can consider exposing only Naive and ARIMA models for rainfall data prediction on our Shiny Application.
 
 # Shiny Dashboard Prototype
 
-## Parameters and outputs to expose on Shiny Application
+After working on the previous sections, we can see that not every models work for temperature and rainfall data. Also, we have to impute missing data before we can build such time series forceasting models. As such, the following sections summarise the parameters and output to expose on Shiny application and how we can go about exposing these parameters and output.
 
-## How to expose these parameters and output
+## Parameters to expose on Shiny Application
+
+1.  Type of data to forecast:
+
+    -   Temperature or Rainfall
+
+2.  Length of forecast:
+
+    -   E.g. next 3 months or next 4 years (i.e. 48 months)
+
+3.  Which weather station
+
+    -   Our data have many data stations, so users can choose which weather station they want
+
+4.  Method of imputing missing data
+
+    -   Choose between Moving Average, Kalman Smoothing on ARIMA or Kalman Smoothing on StrucTS.
+
+5.  Forecasting model to use
+
+    -   For temperature data, we can consider allow users to choose from Holt-Winters, State Space and ARIMA models since we got very good data.
+
+    -   For rainfall data, if we choose to allow users to do forecasting on our Shiny application, we can consider to allow users to choose from Naive or ARIMA model.
+
+## Output to expose on Shiny Application
+
+-   Data table of the output for missing data imputation chosen
+
+-   Plot of the output for the missing data imputation chosen
+
+-   Data table of the output for the forecasting model chosen
+
+-   Plot of the output for the forecasting model chosen
+
+-   MAPE of the forecasting model chosen
+
+## How to expose these parameters and output 
+
++---------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Parameter / Output                                      | How to expose it                                                                                                                                                                                                                                                                                                                                                                                                               |
++=========================================================+================================================================================================================================================================================================================================================================================================================================================================================================================================+
+| Type of data to forecast                                | Each data (i.e. temperature or rainfall) is in a different page. Hence, user can choose which data to forecast by clicking on the respective page on the Navbar Pages.                                                                                                                                                                                                                                                         |
++---------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Weather Station                                         | A dropdown list to allow user to select which weather station they want to use for forecasting                                                                                                                                                                                                                                                                                                                                 |
++---------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Temperature / rainfall data of chosen weather station   | After selecting the type of data to forecast and the weather station, we can display an interactive plot of the past data and show if there are any missing data. This can help the user choose which imputation method to use for the next step.                                                                                                                                                                              |
++---------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Method of Imputing Missing Data                         | A dropdown list to allow user to select which missing data imputation method they want to use. The options are:                                                                                                                                                                                                                                                                                                                |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   Moving average (exponential)                                                                                                                                                                                                                                                                                                                                                                                               |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   Moving average (linear)                                                                                                                                                                                                                                                                                                                                                                                                    |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   Moving average (simple)                                                                                                                                                                                                                                                                                                                                                                                                    |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   Kalman Smoothing (ARIMA)                                                                                                                                                                                                                                                                                                                                                                                                   |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   Kalman Smoothing (StrucTS)                                                                                                                                                                                                                                                                                                                                                                                                 |
++---------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Data table and plot of the output for the missing data  | After selecting the type of missing data imputation method, we can display an interactive plot and data table of the resultant dataframe. This can help them decide which imputation method is most suitable. For example in the earlier section, we realised that Kalman Smoothing (ARIMA) was not suitable for Admiralty weather station's monthly temperature data after plotting the chart using the resultant dataframe.  |
++---------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Decomposition of Time Series Data                       | To help the users choose the forecasting model, we can also display the output of the time series data's decomposition                                                                                                                                                                                                                                                                                                         |
++---------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Forecasting Model to use                                | A dropdown list to allow user to select which forecasting method they want to use. For temperature data, the forecasting methods are:                                                                                                                                                                                                                                                                                          |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   State Space Model                                                                                                                                                                                                                                                                                                                                                                                                          |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   Holt Winters' Additive Seasonality Model                                                                                                                                                                                                                                                                                                                                                                                   |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   Holt Winters' Multiplicative Model                                                                                                                                                                                                                                                                                                                                                                                         |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   ARIMA                                                                                                                                                                                                                                                                                                                                                                                                                      |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | For rainfall data, the forecasting methods are:                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   Naive model                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|                                                         | -   ARIMA                                                                                                                                                                                                                                                                                                                                                                                                                      |
++---------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Length of forecast                                      | A numeric input field to allow user key in the number of months to forecast                                                                                                                                                                                                                                                                                                                                                    |
++---------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Data table, MAPE and plot of the forecasted results     |                                                                                                                                                                                                                                                                                                                                                                                                                                |
++---------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 ## Layout on Shiny Application
 
 # References
 
-https://michaelminn.net/tutorials/r-weather/index.html https://towardsdatascience.com/a-guide-to-forecasting-in-r-6b0c9638c261 https://www.singstat.gov.sg/-/media/files/publications/reference/ssnsep05-pg11-14.ashx https://otexts.com/fpp2/estimation-and-model-selection.html https://www.michaelplazzer.com/weather-forecasting-with-machine-learning-in-r/ https://jtr13.github.io/EDAVold/missingTS.html https://cran.r-project.org/web/packages/imputeTS/vignettes/imputeTS-Time-Series-Missing-Value-Imputation-in-R.pdf https://www.analyticsvidhya.com/blog/2021/06/statistical-tests-to-check-stationarity-in-time-series-part-1/ https://hex.tech/blog/stationarity-in-time-series/ https://pkg.robjhyndman.com/forecast/reference/auto.arima.html
+-   https://michaelminn.net/tutorials/r-weather/index.html https://towardsdatascience.com/a-guide-to-forecasting-in-r-6b0c9638c261
+
+-   https://www.singstat.gov.sg/-/media/files/publications/reference/ssnsep05-pg11-14.ashx
+
+-   https://otexts.com/fpp2/estimation-and-model-selection.html
+
+-   https://www.michaelplazzer.com/weather-forecasting-with-machine-learning-in-r/
+
+-   https://jtr13.github.io/EDAVold/missingTS.html
+
+-   https://cran.r-project.org/web/packages/imputeTS/vignettes/imputeTS-Time-Series-Missing-Value-Imputation-in-R.pdf
+
+-   https://www.analyticsvidhya.com/blog/2021/06/statistical-tests-to-check-stationarity-in-time-series-part-1/
+
+-   https://hex.tech/blog/stationarity-in-time-series/
+
+-   https://pkg.robjhyndman.com/forecast/reference/auto.arima.html
