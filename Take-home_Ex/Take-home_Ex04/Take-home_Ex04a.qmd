@@ -122,11 +122,11 @@ str(temp)
 ## Observations
 
 -   The resultant dataframe (`temp`) is a tibble dataframe with the following columns:
-  -   `station`: refers to the weather station that collected this temperature reading.
-  -   `tdate`: refers to the date of the temperature reading collected.
-  -   `mean_temperature`: refers to the mean temperature reading of that day.
-  -   `maximum_temperature`: refers to the highest temperature reading of that day.
-  -   `minimum_temperature`: refers to the lowest temperature reading of that day.
+-   `station`: refers to the weather station that collected this temperature reading.
+-   `tdate`: refers to the date of the temperature reading collected.
+-   `mean_temperature`: refers to the mean temperature reading of that day.
+-   `maximum_temperature`: refers to the highest temperature reading of that day.
+-   `minimum_temperature`: refers to the lowest temperature reading of that day.
 :::
 
 Let us save the dataframe into an RDS file for future usage using `write_rds()`.
@@ -612,7 +612,7 @@ statsNA(adm_xts$mean_temperature)
 
 ### Missing Value Imputation
 
-There are several ways to impute missing data in time series objects. We need to impute missing values because some of the models cannot handle NAs in Time Series objects. 
+There are several ways to impute missing data in time series objects. We need to impute missing values because some of the models cannot handle NAs in Time Series objects.
 
 #### Moving Averages
 
@@ -1048,23 +1048,23 @@ autoplot(arima_model) +
 
 ### Comparisons of Models Tried
 
-| Model                                                 | MAPE (%)   |
-|-------------------------------------------------------|------------|
-| Naive                                                 | 2.79       |
-| Seasonal Naive                                        | 2.07       |
-| Simple Exponential Smoothing                          | 2.78       |
-| **State Space Model**                                 | **1.47**   |
-| **Holt-Winters' Model (Additive Seasonality)**        | **1.47**   |
-| **Holt-Winters' Model (Multiplicative Seasonality)**  | **1.53**   |
-| **ARIMA**                                             | **1.55**   |
+| Model                                                | MAPE (%) |
+|------------------------------------------------------|----------|
+| Naive                                                | 2.79     |
+| Seasonal Naive                                       | 2.07     |
+| Simple Exponential Smoothing                         | 2.78     |
+| **State Space Model**                                | **1.47** |
+| **Holt-Winters' Model (Additive Seasonality)**       | **1.47** |
+| **Holt-Winters' Model (Multiplicative Seasonality)** | **1.53** |
+| **ARIMA**                                            | **1.55** |
 
 : MAPE Results of Models Tried
 
-From the above table, the state space model, Holt-Winters' model and ARIMA model all outperformed the benchmark models (i.e. naive Model and Seasonal Naive Model) for temperature data. We can consider letting users to choose to use these models when forecasting temperature data. 
-
+From the above table, the state space model, Holt-Winters' model and ARIMA model all outperformed the benchmark models (i.e. naive Model and Seasonal Naive Model) for temperature data. We can consider letting users to choose to use these models when forecasting temperature data.
 
 # Rainfall Data
-In this section, we will be cleaning the rainfall data and building models for the rainfall data. 
+
+In this section, we will be cleaning the rainfall data and building models for the rainfall data.
 
 First we select the relevant rainfall related columns needed for this exercise using `select()`. We will examine the resultant dataframe `rainfall` using `str()`.
 
@@ -1077,16 +1077,18 @@ rain <- data %>%
 
 str(rain)
 ```
-:::{.callout-note}
-## Observations 
+
+::: callout-note
+## Observations
 
 -   The resultant dataframe (`rainfall`) is a tibble dataframe with the following columns:
-    -   `tdate`: refers to the date of the rainfall reading is collected. 
-    -   `station`: refers to the weather station that collected this rainfall reading. 
-    -   `daily_rainfall_total`: refers to the total amount of rainfall observed by this weather station in a day. The unit of measurement is in mm. 
-::: 
+    -   `tdate`: refers to the date of the rainfall reading is collected.
+    -   `station`: refers to the weather station that collected this rainfall reading.
+    -   `daily_rainfall_total`: refers to the total amount of rainfall observed by this weather station in a day. The unit of measurement is in mm.
+:::
 
 Let us save the dataframe into an RDS file for future usage using write_rds().
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -1097,22 +1099,25 @@ write_rds(rain, "data/rainfall.rds")
 ```
 
 We will bring in the rainfall data using read_rds(). Let us check the imported RDS data using str() again.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 rain <- read_rds("data/rainfall.rds")
 str(rain)
 ```
-:::{.callout-note}
-## Observations 
 
--   `rainfall` is a tibble dataframe. 
--   The data type for the columns are in order: `station` is character data type, `tdate` is date data type and `daily_rainfall_total` is numeric data. 
+::: callout-note
+## Observations
 
+-   `rainfall` is a tibble dataframe.
+-   The data type for the columns are in order: `station` is character data type, `tdate` is date data type and `daily_rainfall_total` is numeric data.
 :::
+
 ## Investigating missing values
 
 First, let us use `summary()` to check for missing data.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -1120,17 +1125,17 @@ First, let us use `summary()` to check for missing data.
 summary(rain)
 
 ```
-:::{.callout-note}
-## Observations 
+
+::: callout-note
+## Observations
 
 -   The observations ranged from 1 Jan 1980 to 31 Dec 2023. There are 58 rows with missing dates. We should drop these rows since they are unable to tell us which day the observations were made (even if they have rainfall readings).
 
--   There are 5,136 rows of NAs for daily rainfall. 
-
-::: 
-
+-   There are 5,136 rows of NAs for daily rainfall.
+:::
 
 First, let us drop those rows where date is missing because we would not be able to definitively identify when the temperature(s) were collected (even if there were temperature readings for these rows.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -1140,7 +1145,9 @@ rain <- rain %>%
 
 summary(rain)
 ```
-Let us also do a check of the weather stations. 
+
+Let us also do a check of the weather stations.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -1152,7 +1159,7 @@ unique(rain$station)
 
 From the previous section, we noted that there are many weather stations in the `rainfall` dataframe. Hence, we will make use of plotly to further explore the missing temperatures.
 
-First, we will pivot the dataframe wider. 
+First, we will pivot the dataframe wider.
 
 ```{r}
 #| code-fold: true
@@ -1163,6 +1170,7 @@ rain_wide <- rain %>%
 
 summary(rain_wide)
 ```
+
 We will make use of plotly to explore the daily rainfall for each station using a dropdown list.
 
 ```{r}
@@ -1303,12 +1311,11 @@ plot_ly(data = rain_wide,
 
 ```
 
-:::{.callout-note}
+::: callout-note
 ## Observations
 
 -   It seems like there are some stations with no rainfall data in all years, while some have rainfall data from certain years onwards. Let's explore further.
-
-::: 
+:::
 
 Let us find out the amount of missing values for each weather station using the following code chunk.
 
@@ -1339,8 +1346,9 @@ percentage_plot <- missing_values %>%
 
 
 ```
-:::{.panel-tabset}
-## Table of missing values 
+
+::: panel-tabset
+## Table of missing values
 
 ```{r}
 missing_values %>%
@@ -1348,14 +1356,14 @@ missing_values %>%
   datatable()
 ```
 
-## Plot of amount of missing values 
+## Plot of amount of missing values
 
 ```{r}
 percentage_plot
 ```
 :::
 
-Let us check if there are any stations where they have 100% missing values. 
+Let us check if there are any stations where they have 100% missing values.
 
 ```{r}
 #| code-fold: true
@@ -1366,9 +1374,11 @@ norfdata <- missing_values %>%
 
 norfdata$key
 ```
-From the above output, it seems like no stations have 100% missing values. 
 
-Let us check if there are any stations with no missing values. 
+From the above output, it seems like no stations have 100% missing values.
+
+Let us check if there are any stations with no missing values.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -1379,14 +1389,14 @@ allrfdata <- missing_values %>%
 allrfdata$key
 
 ```
-From the above output, it seems like only Changi weather station has no missing values. This means that for other weather stations there are some amount of missing data for each weather station. Let us impute the missing values in the next section. 
 
+From the above output, it seems like only Changi weather station has no missing values. This means that for other weather stations there are some amount of missing data for each weather station. Let us impute the missing values in the next section.
 
-## Creating Time Series Object 
+## Creating Time Series Object
 
 As mentioned earlier, for us to make use of the time series forecasting packages and their functions, we would need to convert the tibble dataframe into a time series object.
 
-Before we create the time series object, let us first aggregate the daily rainfall readings to monthly rainfall readings by (1) creating the `year-month` column for each observation using `floor_date()` and specifying it to derive the year and month of each observation, and (2) aggregate the temperature readings by `station` and `year_month` then use summarise() to compute the monthly rainfall reading. 
+Before we create the time series object, let us first aggregate the daily rainfall readings to monthly rainfall readings by (1) creating the `year-month` column for each observation using `floor_date()` and specifying it to derive the year and month of each observation, and (2) aggregate the temperature readings by `station` and `year_month` then use summarise() to compute the monthly rainfall reading.
 
 ```{r}
 #| code-fold: true
@@ -1411,16 +1421,17 @@ glimpse(monthly_rain)
 
 With the monthly temperature of all weather stations, let us filter out one weather station (e.g. Admiralty) to create a tibble data frame `adm_rf` so that we can convert it into an xts object, which is a type of time series object.
 
-
 ```{r}
 adm_rf<- monthly_rain %>%
   filter(station == "Admiralty")
 
 summary(adm_rf)
 ```
+
 We will use `xts()` from xts package to create a time series object. The order.by parameter uses the dates from the `adm_rf` dataframe. We then use the `ts_regular()` function to give the time series object `adm_rf_xts` a regular interval by adding NA values for missing dates.
 
 Just in case there are missing months which we did not detected, we use the na.fill() function fills in those missing dates by extending values from previous days.
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -1442,20 +1453,22 @@ p3 <- ggplot(adm_rf_xts, aes(x = Index, y = value)) +
 
 ggplotly(p3)
 ```
+
 From the above output, we see that there are missing temperatures for numerous time periods. As a result, the line for the above chart is not continuous.
 
-Let us investigate futher using imputeTS package’s `ggplot_na_distribution`, which highlights the missing values in our data. 
+Let us investigate futher using imputeTS package’s `ggplot_na_distribution`, which highlights the missing values in our data.
 
 ```{r}
 ggplot_na_distribution(adm_rf_xts)
 ```
 
-### Missing Value Imputation 
+### Missing Value Imputation
 
 There are several ways to impute missing data in time series objects.
 
-#### Moving Averages 
-This `na_ma() `function also allows us to use linear-weighted and exponentially-weighted moving averages.
+#### Moving Averages
+
+This `na_ma()`function also allows us to use linear-weighted and exponentially-weighted moving averages.
 
 ```{r}
 
@@ -1467,9 +1480,10 @@ ggplot(admrf_imp_movingavg, aes(x = Index, y = value)) +
 
 ```
 
-#### Kalman Smoothing 
+#### Kalman Smoothing
 
 We can also use Kalman Smoothing on ARIMA model to impute the missing values.
+
 ```{r}
 
 admrf_imp_kalman <- na_kalman(adm_rf_xts, model = "auto.arima")
@@ -1480,6 +1494,7 @@ ggplot(admrf_imp_kalman, aes(x = Index, y = value)) +
   geom_line()
 
 ```
+
 Kalman Smoothing also has a “StrucTS” option. Let us try and see how it works for our monthly rainfall data.
 
 ```{r}
@@ -1492,33 +1507,38 @@ ggplot(admrf_imp_kalmans, aes(x = Index, y = value)) +
   geom_line()
 
 ```
-For the subsequent sections, we will use the results from moving average to build our model. 
 
-## Testing if the time series is stationary 
+For the subsequent sections, we will use the results from moving average to build our model.
 
-Similar to the temperature data, we will also test for stationarity for our rainfall data. 
+## Testing if the time series is stationary
 
-### Augmented Dickey-Fuller Test 
--   Null Hypothesis: Series is non-stationary, or series has a unit root. 
+Similar to the temperature data, we will also test for stationarity for our rainfall data.
+
+### Augmented Dickey-Fuller Test
+
+-   Null Hypothesis: Series is non-stationary, or series has a unit root.
 -   Alternative Hypothesis: Series is stationary, or series has no unit root.
 
 ```{r}
 adf.test(admrf_imp_movingavg$value)
 ```
+
 Since the p-value is 0.01, which is less than critical value of 0.05, we reject the null hypothesis. This means that the time series does not have a unit root, meaning it is stationary. It does not have a time-dependent structure.
 
 ### Kwiatkowski-Phillips-Schmidt-Shin Test
--   Null Hypothesis: Series is trend stationary or series has no unit root. 
+
+-   Null Hypothesis: Series is trend stationary or series has no unit root.
 -   Alternative Hypothesis: Series is non-stationary, or series has a unit root.
 
 ```{r}
 kpss.test(admrf_imp_movingavg$value)
 ```
+
 Since the p-value is 0.1, which is greater than the critical value of 0.05, we fail to reject the null hypothesis of the KPSS test.This means we can assume that the time series is trend stationary.
 
 Both ADF and KPSS tests conclude that the given series is stationary. This means that we can make use of most of the time series forecasting models such as Exponential Smoothing and ARIMA.
 
-## Decomposition of Time Series Object 
+## Decomposition of Time Series Object
 
 First, let us plot the monthly rainfall of the Admiralty weather station.
 
@@ -1531,13 +1551,11 @@ p4 <- ggplot(admrf_imp_movingavg, aes(x = Index, y = value)) +
 ggplotly(p4)
 ```
 
-:::[.callout-note]
-From the above output, it seems like there were fluctuations in monthly rainfall but there was no increasing trend.
-We also cannot see if there are any seasonality.
-
+::: [.callout-note]
+From the above output, it seems like there were fluctuations in monthly rainfall but there was no increasing trend. We also cannot see if there are any seasonality.
 :::
 
-Let us decompose the time series object and explore further. 
+Let us decompose the time series object and explore further.
 
 ```{r}
 fit <- stl(ts_ts(admrf_imp_movingavg), s.window= "periodic")
@@ -1549,20 +1567,20 @@ autoplot(fit)+
   theme_clean()
 
 ```
+
 ```{r}
 summary(fit)
 ```
-:::{.callout-note}
 
--   From the above output, we noted that there is no clear linear trend for the monthly rainfall over the years. However, we do note that the inital rainfall in the earlier time period were around 150mm and the later time period has a rainfall level of 200mm. 
+::: callout-note
+-   From the above output, we noted that there is no clear linear trend for the monthly rainfall over the years. However, we do note that the inital rainfall in the earlier time period were around 150mm and the later time period has a rainfall level of 200mm.
 
 -   We also observed seasonality in the monthly rainfall over the years.
-
 :::
 
 ## Building Models
 
-First we will split the data into training and validation data. Again, similar to temperature data, we will let users decide how much training data and test data they would want, and the duration of the forecast. 
+First we will split the data into training and validation data. Again, similar to temperature data, we will let users decide how much training data and test data they would want, and the duration of the forecast.
 
 ```{r}
 #| code-fold: true
@@ -1578,22 +1596,25 @@ validationrf <- ts_ts(tail(admrf_imp_movingavg$value, 24)) # the number of month
 
 ### Naive method
 
-:::{.panel-tabset}
-
-## Data Table 
+::: panel-tabset
+## Data Table
 
 ```{r}
 naive_model <- naive(trainingrf, h = length(validationrf))
 datatable(data.frame(naive_model))
 ```
-## MAPE 
+
+## MAPE
+
 ```{r}
 MAPE(naive_model$mean, validationrf) * 100
 
 ```
-From the above output, we have a MAPE of ~40% meaning that the average difference between the forecasted value and the actual value is ~40%. As compared to the temperature data, this MAPE is considered very high and there are a lot of room for improvement. 
 
-## Plot of Forecasted Results 
+From the above output, we have a MAPE of \~40% meaning that the average difference between the forecasted value and the actual value is \~40%. As compared to the temperature data, this MAPE is considered very high and there are a lot of room for improvement.
+
+## Plot of Forecasted Results
+
 ```{r}
 autoplot(naive_model) +
   ggtitle("Naive Forecasts for Monthly Total Rainfall") +
@@ -1603,12 +1624,11 @@ autoplot(naive_model) +
 ```
 :::
 
-
 ### Seasonal Naive method
 
-:::{.panel-tabset}
+::: panel-tabset
+## Data Table
 
-## Data Table 
 ```{r}
 snaive_model <- snaive(trainingrf, h = length(validationrf))
 datatable(data.frame(snaive_model))
@@ -1616,13 +1636,15 @@ datatable(data.frame(snaive_model))
 ```
 
 ## MAPE
+
 ```{r}
 MAPE(snaive_model$mean, validationrf) * 100
 
 ```
-The MAPE for seasonal naive model is worse than the naive model with it have a MAPE of ~70%. Let's try other models and see if there any improvements. 
 
-## Plot of Forecasted Results 
+The MAPE for seasonal naive model is worse than the naive model with it have a MAPE of \~70%. Let's try other models and see if there any improvements.
+
+## Plot of Forecasted Results
 
 ```{r}
 autoplot(snaive_model) +
@@ -1632,24 +1654,29 @@ autoplot(snaive_model) +
   theme_ipsum_rc()
 ```
 
-### Exponential Smoothing Methods 
+### Exponential Smoothing Methods
 
-#### Simple exponential smoothing 
+#### Simple exponential smoothing
 
-:::{.panel-tabset}
-## Data Table 
+::: panel-tabset
+## Data Table
+
 ```{r}
 ses_modelrf <- ses(trainingrf, h = length(validationrf))
 datatable(data.frame(ses_modelrf))
 ```
+
 ## MAPE
+
 ```{r}
 MAPE(ses_modelrf$mean, validationrf) * 100
 
 ```
-From the above output, we have a MAPE of ~43% meaning that the average difference between the forecasted value and the actual value is ~43%. This MAPE is similar to the naive model. 
 
-## Plot of Forecasted Results 
+From the above output, we have a MAPE of \~43% meaning that the average difference between the forecasted value and the actual value is \~43%. This MAPE is similar to the naive model.
+
+## Plot of Forecasted Results
+
 ```{r}
 autoplot(ses_modelrf) +
   ggtitle("Simple Expoential Smoothing forecasts for \nMonthly Total Rainfall") +
@@ -1661,8 +1688,9 @@ autoplot(ses_modelrf) +
 
 #### State Space Models
 
-:::{.panel-tabset}
-## Fitting the model 
+::: panel-tabset
+## Fitting the model
+
 ```{r}
 ets_modelrf <- ets(trainingrf)
 summary(ets_modelrf)
@@ -1670,19 +1698,23 @@ summary(ets_modelrf)
 
 We see ETS (M,N,A). This means we have an ets model with multiplicative errors, no trend and a additive seasonality. Additive seasonality means there aren’t any changes to widths or heights of seasonal periods over time.
 
-## Getting the forecasted results 
+## Getting the forecasted results
+
 ```{r}
 ets_forecastrf <- forecast(ets_modelrf, h=length(validationrf))
 datatable(data.frame(ets_forecastrf))
 ```
 
 ## MAPE
+
 ```{r}
 MAPE(ets_forecastrf$mean, validationrf)*100
 ```
-From the above output, we have a MAPE of 45.5%, which is worse than the naive model, our benchmark model. 
 
-## Plot of Forecasted Results 
+From the above output, we have a MAPE of 45.5%, which is worse than the naive model, our benchmark model.
+
+## Plot of Forecasted Results
+
 ```{r}
 autoplot(ets_forecastrf) +
   ggtitle("ETS Forecasts for Monthly Total Rainfall") +
@@ -1692,27 +1724,28 @@ autoplot(ets_forecastrf) +
 ```
 :::
 
-
 ### Holt-Winters
 
-#### Holt-Winters' Additive Seasonality 
+#### Holt-Winters' Additive Seasonality
 
-:::{.panel-tabset}
+::: panel-tabset
+## Data Table
 
-## Data Table 
 ```{r}
 hw_modela <- hw(trainingrf, h = length(validationrf), seasonal = "additive")
 datatable(data.frame(hw_modela))
 
 ```
-## MAPE 
+
+## MAPE
+
 ```{r}
 
 MAPE(hw_modela$mean, validationrf)*100
 
 ```
 
-## Plot of Forecasted Results 
+## Plot of Forecasted Results
 
 ```{r}
 autoplot(hw_modela) +
@@ -1721,27 +1754,28 @@ autoplot(hw_modela) +
   ylab("Amount of Rainfall (in mm)") + 
   theme_ipsum_rc()
 ```
-::: 
+:::
 
+#### Holt-Winters' Multiplicative Seasonality
 
-#### Holt-Winters' Multiplicative Seasonality 
+::: panel-tabset
+## Data Table
 
-:::{.panel-tabset}
-
-## Data Table 
 ```{r}
 hw_modelm <- hw(trainingrf, h = length(validationrf), seasonal = "multiplicative")
 datatable(data.frame(hw_modelm))
 
 ```
-## MAPE 
+
+## MAPE
+
 ```{r}
 
 MAPE(hw_modelm$mean, validationrf)*100
 
 ```
 
-## Plot of Forecasted Results 
+## Plot of Forecasted Results
 
 ```{r}
 autoplot(hw_modelm) +
@@ -1750,16 +1784,13 @@ autoplot(hw_modelm) +
   ylab("Amount of Rainfall (in mm)") + 
   theme_ipsum_rc()
 ```
-::: 
-::: 
-
+:::
+:::
 
 ### ARIMA
 
-
-:::{.panel-tabset}
-
-## Fitting the model 
+::: panel-tabset
+## Fitting the model
 
 ```{r}
 
@@ -1768,19 +1799,22 @@ arima_optimal
 
 ```
 
-## Getting the Forecasted Results 
+## Getting the Forecasted Results
+
 ```{r}
 arima_model <- forecast(arima_optimal)
 datatable(data.frame(arima_model))
 ```
 
-## MAPE 
+## MAPE
+
 ```{r}
 MAPE(arima_model$mean, validationrf)*100
 
 ```
 
-## Plotting the forecasted results 
+## Plotting the forecasted results
+
 ```{r}
 autoplot(arima_model) +
   ggtitle("ARIMA Forecasts for Monthly Mean Temperature") +
@@ -1788,11 +1822,22 @@ autoplot(arima_model) +
   ylab("Temperature (degree celsius)") + 
   theme_ipsum_rc()
 ```
-::: 
+:::
 
+### Comparison of Model Performance
 
-### Comparison of Model Performance 
+| Model                                     | MAPE (%) |
+|-------------------------------------------|----------|
+| Naive                                     | 39.96%   |
+| Seasonal Naive                            | 69.78%   |
+| Simple Exponential Smoothing              | 42.79%   |
+| Holt-Winters' Additive Seasonality        | 48.54%   |
+| Holt-Winters' Multiplicative Seasonality  | 63.31%   |
+| ARIMA                                     | 40.20%   |
 
+: Comparison of MAPE across Models
+
+From the above table, we see that none of the models outperformed the naive model when it comes to forecasting of rainfall data.
 
 # Shiny Dashboard Prototype
 
