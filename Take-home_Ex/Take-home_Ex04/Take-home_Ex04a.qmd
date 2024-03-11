@@ -1,7 +1,8 @@
 ---
-title: "Take-home Exercise 4: Prototyping Time Series Module for Visual Analytics Shiny Application" 
+title: "Take-home Exercise 4: Prototyping Time Series Module for Shiny Application" 
 author: "Goh Si Hui"
 date: 2024/02/25
+date-modified: "last-modified"
 execute: 
   echo: true
   eval: true
