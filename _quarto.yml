@@ -62,6 +62,8 @@ website:
           href: "Take-home_Ex/Take-home_Ex02/Take-home_Ex02.qmd"
         - text: Take-home Exercise 3
           href: "Take-home_Ex/Take-home_Ex03/Take-home_Ex03b.qmd"
+        - text: Take-home Exercise 4
+          href: "Take-home_Ex/Take-home_Ex04/Take-home_Ex04a.qmd"
 
     - text: Extra Stuff
       menu: 
@@ -109,6 +111,7 @@ website:
           - Take-home_Ex/Take-home_Ex01/Take-home_Ex01.qmd
           - Take-home_Ex/Take-home_Ex02/Take-home_Ex02.qmd
           - Take-home_Ex/Take-home_Ex03/Take-home_Ex03b.qmd
+          - Take-home_Ex/Take-home_Ex04/Take-home_Ex04a.qmd
       - section: "Extra Stuff"
         contents: 
           - Extra/Post-Lesson_01/Post-Lesson_01.qmd
