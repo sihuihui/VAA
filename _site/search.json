@@ -3125,5 +3125,33 @@
       "In-class Exercises",
       "In-class Exercise 3"
     ]
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09.html",
+    "href": "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09.html",
+    "title": "Hands-on Exercise 9",
+    "section": "",
+    "text": "By the end of this hands-on exercise, we will be able to:\n\ncreate bullet chart by using ggplot2,\ncreate sparklines by using ggplot2,\nbuild industry standard dashboard by using R Shiny."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09.html#installing-and-launching-r-packages",
+    "href": "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09.html#installing-and-launching-r-packages",
+    "title": "Hands-on Exercise 9",
+    "section": "2.1 Installing and Launching R Packages",
+    "text": "2.1 Installing and Launching R Packages\nFor the purpose of this hands-on exercise, the following R packages will be used:\n\ntidyverse\nlubridate\nggthemes\ngtExtras\nreactable\nreactablefmtr\n\nThe code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.\n\npacman::p_load(lubridate, ggthemes, reactable,\nreactablefmtr, gt, gtExtras, tidyverse)"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09.html#importing-microsoft-access-database",
+    "href": "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09.html#importing-microsoft-access-database",
+    "title": "Hands-on Exercise 9",
+    "section": "2.2 Importing Microsoft Access Database",
+    "text": "2.2 Importing Microsoft Access Database\nFor the purpose of this study, a personal database in Microsoft Access mdb format called Coffee Chain will be used.\nIn the code chunk below, odbcConnectAccess() of RODBC package is used used to import a database query table into R.\n\nlibrary(RODBC)\ncon &lt;- odbcConnectAccess2007('data/Coffee Chain.mdb')\ncoffeechain &lt;- sqlFetch(con, 'CoffeeChain Query')\nwrite_rds(coffeechain, \"data/CoffeeChain.rds\")\nodbcClose(con)\n\n\ncoffeechain &lt;- read_rds(\"data/rds/CoffeeChain.rds\")\n\nThe code chunk below is used to aggregate sales and budgeted sales at the product level.\n\nproduct &lt;- coffeechain %&gt;%\n  group_by(`Product`) %&gt;%\n  summarise(`target` = sum(`Budget Sales`),\n            `current` = sum(`Sales`)) %&gt;%\n  ungroup()"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09.html#preparing-the-data",
+    "href": "Hands-on_Ex/Hands-on_Ex09/Hands-on_Ex09.html#preparing-the-data",
+    "title": "Hands-on Exercise 9",
+    "section": "4.1 Preparing the data",
+    "text": "4.1 Preparing the data\n\nsales_report &lt;- coffeechain %&gt;%\n  filter(Date &gt;= \"2013-01-01\") %&gt;%\n  mutate(Month = month(Date)) %&gt;%\n  group_by(Month, Product) %&gt;%\n  summarise(Sales = sum(Sales)) %&gt;%\n  ungroup() %&gt;%\n  select(Month, Product, Sales)\n\nThe code chunk below is used to compute the minimum, maximum and end of the the month sales.\n\nmins &lt;- group_by(sales_report, Product) %&gt;% \n  slice(which.min(Sales))\nmaxs &lt;- group_by(sales_report, Product) %&gt;% \n  slice(which.max(Sales))\nends &lt;- group_by(sales_report, Product) %&gt;% \n  filter(Month == max(Month))\n\nThe following code chunk is used to compute the 25th and 75th quantiles.\n\nquarts &lt;- sales_report %&gt;%\n  group_by(Product) %&gt;%\n  summarise(quart1 = quantile(Sales, \n                              0.25),\n            quart2 = quantile(Sales, \n                              0.75)) %&gt;%\n  right_join(sales_report)\n\n\nggplot(sales_report, aes(x=Month, y=Sales)) + \n  facet_grid(Product ~ ., scales = \"free_y\") + \n  geom_ribbon(data = quarts, aes(ymin = quart1, max = quart2), \n              fill = 'grey90') +\n  geom_line(size=0.3) +\n  geom_point(data = mins, col = 'red') +\n  geom_point(data = maxs, col = 'blue') +\n  geom_text(data = mins, aes(label = Sales), vjust = -1) +\n  geom_text(data = maxs, aes(label = Sales), vjust = 2.5) +\n  geom_text(data = ends, aes(label = Sales), hjust = 0, nudge_x = 0.5) +\n  geom_text(data = ends, aes(label = Product), hjust = 0, nudge_x = 1.0) +\n  expand_limits(x = max(sales_report$Month) + \n                  (0.25 * (max(sales_report$Month) - min(sales_report$Month)))) +\n  scale_x_continuous(breaks = seq(1, 12, 1)) +\n  scale_y_continuous(expand = c(0.1, 0)) +\n  theme_tufte(base_size = 3, base_family = \"Helvetica\") +\n  theme(axis.title=element_blank(), axis.text.y = element_blank(), \n        axis.ticks = element_blank(), strip.text = element_blank())"
   }
 ]
