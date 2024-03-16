@@ -16,15 +16,18 @@ execute:
 # Getting Started 
 
 ## Installing the packages 
+First, let us install and launch the relevant packages needed for this exercise using `pacman::p_load()`. 
 
 ```{r}
 pacman::p_load(tidygraph, ggraph, visNetwork, lubridate, clock, tidyverse, graphlayouts)
 
 ```
 
--   clock is meant for time 
--   lubridate is meant for date columns 
+-   clock is meant for manipulating time data
+-   lubridate is meant for mainpulating date- related data  
+-   ggraph: create network graphs 
 -   graphlayout: complement ggraph 
+-   visNetwork: create interactive network graphs.
 
 :::{.callout-note}
 -   if we are using tidygraph, there's no need for igraph. 
@@ -32,7 +35,9 @@ pacman::p_load(tidygraph, ggraph, visNetwork, lubridate, clock, tidyverse, graph
 
 
 ## Importing the Data 
-::: panel-tabset
+Let us import the data using `read_csv()` and check the structure of the imported data using `str()`. 
+
+:::{.panel-tabset}
 ## node
 
 ```{r}
@@ -50,10 +55,13 @@ edge <- read_csv("data/GAStech_email_edge-v2.csv")
 str(edge)
 
 ```
+:::
+
 
 
 # Data Wrangling 
 
+From the above output, we noted that `SentDate` was seen as character data type. So we will convert it using `dmy()` and also create a new column to tell us the day of the email being sent using `wday()`. 
 ```{r}
 edge <- edge %>% 
   mutate(SendDate = dmy(SentDate)) %>%
@@ -73,9 +81,9 @@ str(edge)
 
 :::
 
-Now we will aggregate the edges because they are currently at an individual level. Each row is an edge currently.
-```{r}
+Now we will aggregate the edges because they are currently at an individual level where each row is an edge.
 
+```{r}
 edge_aggregated <- edge %>%
   filter(MainSubject == "Work related") %>%
   group_by(source, target, Weekday) %>%
@@ -98,6 +106,7 @@ glimpse(edge_aggregated)
 
 ::: 
 
+We will now create a network graph object using `tbl_graph()`. 
 ```{r}
 
 graph <- tbl_graph(nodes = node,
@@ -149,6 +158,9 @@ g + theme_graph(background = 'grey10',
 
 # Changing the Network Graph's Layout 
 
+:::{.panel-tabset}
+
+## fr layout 
 ```{r}
 g <- ggraph(graph, 
             layout = "fr") + #alternative is to use layout_with_fr() if we look at igraph's documentation
@@ -158,6 +170,8 @@ g <- ggraph(graph,
 g + theme_graph()
 
 ```
+
+## kk layout 
 ```{r}
 #trying out a different layout
 g <- ggraph(graph, 
@@ -168,7 +182,7 @@ g <- ggraph(graph,
 g + theme_graph()
 
 ```
-
+## dh layout 
 ```{r}
 #trying out a different layout
 g <- ggraph(graph, 
@@ -179,6 +193,8 @@ g <- ggraph(graph,
 g + theme_graph()
 
 ```
+:::
+
 # Further Customising the Network Graph 
 ```{r}
 g <- ggraph(graph, 
@@ -201,7 +217,8 @@ g + theme_graph()
 
 
 :::{.panel-tabset}
-## Added width but did not indicate alpha and scale_edge_width
+
+## Added width only 
 ```{r}
 g <- ggraph(graph, 
             layout = "nicely") +
@@ -215,7 +232,8 @@ g + theme_graph()
 
 It is very hard to read because the lines overlap. 
 
-## Added width and alpha but did not indicate scale_edge_width
+## Added width and alpha 
+
 ```{r}
 g <- ggraph(graph, 
             layout = "nicely") +
@@ -230,7 +248,8 @@ g + theme_graph()
 
 Now the output is a bit better. 
 
-## Added scale_edge_width
+## Added width, alpha and scale_edge_width
+
 We can add scale_edge_width() to give the range of the "thickness" of the edges. 
 ```{r}
 g <- ggraph(graph, 

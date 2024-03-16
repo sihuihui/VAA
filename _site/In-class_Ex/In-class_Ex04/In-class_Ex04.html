@@ -530,7 +530,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#installing-the-packages" id="toc-installing-the-packages" class="nav-link" data-scroll-target="#installing-the-packages"><span class="header-section-number">1.1</span> Installing the packages</a></li>
   <li><a href="#importing-the-data" id="toc-importing-the-data" class="nav-link" data-scroll-target="#importing-the-data"><span class="header-section-number">1.2</span> Importing the Data</a></li>
-  <li><a href="#edge" id="toc-edge" class="nav-link" data-scroll-target="#edge"><span class="header-section-number">1.3</span> edge</a></li>
   </ul></li>
   <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling"><span class="header-section-number">2</span> Data Wrangling</a></li>
   <li><a href="#plotting-a-network-graph" id="toc-plotting-a-network-graph" class="nav-link" data-scroll-target="#plotting-a-network-graph"><span class="header-section-number">3</span> Plotting a Network Graph</a></li>
@@ -587,13 +586,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 data-number="1"><span class="header-section-number">1</span> Getting Started</h1>
 <section id="installing-the-packages" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="installing-the-packages"><span class="header-section-number">1.1</span> Installing the packages</h2>
+<p>First, let us install and launch the relevant packages needed for this exercise using <code>pacman::p_load()</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidygraph, ggraph, visNetwork, lubridate, clock, tidyverse, graphlayouts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>clock is meant for time</li>
-<li>lubridate is meant for date columns</li>
+<li>clock is meant for manipulating time data</li>
+<li>lubridate is meant for mainpulating date- related data<br>
+</li>
+<li>ggraph: create network graphs</li>
 <li>graphlayout: complement ggraph</li>
+<li>visNetwork: create interactive network graphs.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -613,7 +616,11 @@ Note
 </section>
 <section id="importing-the-data" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="importing-the-data"><span class="header-section-number">1.2</span> Importing the Data</h2>
-<p>::: panel-tabset ## node</p>
+<p>Let us import the data using <code>read_csv()</code> and check the structure of the imported data using <code>str()</code>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">node</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">edge</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>node <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/GAStech_email_node.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(node)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -634,9 +641,8 @@ Note
 </div>
 </div>
 <p>GAStech_email_nodes.csv consist of the name, department and title of the employees.</p>
-</section>
-<section id="edge" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="edge"><span class="header-section-number">1.3</span> edge</h2>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>edge <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/GAStech_email_edge-v2.csv"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(edge)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -665,10 +671,14 @@ Note
  - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
 </div>
 </div>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="data-wrangling" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Data Wrangling</h1>
+<p>From the above output, we noted that <code>SentDate</code> was seen as character data type. So we will convert it using <code>dmy()</code> and also create a new column to tell us the day of the email being sent using <code>wday()</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>edge <span class="ot">&lt;-</span> edge <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SendDate =</span> <span class="fu">dmy</span>(SentDate)) <span class="sc">%&gt;%</span></span>
@@ -709,7 +719,7 @@ Observations
 </ul>
 </div>
 </div>
-<p>Now we will aggregate the edges because they are currently at an individual level. Each row is an edge currently.</p>
+<p>Now we will aggregate the edges because they are currently at an individual level where each row is an edge.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>edge_aggregated <span class="ot">&lt;-</span> edge <span class="sc">%&gt;%</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(MainSubject <span class="sc">==</span> <span class="st">"Work related"</span>) <span class="sc">%&gt;%</span></span>
@@ -746,6 +756,7 @@ About the above code chunk
 </ul>
 </div>
 </div>
+<p>We will now create a network graph object using <code>tbl_graph()</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">&lt;-</span> <span class="fu">tbl_graph</span>(<span class="at">nodes =</span> node,</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">edges =</span> edge_aggregated,</span>
@@ -851,6 +862,10 @@ Note
 </section>
 <section id="changing-the-network-graphs-layout" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Changing the Network Graph’s Layout</h1>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">fr layout</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">kk layout</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">dh layout</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(graph, </span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">layout =</span> <span class="st">"fr"</span>) <span class="sc">+</span> <span class="co">#alternative is to use layout_with_fr() if we look at igraph's documentation</span></span>
@@ -866,6 +881,8 @@ Note
 </div>
 </div>
 </div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#trying out a different layout</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(graph, </span>
@@ -882,6 +899,8 @@ Note
 </div>
 </div>
 </div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#trying out a different layout</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(graph, </span>
@@ -895,6 +914,9 @@ Note
 <figure class="figure">
 <p><img src="In-class_Ex04_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -934,9 +956,9 @@ About the above code chunk
 </div>
 </div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
-<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Added width but did not indicate alpha and scale_edge_width</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Added width and alpha but did not indicate scale_edge_width</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Added scale_edge_width</a></li></ul>
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Added width only</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Added width and alpha</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Added width, alpha and scale_edge_width</a></li></ul>
 <div class="tab-content">
-<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(graph, </span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">layout =</span> <span class="st">"nicely"</span>) <span class="sc">+</span></span>
@@ -955,7 +977,7 @@ About the above code chunk
 </div>
 <p>It is very hard to read because the lines overlap.</p>
 </div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(graph, </span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">layout =</span> <span class="st">"nicely"</span>) <span class="sc">+</span></span>
@@ -975,7 +997,7 @@ About the above code chunk
 </div>
 <p>Now the output is a bit better.</p>
 </div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
 <p>We can add scale_edge_width() to give the range of the “thickness” of the edges.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggraph</span>(graph, </span>
