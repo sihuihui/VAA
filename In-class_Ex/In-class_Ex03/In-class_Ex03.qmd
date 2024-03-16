@@ -13,7 +13,7 @@ execute:
   message: false
 ---
 
-*Work in Progress: Updating this exercise with kriging*
+*Updated this exercise with kriging*
 
 # About this Exercise
 
@@ -198,6 +198,9 @@ Weighting is assigned to sample points through the use of a weighting coefficien
 
 It is important to notice that the IDW interpolation method also has some disadvantages: the quality of the interpolation result can decrease, if the distribution of sample data points is uneven. Furthermore, maximum and minimum values in the interpolated surface can only occur at sample data points. This often results in small peaks and pits around the sample data points.
 
+### Building the models 
+For the next few steps, we will try building different models with nmax =5, 10 and 15 to see the differences. 
+
 ::: panel-tabset
 ## nmax = 5
 
@@ -229,6 +232,16 @@ res15 <- gstat(formula = MONTHSUM ~ 1,
 
 ```
 :::
+
+### Doing interpolation 
+Now that our model is defined, we can use predict() to actually interpolate, i.e., to calculate predicted values. The predict function accepts:
+
+-   A raster—stars object, such as dem
+-   A model—gstat object, such as g. 
+
+The raster serves for two purposes:
+-   Specifying the locations where we want to make predictions (in all methods), and
+-   Specifying covariate values (in Universal Kriging only).
 
 ::: panel-tabset
 ## nmax = 5
@@ -300,6 +313,10 @@ tm_shape(pred15) +
 Kriging is one of several methods that uses a limited set of sampled data points to estimate the value of a variable over a continuous spatial field. It differs from Inverse Distance Weighted Interpolation in that it uses the spatial correlation between sampled points to interpolate the values in the spatial field: the interpolation is based on the spatial arrangement of the empirical observations, rather than on a presumed model of spatial distribution. Kriging also generates estimates of the uncertainty surrounding each interpolated value.
 
 First, we will calculate and examine the empirical variogram using `variogram()` of gstat package.
+The function requires two arguments:
+
+-   formula, the dependent variable and the covariates (same as in gstat)
+-   data, a point layer with the dependent variable and covariates as attributes. 
 
 ```{r}
 v <- variogram(MONTHSUM ~ 1, 
@@ -307,7 +324,7 @@ v <- variogram(MONTHSUM ~ 1,
 plot(v)
 
 ```
-
+We can then fit an empirical variogram model using `fit.variogram()`. 
 ```{r}
 fv <- fit.variogram(object = v,
                     model = vgm(
@@ -319,6 +336,7 @@ fv
 
 ```
 
+We now visualise how well the observed data fit the model by plotting *fv* using the following code chunk. 
 ```{r}
 
 plot(v, fv)
@@ -333,6 +351,7 @@ k <- gstat(formula = MONTHSUM ~ 1,
 k
 
 ```
+Now we can use `predict()` of gstat package to estimate the unknown grids using the following code chunk. 
 
 ```{r}
 resp <- predict(k, coop)
@@ -348,9 +367,33 @@ resp
 
 ```
 
+In order to create a raster surface data object, rasterize() of terra is used as shown in the code chunk below.
 ```{r}
 kpred <- terra::rasterize(resp, grid, 
                          field = "pred")
 kpred
 
 ```
+Lastly, we will map the interpolated rainfall raster (i.e. kpred) by using tmap. 
+
+```{r}
+tmap_options(check.and.fix = TRUE)
+tmap_mode("plot")
+tm_shape(kpred) + 
+  tm_raster(alpha = 0.6, 
+            palette = "viridis",
+            title = "Total monthly rainfall (mm)") +
+  tm_layout(main.title = "Distribution of monthly rainfall, Feb 2024",
+            main.title.position = "center",
+            main.title.size = 1.2,
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            frame = TRUE) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2)
+
+
+
+```
+
