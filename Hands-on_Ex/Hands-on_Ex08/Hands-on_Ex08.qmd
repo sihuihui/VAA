@@ -2,6 +2,7 @@
 title: "Hands-on Exercise 8: Modelling, Visualising and Analysing Network data with R"
 author: "Goh Si Hui"
 date: 2024/03/03
+date-modified: "last-modified"
 execute: 
   echo: true
   eval: true
@@ -9,6 +10,7 @@ execute:
   warning: false
   message: false
 ---
+*[Added date modified field on 16 Mar as I realised it was missing]*
 
 # About this Exercise
 
@@ -30,7 +32,7 @@ For this exercise, other than tidyverse and lubridate, we will use the following
 
 -   [igraph](https://r.igraph.org/):Routines for simple graphs and network analysis. It can handle large graphs very well and provides functions for generating random and regular graphs, graph visualization, centrality methods and much more.
 
--   [tidygraph](https://tidygraph.data-imaginist.com/):provides a tidy API for graph/network manipulation. 
+-   [tidygraph](https://tidygraph.data-imaginist.com/):provides a tidy API for graph/network manipulation.
 
 -   [ggraph](https://ggraph.data-imaginist.com/):an extension of ggplot2 aimed at supporting relational data structures such as networks, graphs, and trees.
 
@@ -43,50 +45,57 @@ pacman::p_load(tidyverse, lubridate, igraph, tidygraph, ggraph, visNetwork)
 ```
 
 ## Importing Data into R
-The data sets used in this hands-on exercise are from an oil exploration and extraction company. There are two data sets: one data set contains the nodes data and the other contains the edges (also know as link) data. We will import them using `read_csv()` of **readr** package. 
 
-:::{.panel-tabset}
-## node 
+The data sets used in this hands-on exercise are from an oil exploration and extraction company. There are two data sets: one data set contains the nodes data and the other contains the edges (also know as link) data. We will import them using `read_csv()` of **readr** package.
+
+::: panel-tabset
+## node
+
 ```{r}
 node <- read_csv("data/GAStech_email_node.csv")
 head(node)
 
 ```
+
 GAStech_email_nodes.csv consist of the name, department and title of the employees.
 
-## edge 
+## edge
+
 ```{r}
 edge <- read_csv("data/GAStech_email_edge-v2.csv")
 head(edge)
 
 ```
+
 GAStech-email_edges.csv consists of emails correspondances between the employees.
 :::
 
+# Data Checks
 
-# Data Checks 
-We will now examine the structure of the data frame using `glimpse()` of **dplyr**. 
+We will now examine the structure of the data frame using `glimpse()` of **dplyr**.
 
-:::{.panel-tabset}
-## node 
+::: panel-tabset
+## node
+
 ```{r}
 glimpse(node)
 
 ```
 
-## edge 
+## edge
+
 ```{r}
 glimpse(edge)
 
 ```
 :::
 
-:::{.callout-note}
+::: callout-note
 ## Observations
--   From the node table, we see that each employee is given an `id`, which is then used as the `source` and `target` for the edge table. 
 
--   the edge table's `SentDate` consists of date but it is treated as characters. We should change it to date data type. 
+-   From the node table, we see that each employee is given an `id`, which is then used as the `source` and `target` for the edge table.
 
+-   the edge table's `SentDate` consists of date but it is treated as characters. We should change it to date data type.
 :::
 
 ```{r}
@@ -99,15 +108,15 @@ edge <- edge %>%
 glimpse(edge)
 ```
 
-:::{.callout-note}
+::: callout-note
 ## Observations
+
 -   `SentDate` is now a Date data type after we use `dmy()` to transform the `SentDate`.
 
--   A new column `Weekday` has been created using `wday()`, which returns the day of the week as a decimal number or an ordered factor if label is TRUE. The argument abbr is FALSE keep the daya spells in full, i.e. Monday. 
-
+-   A new column `Weekday` has been created using `wday()`, which returns the day of the week as a decimal number or an ordered factor if label is TRUE. The argument abbr is FALSE keep the daya spells in full, i.e. Monday.
 :::
 
-A close examination of edge data frame reveals that it consists of individual e-mail flow records. This is not very useful for visualisation.Hence, we will aggregate the individual by date, senders, receivers, main subject and day of the week. 
+A close examination of edge data frame reveals that it consists of individual e-mail flow records. This is not very useful for visualisation.Hence, we will aggregate the individual by date, senders, receivers, main subject and day of the week.
 
 ```{r}
 edge_aggregated <- edge %>%
@@ -121,40 +130,51 @@ edge_aggregated <- edge %>%
 glimpse(edge_aggregated)
 ```
 
-:::{.callout-note}
+::: callout-note
 ## Observations
--   We filtered those "Work related" emails using `MainSubject`. Then perform group_by using the source, target and Weekday. Then we create a new field `Weight` by counting the number of emails resulting from the group_by. We also remove those emails where the source and target are the same employees and those weights that are less than 1 to get the resultant table `edge_aggregated`. 
+
+-   We filtered those "Work related" emails using `MainSubject`. Then perform group_by using the source, target and Weekday. Then we create a new field `Weight` by counting the number of emails resulting from the group_by. We also remove those emails where the source and target are the same employees and those weights that are less than 1 to get the resultant table `edge_aggregated`.
 :::
 
-
-# Creating network objects using tidygraph 
+# Creating network objects using tidygraph
 
 In this section, we will learn how to create a graph data model by using tidygraph package. It provides a tidy API for graph/network manipulation. While network data itself is not tidy, it can be envisioned as two tidy tables, one for node data and one for edge data. tidygraph provides a way to switch between the two tables and provides dplyr verbs for manipulating them. Furthermore it provides access to a lot of graph algorithms with return values that facilitate their use in a tidy workflow.
 
-## tbl_graph object 
-Graphs and networks can come from many sources, or be created by simulation or deterministacally. Tidygraph provides conversions from all well-known structures in R, as well as a range of create_() and play_*() functions for creating well-defined or simulated graphs.
+## tbl_graph object
 
-We can make use of `tbl_graph()` and `as_tbl_graph()` to create network objects. 
+Graphs and networks can come from many sources, or be created by simulation or deterministacally. Tidygraph provides conversions from all well-known structures in R, as well as a range of create\_() and play\_\*() functions for creating well-defined or simulated graphs.
 
--   `tbl_graph()` creates a tbl_graph network object from nodes and edges data. 
+We can make use of `tbl_graph()` and `as_tbl_graph()` to create network objects.
+
+-   `tbl_graph()` creates a tbl_graph network object from nodes and edges data.
+
 -   `as_tbl_graph()` converts network data and objects to a tbl_graph network. Below are network data and objects supported by `as_tbl_graph()`
 
-  -   a node data.frame and an edge data.frame,
-  -   data.frame, list, matrix from base,
-  -   igraph from igraph,
-  -   network from network,
-  -   dendrogram and hclust from stats,
-  -   Node from data.tree,
-  -   phylo and evonet from ape, and
-  -   graphNEL, graphAM, graphBAM from graph (in Bioconductor).
+-   a node data.frame and an edge data.frame,
+
+-   data.frame, list, matrix from base,
+
+-   igraph from igraph,
+
+-   network from network,
+
+-   dendrogram and hclust from stats,
+
+-   Node from data.tree,
+
+-   phylo and evonet from ape, and
+
+-   graphNEL, graphAM, graphBAM from graph (in Bioconductor).
 
 ## dplyr verbs in tidygraph
+
 -   `activate()` verb from tidygraph serves as a switch between tibbles for nodes and edges. All dplyr verbs applied to tbl_graph object are applied to the active tibble.
 -   `.N()` function is used to gain access to the node data while manipulating the edge data.
--   `.E()` function is used to gain access to the edge data. 
--   `.G()` function is used to give us the tbl_graph object itself. 
+-   `.E()` function is used to gain access to the edge data.
+-   `.G()` function is used to give us the tbl_graph object itself.
 
-## Building tidygraph data model 
+## Building tidygraph data model
+
 In this section, we will use `tbl_graph()` of tinygraph package to build an tidygraph’s network graph data.frame.
 
 ```{r}
@@ -166,17 +186,17 @@ graph <- tbl_graph(nodes = node,
 graph 
 ```
 
-:::{.callout-note}
+::: callout-note
 ## Observations
+
 -   The output above reveals that GAStech_graph is a tbl_graph object with 54 nodes and 4541 edges.
 -   The command also prints the first six rows of “Node Data” and the first three of “Edge Data”.
 -   It states that the Node Data is active. The notion of an active tibble within a tbl_graph object makes it possible to manipulate the data in one tibble at a time.
-
 :::
 
-## Changing the active object 
-The nodes tibble data frame is activated by default, but you can change which tibble data frame is active with the activate() function. Thus, if we wanted to rearrange the rows in the edges tibble to list those with the highest “weight” first, we could use activate() and then arrange().
+## Changing the active object
 
+The nodes tibble data frame is activated by default, but you can change which tibble data frame is active with the activate() function. Thus, if we wanted to rearrange the rows in the edges tibble to list those with the highest “weight” first, we could use activate() and then arrange().
 
 ```{r}
 graph %>% 
@@ -185,19 +205,20 @@ graph %>%
 
 ```
 
-# Plotting Static Network Graphs using ggraph 
+# Plotting Static Network Graphs using ggraph
 
 ggraph is an extension of ggplot2, making it easier to carry over basic ggplot skills to the design of network graphs.
 
 As in all network graph, there are three main aspects to a ggraph’s network graph, they are:
 
 -   The Layout defines how nodes are placed on the plot, that is, it is a conversion of the relational structure into an x and y value for each node in the graph. ggraph has access to all layout functions available in igraph and furthermore provides a large selection of its own, such as hive plots, treemaps, and circle packing.
--   The Nodes are the connected entities in the relational structure. These can be plotted using the geom_node_*() family of geoms. Some node geoms make more sense for certain layouts, e.g. geom_node_tile() for treemaps and icicle plots, while others are more general purpose, e.g. geom_node_point().
--   The Edges are the connections between the entities in the relational structure. These can be visualized using the geom_edge_*() family of geoms that contain a lot of different edge types for different scenarios. Sometimes the edges are implied by the layout (e.g. with treemaps) and need not be plotted, but often some sort of line is warranted.
-
+-   The Nodes are the connected entities in the relational structure. These can be plotted using the geom_node\_\*() family of geoms. Some node geoms make more sense for certain layouts, e.g. geom_node_tile() for treemaps and icicle plots, while others are more general purpose, e.g. geom_node_point().
+-   The Edges are the connections between the entities in the relational structure. These can be visualized using the geom_edge\_\*() family of geoms that contain a lot of different edge types for different scenarios. Sometimes the edges are implied by the layout (e.g. with treemaps) and need not be plotted, but often some sort of line is warranted.
 
 ## Plotting a basic network graph
-The code chunk below uses `ggraph()`, `geom-edge_link()` and `geom_node_point()` to plot a network graph by using `graph` which is the tbl_graph object that we created in previous section. 
+
+The code chunk below uses `ggraph()`, `geom-edge_link()` and `geom_node_point()` to plot a network graph by using `graph` which is the tbl_graph object that we created in previous section.
+
 ```{r}
 ggraph(graph) +
   geom_edge_link() +
@@ -205,15 +226,14 @@ ggraph(graph) +
 
 ```
 
-:::{.callout-note}
--   The basic plotting function is `ggraph()`, which takes the data to be used for the graph and the type of layout desired. 
+::: callout-note
+-   The basic plotting function is `ggraph()`, which takes the data to be used for the graph and the type of layout desired.
 -   Both of the arguments for `ggraph()` are built around igraph. Therefore, `ggraph()` can use either an igraph object or a tbl_graph object.
-
 :::
 
 ## Customising ggraph's network graphs
-We can use ggraph's `theme_graph()` to further customise our network graph. This `theme_graph()` is tuned for graph visualisations because the coordinate values are often of no importance  and axes are thus a distraction. Hence, ggraph has `theme_graph()`, a built-in theme to remove redundant elements. Furthermore the default behaviour is to use a narrow font so text takes up less space. Theme colour is defined by a background and foreground colour where the background defines the colour of the whole graphics area and the foreground defines the colour of the strip and border. By default strip and border is turned off as it is an unnecessary element unless facetting is used. To add a foreground colour to a plot that is already using theme_graph the th_foreground helper is provided. In order to use this appearance as default use the set_graph_style function. An added benefit of this is that it also changes the default text-related values in the different geoms for a completely coherent look. unset_graph_style can be used to revert the defaults back to their default settings (that is, they are not necessarily reverted back to what they were prior to calling set_graph_style). The th_no_axes() helper is provided to modify an existing theme so that grid and axes are removed.
 
+We can use ggraph's `theme_graph()` to further customise our network graph. This `theme_graph()` is tuned for graph visualisations because the coordinate values are often of no importance and axes are thus a distraction. Hence, ggraph has `theme_graph()`, a built-in theme to remove redundant elements. Furthermore the default behaviour is to use a narrow font so text takes up less space. Theme colour is defined by a background and foreground colour where the background defines the colour of the whole graphics area and the foreground defines the colour of the strip and border. By default strip and border is turned off as it is an unnecessary element unless facetting is used. To add a foreground colour to a plot that is already using theme_graph the th_foreground helper is provided. In order to use this appearance as default use the set_graph_style function. An added benefit of this is that it also changes the default text-related values in the different geoms for a completely coherent look. unset_graph_style can be used to revert the defaults back to their default settings (that is, they are not necessarily reverted back to what they were prior to calling set_graph_style). The th_no_axes() helper is provided to modify an existing theme so that grid and axes are removed.
 
 ```{r}
 #create the graph
@@ -225,7 +245,8 @@ g <- ggraph(graph) +
 g + theme_graph()
 
 ```
-### Changing the plot colour 
+
+### Changing the plot colour
 
 `theme_graph()` makes it easy to change the coloring of the plot.
 
@@ -238,12 +259,12 @@ g + theme_graph(background = 'grey10',
                 text_colour = 'white')
 ```
 
-## Working with ggraph's layouts 
+## Working with ggraph's layouts
+
 ggraph support many layout for standard used, they are: star, circle, nicely (default), dh, gem, graphopt, grid, mds, spahere, randomly, fr, kk, drl and lgl. Figures below and on the right show layouts supported by ggraph().
 
-
-:::{.panel-tabset}
-## Fruchterman and Reingold layout 
+::: panel-tabset
+## Fruchterman and Reingold layout
 
 ```{r}
 g <- ggraph(graph, 
@@ -254,7 +275,8 @@ g <- ggraph(graph,
 g + theme_graph()
 
 ```
-## star layout 
+
+## star layout
 
 ```{r}
 g <- ggraph(graph, 
@@ -266,7 +288,7 @@ g + theme_graph()
 
 ```
 
-## eigen layout 
+## eigen layout
 
 ```{r}
 g <- ggraph(graph, 
@@ -277,10 +299,10 @@ g <- ggraph(graph,
 g + theme_graph()
 
 ```
-
 :::
 
-## Modifying network nodes 
+## Modifying network nodes
+
 We can also define the colour each node by referring to their respective departments.
 
 ```{r}
@@ -294,13 +316,14 @@ g + theme_graph()
 
 ```
 
-:::{.callout-note}
-## Observations 
+::: callout-note
+## Observations
 
 -   geom_node_point is equivalent in functionality to geo_point of ggplot2. It allows for simple plotting of nodes in different shapes, colours and sizes. In the codes chnuks above colour and size are used.
 :::
 
-## Modifying Edges 
+## Modifying Edges
+
 We can also modify the edges such that the thickness of the edges will be mapped with the Weight variable.
 
 ```{r}
@@ -316,14 +339,13 @@ g + theme_graph()
 
 ```
 
-:::{.callout-note}
-
+::: callout-note
 geom_edge_link draws edges in the simplest way - as straight lines between the start and end nodes. But, it can do more that that. In the example above, argument width is used to map the width of the line in proportional to the Weight attribute and argument alpha is used to introduce opacity on the line.
 :::
 
+## Creating Facet Graphs
 
-## Creating Facet Graphs 
-Another very useful feature of ggraph is faceting. In visualising network data, this technique can be used to reduce edge over-plotting in a very meaning way by spreading nodes and edges out based on their attributes. 
+Another very useful feature of ggraph is faceting. In visualising network data, this technique can be used to reduce edge over-plotting in a very meaning way by spreading nodes and edges out based on their attributes.
 
 There are three functions in ggraph to implement faceting, they are:
 
@@ -331,8 +353,9 @@ There are three functions in ggraph to implement faceting, they are:
 -   `facet_edges()` whereby nodes are always drawn in a panels even if the node data contains an attribute named the same as the one used for the edge facetting, and
 -   `facet_graph()` faceting on two variables simultaneously.
 
-### facet_edges() 
-This function creates small multiples based on edge attributes. It is equivalent to ggplot::facet_wrap() but only facet edges. Nodes are repeated in every panel. 
+### facet_edges()
+
+This function creates small multiples based on edge attributes. It is equivalent to ggplot::facet_wrap() but only facet edges. Nodes are repeated in every panel.
 
 ```{r}
 set_graph_style()
@@ -348,7 +371,7 @@ g + facet_edges(~Weekday)
 
 ```
 
-Currently the legend is on the right side. We can use `theme()` to change the position of the legend. 
+Currently the legend is on the right side. We can use `theme()` to change the position of the legend.
 
 ```{r}
 set_graph_style()
@@ -365,7 +388,7 @@ g + facet_edges(~Weekday)
 
 ```
 
-We can also add frame to each facet graph using `th_foreground()`. 
+We can also add frame to each facet graph using `th_foreground()`.
 
 ```{r}
 set_graph_style()
@@ -385,7 +408,8 @@ g + facet_edges(~Weekday) +
 
 ```
 
-### facet_nodes() 
+### facet_nodes()
+
 `facet_nodes()` creates small multiples based on node attributes. This function is equivalent to ggplot2::facet_wrap() but only facets nodes. Edges are drawn if their terminal nodes are both present in a panel.
 
 ```{r}
@@ -406,16 +430,19 @@ g + facet_nodes(~Department) +
 
 ```
 
-# Network Metrics Analysis 
-Centrality measures are a collection of statistical indices use to describe the relative important of the actors are to a network. There are four well-known centrality measures, namely: degree, betweenness, closeness and eigenvector. For more information on centrality measures, please refer to [A User's Guide to Network Analysis in R](https://www.researchgate.net/publication/307923050_A_User's_Guide_to_Network_Analysis_in_R). 
+# Network Metrics Analysis
 
-## Computing and Visualising Centrality Indices 
+Centrality measures are a collection of statistical indices use to describe the relative important of the actors are to a network. There are four well-known centrality measures, namely: degree, betweenness, closeness and eigenvector. For more information on centrality measures, please refer to [A User's Guide to Network Analysis in R](https://www.researchgate.net/publication/307923050_A_User's_Guide_to_Network_Analysis_in_R).
+
+## Computing and Visualising Centrality Indices
+
 It is important to note that from ggraph v2.0 onward tidygraph algorithms such as centrality measures can be accessed directly in ggraph calls. This means that it is no longer necessary to precompute and store derived node and edge centrality measures on the graph in order to use them in a plot.
 
-The code chunks below show how to compute and visualise graphs based on centrality indices before ggraph v2.0 and after ggraph v2.0. 
+The code chunks below show how to compute and visualise graphs based on centrality indices before ggraph v2.0 and after ggraph v2.0.
 
-:::{.panel-tabset}
+::: panel-tabset
 ## Manual Computation (before ggraph v2.0)
+
 ```{r fig.width=12, fig.height=10}
 g <- graph %>%
   mutate(betweenness_centrality = centrality_betweenness()) %>%
@@ -429,10 +456,12 @@ g <- graph %>%
 g + theme_graph() +
   labs(title = 'The email relationship between employees based on betweenness centrality')
 ```
+
 -   `mutate()` of dplyr is used to perform the computation.
 -   the algorithm used, on the other hand, is the centrality_betweenness() of tidygraph.
 
 ## No Computation (ggraph v2.0 onwards)
+
 ```{r fig.width=12, fig.height=10}
 
 g <- graph %>%
@@ -448,8 +477,9 @@ g + theme_graph() +
 ```
 :::
 
-## Visualising Community 
-tidygraph package inherits many of the community detection algorithms imbedded into igraph and makes them available to us, including Edge-betweenness (group_edge_betweenness), Leading eigenvector (group_leading_eigen), Fast-greedy (group_fast_greedy), Louvain (group_louvain), Walktrap (group_walktrap), Label propagation (group_label_prop), InfoMAP (group_infomap), Spinglass (group_spinglass), and Optimal (group_optimal). Some community algorithms are designed to take into account direction or weight, while others ignore it. Use this link to find out more about community detection functions provided by tidygraph. 
+## Visualising Community
+
+tidygraph package inherits many of the community detection algorithms imbedded into igraph and makes them available to us, including Edge-betweenness (group_edge_betweenness), Leading eigenvector (group_leading_eigen), Fast-greedy (group_fast_greedy), Louvain (group_louvain), Walktrap (group_walktrap), Label propagation (group_label_prop), InfoMAP (group_infomap), Spinglass (group_spinglass), and Optimal (group_optimal). Some community algorithms are designed to take into account direction or weight, while others ignore it. Use this link to find out more about community detection functions provided by tidygraph.
 
 In the code chunk below group_edge_betweenness() is used.
 
@@ -464,11 +494,14 @@ g <- graph %>%
 
   g + theme_graph()
 ```
-# Building Interactive Network Graph with visNetwork 
+
+# Building Interactive Network Graph with visNetwork
+
 visNetwork() function uses a nodes list and edges list to create an interactive graph.The nodes list must include an “id” column, and the edge list must have “from” and “to” columns. The function also plots the labels for the nodes, using the names of the actors from the “label” column in the node list.
 
-## Data Preparation 
-Before we can plot the interactive graph, let us prepare the data using the following code chunk so that it has the required columns. 
+## Data Preparation
+
+Before we can plot the interactive graph, let us prepare the data using the following code chunk so that it has the required columns.
 
 ```{r}
 edge_aggregated2 <- edge %>%
@@ -487,31 +520,29 @@ head(edge_aggregated2)
 
 ```
 
-:::{.callout-note}
+::: callout-note
 ## About the above code chunk
 
--   Perform left join between edge dataframe and node dataframe using the sourceLabel and label columns from the respective dataframe. By doing so, the resulting dataframe have additional information (i.e. id, group and title) about the source employee. 
--   rename `id` to `from` so that we can use this `from` column later. 
+-   Perform left join between edge dataframe and node dataframe using the sourceLabel and label columns from the respective dataframe. By doing so, the resulting dataframe have additional information (i.e. id, group and title) about the source employee.
 
--   Perform left join between edge dataframe and node dataframe using the targetLabel and label columns from the respective dataframe. By doing so, the resulting dataframe have additional information (i.e. id, group and title) about the target employee. 
--   rename `id` to `to` so that we can use this `to` column later. 
+-   rename `id` to `from` so that we can use this `from` column later.
 
--   filter the rows where the `MainSubject` is related to work 
+-   Perform left join between edge dataframe and node dataframe using the targetLabel and label columns from the respective dataframe. By doing so, the resulting dataframe have additional information (i.e. id, group and title) about the target employee.
 
--   Then perform group_by using `from` and `to`. 
+-   rename `id` to `to` so that we can use this `to` column later.
 
--   Then we create a new field `Weight` by counting the number of emails resulting from the group_by. 
+-   filter the rows where the `MainSubject` is related to work
+
+-   Then perform group_by using `from` and `to`.
+
+-   Then we create a new field `Weight` by counting the number of emails resulting from the group_by.
 
 -   We also remove those emails where the source and target are the same employees and those weights that are less than 1 to get the resultant table `edge_aggregated2`.
+:::
 
+## Plotting the first interactive network graph
 
-::: 
-
-
-
-## Plotting the first interactive network graph 
-
-Let us plot an interactive network graph using the data prepared. 
+Let us plot an interactive network graph using the data prepared.
 
 ```{r}
 visNetwork(node, 
@@ -519,16 +550,19 @@ visNetwork(node,
 
 ```
 
-## Working with layout 
+## Working with layout
 
 We can change the layout of the network graph by specifying the type of layout we want using the function `visIgraphLayout()`
+
 ```{r}
 visNetwork(node, 
            edge_aggregated2) %>%
   visIgraphLayout(layout = "layout_with_fr")
 
 ```
-## Working with visual attributes - Notes 
+
+## Working with visual attributes - Notes
+
 visNetwork() looks for a field called “group” in the nodes object and colour the nodes according to the values of the group field.
 
 The code chunk below rename Department field to group.
@@ -538,7 +572,6 @@ node <- node %>%
   rename(group = Department)
 
 ```
-
 
 When we rerun the code chunk below, visNetwork shades the nodes by assigning unique colour to each category in the group field.
 
@@ -551,10 +584,9 @@ visNetwork(node,
 
 ```
 
-## Working with visual attributes - Edges 
-In the code run below visEdges() is used to symbolise the edges.
--   The argument arrows is used to define where to place the arrow.
--   The smooth argument is used to plot the edges using a smooth curve.
+## Working with visual attributes - Edges
+
+In the code run below visEdges() is used to symbolise the edges. - The argument arrows is used to define where to place the arrow. - The smooth argument is used to plot the edges using a smooth curve.
 
 ```{r}
 visNetwork(node, 
@@ -568,13 +600,14 @@ visNetwork(node,
 
 ```
 
-## Interactivity 
+## Interactivity
+
 In the code chunk below, visOptions() is used to incorporate interactivity features in the data visualisation.
 
-:::{.callout-note}
+::: callout-note
 ## About the code chunk
-The argument `highlightNearest` highlights nearest when clicking a node.
-The argument `nodesIdSelection` adds an id node selection creating an HTML select element.
+
+The argument `highlightNearest` highlights nearest when clicking a node. The argument `nodesIdSelection` adds an id node selection creating an HTML select element.
 :::
 
 ```{r}
@@ -589,9 +622,7 @@ visNetwork(node,
 
 ```
 
-# References 
-
-
+# References
 
 Pedersen T (2024). tidygraph: A Tidy API for Graph Manipulation. R package version 1.3.1.9000, https://github.com/thomasp85/tidygraph, https://tidygraph.data-imaginist.com.
 
@@ -600,4 +631,3 @@ Pedersen T (2024). ggraph: An Implementation of Grammar of Graphics for Graphs a
 https://datastorm-open.github.io/visNetwork/
 
 https://r.igraph.org/articles/igraph.html
-
