@@ -10,7 +10,8 @@ execute:
   warning: false
   message: false
 ---
-*[Added date modified field on 16 Mar as I realised it was missing]*
+
+*\[Added date modified field on 16 Mar as I realised it was missing!\]*
 
 # About this Exercise
 

@@ -24,6 +24,7 @@ listing:
     - "In-class_Ex/In-class_Ex01/*.qmd"
     - "In-class_Ex/In-class_Ex02/*.qmd"
     - "In-class_Ex/In-class_Ex03/*.qmd"
+    - "In-class_Ex/In-class_Ex04/*.qmd"
     type: grid
     sort: "date"
     

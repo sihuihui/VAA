@@ -1,0 +1,303 @@
+---
+title: "In-class_Ex04"
+author: "Goh Si Hui"
+date: 2024/03/16
+date-format: long
+date-modified: "last-modified"
+format: html 
+execute: 
+  echo: true
+  eval: true
+  freeze: true
+  warning: false
+  message: false
+---
+
+# About this hands on exercise 
+
+
+
+# Getting Started 
+
+## Installing the packages 
+
+```{r}
+pacman::p_load(tidygraph, ggraph, visNetwork, lubridate, clock, tidyverse, graphlayouts)
+
+```
+
+-   clock is meant for time 
+-   lubridate is meant for date columns 
+-   graphlayout: complement ggraph 
+
+:::{.callout-note}
+-   if we are using tidygraph, there's no need for igraph. 
+:::
+
+
+## Importing the Data 
+::: panel-tabset
+## node
+
+```{r}
+node <- read_csv("data/GAStech_email_node.csv")
+str(node)
+
+```
+
+GAStech_email_nodes.csv consist of the name, department and title of the employees.
+
+## edge
+
+```{r}
+edge <- read_csv("data/GAStech_email_edge-v2.csv")
+str(edge)
+
+```
+
+
+# Data Wrangling 
+
+```{r}
+edge <- edge %>% 
+  mutate(SendDate = dmy(SentDate)) %>%
+  mutate(Weekday = wday(SentDate,
+                        label = TRUE, # label the date 
+                        abbr = FALSE )) # to spell out the day in full e.g. Monday instead of MON
+
+str(edge)
+```
+
+:::{.callout-note}
+## Observations 
+
+-   Note that we now have two additional columns in the `edge` dataframe: `SentDate` and `Weekday`. 
+-   `SentDate` is a date datatype and it has a yyyy-mm-dd format. 
+-   `Weekday` is an ordinal data type with 7 levels (1 level for each day)
+
+:::
+
+Now we will aggregate the edges because they are currently at an individual level. Each row is an edge currently.
+```{r}
+
+edge_aggregated <- edge %>%
+  filter(MainSubject == "Work related") %>%
+  group_by(source, target, Weekday) %>%
+  summarise(Weight = n()) %>%
+  filter(source != target) %>%
+  filter(Weight > 1) %>%
+  ungroup()
+
+glimpse(edge_aggregated)
+
+```
+
+:::{.callout-note}
+
+## About the above code chunk 
+
+-   First, we filter the edges by `MainSubject` so we get edges for `Work-related` emails. 
+-   We will aggregate the edges by summing the edges using their `source`, `target` and `Weekday`
+-   We will also filter out edges where the sender sends emails to themselves and those edges with weight less than 1
+
+::: 
+
+```{r}
+
+graph <- tbl_graph(nodes = node,
+                   edges = edge_aggregated,
+                   directed = TRUE)
+
+graph 
+
+```
+
+:::{.callout-note}
+## About the above code chunk 
+
+-   From the documentation, we see that we need to indicate the dataframe for the nodes and the dataframe for the edges. -   In addition, we should indicate if the output graph should be directed. For this exercise, a directed graph makes sense because there is a "direction" since we have a sender and recipient. 
+-   We can review the output graph by generating the resultant network graph `graph`. 
+
+
+::: 
+
+# Plotting a Network Graph 
+
+Now we can plot out the network graph using ggraph. 
+```{r}
+ggraph(graph) + #create layout 
+  geom_edge_link() + # note that ggplot has geom_edge and geom_link! so we should use geom_edge_link and geom_node_point
+  geom_node_point()
+
+```
+
+
+:::{.callout-note}
+-   Note that ggraph follows the convention of ggplot and tmap. 
+-   For the `geom_edge_link()` and `geom_node_point()`, we can add aesthetics by defining parameters within them. (We will see them in Hands-on Exercise 8 and the following code chunk). 
+-   If we want to draw curved edges instead of straight edges, we need to use `geom_edge_arc`
+
+:::
+
+# Adding Aesthetics to Network Graph
+
+```{r}
+g <- ggraph(graph) + 
+  geom_edge_link(aes(colour = 'grey50')) +
+  geom_node_point(aes(colour = 'grey40'))
+
+g + theme_graph(background = 'grey10',
+                text_colour = 'white')
+```
+
+
+# Changing the Network Graph's Layout 
+
+```{r}
+g <- ggraph(graph, 
+            layout = "fr") + #alternative is to use layout_with_fr() if we look at igraph's documentation
+  geom_edge_link(aes()) +
+  geom_node_point(aes())
+
+g + theme_graph()
+
+```
+```{r}
+#trying out a different layout
+g <- ggraph(graph, 
+            layout = "kk") + 
+  geom_edge_link(aes()) +
+  geom_node_point(aes())
+
+g + theme_graph()
+
+```
+
+```{r}
+#trying out a different layout
+g <- ggraph(graph, 
+            layout = "dh") + 
+  geom_edge_link(aes()) +
+  geom_node_point(aes())
+
+g + theme_graph()
+
+```
+# Further Customising the Network Graph 
+```{r}
+g <- ggraph(graph, 
+            layout = "nicely") + 
+  geom_edge_link(aes()) +
+  geom_node_point(aes(color = Department,
+                      size = 3))
+
+g + theme_graph()
+
+```
+
+:::{.callout-note}
+## About the above code chunk
+
+-   Similar to ggplot, we add `aes()` to add further aesthetics to the graph. 
+-   In the above example, we colour the nodes based on the employees' department. 
+
+:::
+
+
+:::{.panel-tabset}
+## Added width but did not indicate alpha and scale_edge_width
+```{r}
+g <- ggraph(graph, 
+            layout = "nicely") +
+  geom_edge_link(aes(width=Weight)) +
+  geom_node_point(aes(colour = Department), 
+                  size = 3)
+
+g + theme_graph()
+
+```
+
+It is very hard to read because the lines overlap. 
+
+## Added width and alpha but did not indicate scale_edge_width
+```{r}
+g <- ggraph(graph, 
+            layout = "nicely") +
+  geom_edge_link(aes(width=Weight), 
+                 alpha=0.2) +
+  geom_node_point(aes(colour = Department), 
+                  size = 3)
+
+g + theme_graph()
+
+```
+
+Now the output is a bit better. 
+
+## Added scale_edge_width
+We can add scale_edge_width() to give the range of the "thickness" of the edges. 
+```{r}
+g <- ggraph(graph, 
+            layout = "nicely") +
+  geom_edge_link(aes(width=Weight), 
+                 alpha=0.2) +
+  scale_edge_width(range = c(0.1, 5)) +
+  geom_node_point(aes(colour = Department), 
+                  size = 3)
+
+g + theme_graph()
+
+```
+:::
+
+# Facetting Network Graphs 
+
+```{r}
+set_graph_style()
+
+g <- ggraph(graph, layout = "nicely") +
+  geom_edge_link(aes(width=Weight),
+                 alpha = 0.2) +
+  scale_edge_width(range = c(0.1, 5)) + 
+  geom_node_point(aes(color = Department),
+                  size = 2)
+
+g + facet_edges(~Weekday)
+
+```
+
+
+
+# Calculating Centrality 
+
+ggraph's centrality measures all start with "centrality" so it is easy to locate them in the documentation and . In comparison, igraph's centrality calculations' synatax are less consistent. 
+
+
+Here is an example of calculating betweenness centrality:
+
+```{r fig.width=12, fig.height=10}
+g <- graph %>%
+  mutate(betweenness_centrality = centrality_betweenness()) %>%
+  ggraph(layout = "fr") +
+  geom_edge_link(aes(width=Weight),
+                 alpha = 0.2) +
+  scale_edge_width(range = c(0.1, 5)) + 
+  geom_node_point(aes(color = Department,
+                  size = betweenness_centrality)) # to set the size of the nodes based on the centrality measure that we calculated
+
+g + theme_graph() +
+  labs(title = 'The email relationship between employees based on betweenness centrality')
+```
+
+
+:::{.callout-note}
+## About the above code chunk
+-   We use `mutate()` to create a new column for the betweenness centrality values calculated using `centrality_betweenness()`.
+-   Then we use the betweenness centrality values to determine the size of the nodes. Those nodes with higher betweenness centrality, they will be bigger, and vice versa. 
+
+:::
+
+
+# Creating Interactive Network Graph
+
+Please refer to my [hands-on Exercise 8](https://gsh-vaa.netlify.app/hands-on_ex/hands-on_ex08/hands-on_ex08)! :) 

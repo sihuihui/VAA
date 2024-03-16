@@ -12,14 +12,15 @@ execute:
   warning: false
   message: false
 ---
+
 *Work in Progress: Updating this exercise with kriging*
 
 # About this Exercise
 
 In this exercise we will learn how to create an isohyet map using R.
 
-:::{.callout-note}
-## What is an isohyet map? 
+::: callout-note
+## What is an isohyet map?
 
 It is a map depicting contours of equal precipitation amounts recorded during a specific time period.
 
@@ -28,8 +29,7 @@ It is a map depicting contours of equal precipitation amounts recorded during a 
 
 To prepare an isohyet map, we will need to do spatial interpolation. Spatial interpolation is the process of using points with known values to estimate values at other unknown points. For example, we only have weather stations at certain areas in Singapore. As weather stations do not cover the entire Singapore area, we would need to do spatial interpolation to estimate the rainfall at areas without recorded rainfall reading using the known rainfall readings at nearby weather stations. There are many interpolation methods. This type of interpolated surface is often called a geostatistical surface.
 
-In this hands-on exercise, two widely used spatial interpolation methods called Inverse Distance Weighting (IDW) and kriging will be introduced. 
-
+In this hands-on exercise, two widely used spatial interpolation methods called Inverse Distance Weighting (IDW) and kriging will be introduced.
 
 # Getting Started
 
@@ -43,7 +43,7 @@ For this exercise, other than tidyverse, we will be using the following packages
 
 -   gstat: for spatial and spatio-temporal geostatistical modelling, prediction and simulation. In this in-class exercise, it will be used to perform spatial interpolation.
 
--   tmap: allow us to visualise spatial data 
+-   tmap: allow us to visualise spatial data
 
 -   viridis: a colour library
 
@@ -58,14 +58,17 @@ pacman::p_load(sf,terra, gstat, tmap, viridis, tidyverse, automap)
 ## Importing the Data
 
 ### Rainfall Station Data
-In the code chunk below, `read_csv()` of readr package is used to import `RainfallStation.csv`. We will call the imported data `rfstations`. From the output using str(), we noted that `rfstations` is in tibble data.frame format and it has three columns: `Station`, `Latitude` and `Longitude`. 
+
+In the code chunk below, `read_csv()` of readr package is used to import `RainfallStation.csv`. We will call the imported data `rfstations`. From the output using str(), we noted that `rfstations` is in tibble data.frame format and it has three columns: `Station`, `Latitude` and `Longitude`.
 
 ```{r}
 rfstations <-read_csv("data/aspatial/RainfallStation.csv")
 str(rfstations)
 ```
-### Rainfall Records Data 
-In the code chunk below, `read_csv()` of readr package is used to import `DAILYDATA_202402.csv`. We will call the imported data `rfdata`. In addition to importing the data, we also use `select()` to retain column 1 and 5 of the imported data, then we use `group_by()` and `summarise()` to compute the total monthly rainfall from `Daily Rainfall Total (mm)` field. The output is stored in a new field called `MONTHSUM`. From the output using `str()`, we noted that `rfdata` is in tibble data.frame format and it has two columns: `Station` and `MONTHSUM`. 
+
+### Rainfall Records Data
+
+In the code chunk below, `read_csv()` of readr package is used to import `DAILYDATA_202402.csv`. We will call the imported data `rfdata`. In addition to importing the data, we also use `select()` to retain column 1 and 5 of the imported data, then we use `group_by()` and `summarise()` to compute the total monthly rainfall from `Daily Rainfall Total (mm)` field. The output is stored in a new field called `MONTHSUM`. From the output using `str()`, we noted that `rfdata` is in tibble data.frame format and it has two columns: `Station` and `MONTHSUM`.
 
 ```{r}
 rfdata <- read_csv("data/aspatial/DAILYDATA_202402.csv") %>%
@@ -78,7 +81,7 @@ str(rfdata)
 
 ```
 
-Then, we do a left join using rfdata as the reference layer with rf stations. By using rfdata as the reference layer, it ensures that those stations with temperature readings would have the longitude and latitude of the weather stations. Also note that in this case the `Station` field is available in both rfdata and rfstations, hence there is no need to use the `by()` argument of `left_join()`. 
+Then, we do a left join using rfdata as the reference layer with rf stations. By using rfdata as the reference layer, it ensures that those stations with temperature readings would have the longitude and latitude of the weather stations. Also note that in this case the `Station` field is available in both rfdata and rfstations, hence there is no need to use the `by()` argument of `left_join()`.
 
 ```{r}
 rfdata <- rfdata %>%
@@ -86,7 +89,9 @@ rfdata <- rfdata %>%
 
 str(rfdata)
 ```
-We also use the following code chunk to get a summary of the rfdata and check if there are any NA values. 
+
+We also use the following code chunk to get a summary of the rfdata and check if there are any NA values.
+
 ```{r}
 #check for missing values 
 
@@ -94,7 +99,9 @@ summary(rfdata)
 
 
 ```
-As seen from the earlier output, we know that rfdata is a tibble dataframe, even though it has the longitude and latitude data. As such, we need to convert it into a simple feature data frame using `st_as_sf()`. 
+
+As seen from the earlier output, we know that rfdata is a tibble dataframe, even though it has the longitude and latitude data. As such, we need to convert it into a simple feature data frame using `st_as_sf()`.
+
 ```{r}
 rfdata_sf <- st_as_sf(rfdata, 
                       coords = c("Longitude",
@@ -105,16 +112,17 @@ rfdata_sf <- st_as_sf(rfdata,
 rfdata_sf
 ```
 
-:::{.callout-note}
+::: callout-note
 -   For coords argument, it is important to map the X (i.e. Longitude) first, then follow by the Y (i.e. Latitude).
 -   `crs = 4326` indicates that the source data is in wgs84 coordinates system.
 -   `st_transform()` of sf package is then used to transform the source data from `wgs84` to `svy21` projected coordinates system.
 -   `svy21` is the official projected coordinates of Singapore. 3414 is the EPSG code of svy21.
-
 :::
 
-### Planning Subzone Boundary Data 
+### Planning Subzone Boundary Data
+
 We then use `st_read()` of sf package is used to import `MPSZ-2019` shapefile into R. The output is called `mpsz2019`. It is in polygon feature tibble data.frame format.
+
 ```{r}
 mpsz2019 <- st_read(dsn = "data/geospatial",
                     layer = "MPSZ-2019") %>%
@@ -125,13 +133,14 @@ qtm(mpsz2019)
 
 ```
 
-:::{.callout-note}
+::: callout-note
 -   The source data is in wgs84 coordinates system, hence st_tranform() of sf package is used to theo output sf data.frame into svy21 project coordinates system.
+:::
 
-::: 
+# Visualiing the Imported Data
 
-# Visualiing the Imported Data 
-We then use the following code chunk to visualise the rainfall stations, the amount of rainfall and the planning subzone boundary. 
+We then use the following code chunk to visualise the rainfall stations, the amount of rainfall and the planning subzone boundary.
+
 ```{r}
 
 tmap_options(check.and.fix = TRUE)
@@ -145,16 +154,16 @@ tm_shape(mpsz2019) + #plot boundary map first
 tmap_mode("plot")
 ```
 
-:::{.callout-note}
-
--   we use `tmap_options(check.and.fix = TRUE)` so that tmap would ignore any errors in the map. Without this parameter, if there are unclosed polygons in the map, tmap could fail to plot out the map. 
-
+::: callout-note
+-   we use `tmap_options(check.and.fix = TRUE)` so that tmap would ignore any errors in the map. Without this parameter, if there are unclosed polygons in the map, tmap could fail to plot out the map.
 :::
 
-# Spatial Interpolation: gstat method 
+# Spatial Interpolation: gstat method
 
-## Data Preparation 
+## Data Preparation
+
 First, we need to create a grid data object using `rast()` of terra package as shown in the code chunk below.
+
 ```{r}
 
 grid <- terra::rast(mpsz2019,
@@ -163,6 +172,7 @@ grid <- terra::rast(mpsz2019,
 ```
 
 Next, a list called xy will be created by using `xyFromCell()` of terra package.
+
 ```{r}
 xy <- terra::xyFromCell(grid, 
                         1:ncell(grid))
@@ -170,6 +180,7 @@ xy <- terra::xyFromCell(grid,
 ```
 
 Lastly, we will create a data frame called `coop` with prediction/simulation locations by using the code chunk below.
+
 ```{r}
 coop <- st_as_sf(as.data.frame(xy), 
                  coords = c("x", "y"),
@@ -179,17 +190,17 @@ head(coop)
 
 ```
 
-## Inverse Distance Weighted (IDW) Method 
+## Inverse Distance Weighted (IDW) Method
+
 In the IDW interpolation method, the sample points are weighted during interpolation such that the influence of one point relative to another declines with distance from the unknown point you want to create.
 
 Weighting is assigned to sample points through the use of a weighting coefficient that controls how the weighting influence will drop off as the distance from new point increases. The greater the weighting coefficient, the less the effect points will have if they are far from the unknown point during the interpolation process. As the coefficient increases, the value of the unknown point approaches the value of the nearest observational point.
 
 It is important to notice that the IDW interpolation method also has some disadvantages: the quality of the interpolation result can decrease, if the distribution of sample data points is uneven. Furthermore, maximum and minimum values in the interpolated surface can only occur at sample data points. This often results in small peaks and pits around the sample data points.
 
-
-
-:::{.panel-tabset}
+::: panel-tabset
 ## nmax = 5
+
 ```{r}
 res5 <- gstat(formula = MONTHSUM ~ 1, 
              locations = rfdata_sf, 
@@ -197,7 +208,9 @@ res5 <- gstat(formula = MONTHSUM ~ 1,
              set = list(idp = 0))
 
 ```
+
 ## nmax = 10
+
 ```{r}
 res10 <- gstat(formula = MONTHSUM ~ 1, 
              locations = rfdata_sf, 
@@ -206,8 +219,8 @@ res10 <- gstat(formula = MONTHSUM ~ 1,
 
 ```
 
-
 ## nmax = 15
+
 ```{r}
 res15 <- gstat(formula = MONTHSUM ~ 1, 
              locations = rfdata_sf, 
@@ -217,10 +230,9 @@ res15 <- gstat(formula = MONTHSUM ~ 1,
 ```
 :::
 
-
-
-:::{.panel-tabset}
+::: panel-tabset
 ## nmax = 5
+
 ```{r}
 resp <- predict(res5, coop)
 
@@ -239,7 +251,9 @@ tm_shape(pred5) +
             palette = "viridis")
 
 ```
+
 ## nmax = 10
+
 ```{r}
 resp <- predict(res10, coop)
 
@@ -260,6 +274,7 @@ tm_shape(pred10) +
 ```
 
 ## nmax = 15
+
 ```{r}
 resp <- predict(res15, coop)
 
@@ -280,19 +295,18 @@ tm_shape(pred15) +
 ```
 :::
 
+## Kriging Method
 
-## Kriging Method 
 Kriging is one of several methods that uses a limited set of sampled data points to estimate the value of a variable over a continuous spatial field. It differs from Inverse Distance Weighted Interpolation in that it uses the spatial correlation between sampled points to interpolate the values in the spatial field: the interpolation is based on the spatial arrangement of the empirical observations, rather than on a presumed model of spatial distribution. Kriging also generates estimates of the uncertainty surrounding each interpolated value.
 
-
 First, we will calculate and examine the empirical variogram using `variogram()` of gstat package.
+
 ```{r}
 v <- variogram(MONTHSUM ~ 1, 
                data = rfdata_sf)
 plot(v)
 
 ```
-
 
 ```{r}
 fv <- fit.variogram(object = v,
@@ -304,7 +318,6 @@ fv <- fit.variogram(object = v,
 fv
 
 ```
-
 
 ```{r}
 
@@ -326,7 +339,6 @@ resp <- predict(k, coop)
 
 ```
 
-
 ```{r}
 resp$x <- st_coordinates(resp)[,1]
 resp$y <- st_coordinates(resp)[,2]
@@ -336,13 +348,9 @@ resp
 
 ```
 
-
 ```{r}
 kpred <- terra::rasterize(resp, grid, 
                          field = "pred")
 kpred
 
 ```
-
-
-
