@@ -13,10 +13,6 @@ execute:
   message: false
 ---
 
-# About this hands on exercise 
-
-
-
 # Getting Started 
 
 ## Installing the packages 
