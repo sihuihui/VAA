@@ -31,13 +31,19 @@ ui <- fluidPage(
                                   "Minimum Temperature" = "minimum_temperature"),
                       selected = "mean_temperature"),
           hr(),
+          actionButton(inputId = "temp_plot",
+                       label = "Show my Temperature Data!"),
+          hr(),
           radioButtons("shdataimpute", 
                         "Select a Missing Data Imputation Method",
                        c("Moving Average (Exponential)" = "exponential",
                          "Moving Average (Linear)" = "linear",
-                         "Moving Average Simple)" = "simple",
+                         "Moving Average (Simple)" = "simple",
                          "Kalman Smoothing (ARIMA)" = "auto.arima",
                          "Kalman Smoothing (StrucTS)" = "StructTS")),
+          hr(),
+          actionButton(inputId = "temp_imputed",
+                       label = "Show my Temperature Data Again!"),
           hr(),
           radioButtons("shforecast", 
                        "Select a Forecasting Method",
@@ -73,8 +79,26 @@ ui <- fluidPage(
 
 server <- function(input, output) {
 
+  ######################################### Select data based on user input ###################################################### 
 
-    }
+  
+  dataInput <- eventReactive(input$temp_plot, {
+    temp %>% 
+      filter(temp()$station %in% input$shstation) %>%
+      select(input$shtemp)
+  })
+  
+  output$tempdata <- renderPlot({
+    ggplot(data = dataInput(),
+           aes_string(x = dataInput$year_month,
+                      y = input$shtemp)) +
+      geom_line() +
+      theme_clean() 
+  })
+             
+  }
+  
+    
 
 
 # Run the application 
