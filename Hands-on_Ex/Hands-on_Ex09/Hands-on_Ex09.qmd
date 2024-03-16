@@ -12,7 +12,6 @@ execute:
   warning: false
   message: false
 ---
-*Work in Progress* 
 
 # About this Exercise 
 By the end of this hands-on exercise, we will be able to:
@@ -27,22 +26,23 @@ Before we start, let us ensure that the required R packages have been installed 
 ## Installing and Launching R Packages
 For the purpose of this hands-on exercise, the following R packages will be used: 
 
--   tidyverse
--   lubridate
--   ggthemes
--   gtExtras 
--   reactable 
--   reactablefmtr
+-   tidyverse: to manipulate and wrangle data. 
+-   lubridate: to provide us with functions to work with dates and time more efficiently. 
+-   ggthemes: to provide additional themes for ggplot2 charts. 
+-   gtExtras: to provide additional helper functions to assist in creating beautiful tables with [gt](https://gt.rstudio.com/). 
+-   reactable: to create interactive data tables for R based on the [React Table](https://github.com/tanstack/table/tree/v7) library and made with [reactR](https://github.com/react-R/reactR). 
+-   reactablefmtr: to streamline and enhance the styling of interactive reactable tables with easy-to-use and highly-customizable functions and themes.
 
-The code chunk below uses p_load() of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.
+The code chunk below uses `p_load()` of pacman package to check if the abovementioned packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.
 
 ```{r}
 pacman::p_load(lubridate, ggthemes, reactable,
 reactablefmtr, gt, gtExtras, tidyverse) 
 ```
+
 ## Importing Microsoft Access Database 
 
-For the purpose of this study, a personal database in Microsoft Access mdb format called Coffee Chain will be used.
+For the purpose of this study, a personal database in Microsoft Access mdb format called `Coffee Chain` will be used.
 
 In the code chunk below, `odbcConnectAccess()` of RODBC package is used used to import a database query table into R.
 
@@ -69,7 +69,7 @@ product <- coffeechain %>%
 ```
 
 # Bullet Chart using ggplot2 
-
+To create a bullet chart using ggplot2, we can make use of several `geom_col` and `geom_errorbar`. 
 ```{r}
 ggplot(product, aes(Product, current)) + 
   geom_col(aes(Product, max(target) * 1.01),
@@ -97,6 +97,7 @@ ggplot(product, aes(Product, current)) +
 In this section, we will learn how to plot sparklines using ggplot2.
 
 ## Preparing the data
+First we will prepare the data by (1) filtering those rows with Date greater or equal to 1 Jan 2013, (2) create a new column called `Month` using `month()`, (3) aggregate the sales data by `Month` and `Product`. We will need columns `Month`, `Product` and `Sales` to plot the sparklines. 
 
 ```{r}
 sales_report <- coffeechain %>%
@@ -132,7 +133,7 @@ quarts <- sales_report %>%
   right_join(sales_report)
 
 ```
-
+We can now plot sparklines using `geom_ribbon`, `geom_line`, `geom_point` and `facet_grid`. 
 ```{r fig.width=12, fig.height=16}
 ggplot(sales_report, aes(x=Month, y=Sales)) + 
   facet_grid(Product ~ ., scales = "free_y") + 
@@ -157,6 +158,9 @@ ggplot(sales_report, aes(x=Month, y=Sales)) +
 
 
 # Bullet Chart using gt and gtExtras 
+In this section, we will learn how to prepare a bullet chart report  using functions of gt and gtExtras packages.
+
+To create a bullet chart using gt, it is fairly straightforward as compared to using ggplot2. We will use `gt_plt_bullet` function of gt package and specify the column and target parameters. 
 
 ```{r}
 product %>%
@@ -171,8 +175,8 @@ product %>%
 
 
 # Sparklines using gtExtras 
+Before we can prepare the sparklines for sales report by product using gtExtras functions, we need to prepare the data. 
 
-data preparation 
 
 ```{r}
 report <- coffeechain %>%
@@ -186,6 +190,8 @@ report <- coffeechain %>%
   ungroup()
 
 ```
+Note that one of the requirements of gtExtras functions is that it requires us to pass data.frame with list columns. In view of this, the code chunk below will be used to convert the report data.frame into list columns.
+
 ```{r}
 report %>%
   group_by(Product) %>%
@@ -194,6 +200,7 @@ report %>%
 
 ```
 
+Now we are ready to plot the sparklines using gtExtras!
 
 ```{r}
 report %>%
@@ -207,7 +214,7 @@ report %>%
 ```
 
 
-Adding Statistics
+We can also add summary statistics to the sparklines chart. First, we will calculate summary statistics for each product using the following code chunk. 
 
 ```{r}
 report %>% 
@@ -223,7 +230,7 @@ report %>%
 ```
 
 
-Combining the data frame
+Next, we use the code chunks below to add the statistics to the sales table.
 
 ```{r}
 spark <- report %>%
@@ -249,7 +256,7 @@ sales <- report %>%
 
 sales_data = left_join(sales, spark)
 ```
-
+We use the following code chunk to plot data table with summary statistics and sparklines. 
 ```{r}
 
 sales_data %>%
@@ -259,6 +266,8 @@ sales_data %>%
 ```
 
 # Combining bullet chart and sparklines 
+
+We can also combine the bullet chart and sparklines using the following steps. 
 
 ```{r}
 bullet <- coffeechain %>%
@@ -289,16 +298,20 @@ sales_data %>%
 ```
 
 # Interactive Sparklines 
+In this section, you will learn how to create interactive information dashboard by using reactable and reactablefmtr packages.To build an interactive sparklines, we need to install dataui package by using the code chunk below.
 
 ```{r}
 remotes::install_github("timelyportfolio/dataui")
 ```
-
+Next, we load the package onto R environment using the code chunk below.
 ```{r}
 library(dataui)
 
 ```
 
+## Plotting Interactive Sparklines 
+
+Similar to gtExtras, to plot an interactive sparklines by using reactablefmtr package we need to prepare the list field using the code chunk below.
 
 ```{r}
 
@@ -308,7 +321,7 @@ report <- report %>%
 
 ```
 
-
+Then, we will use `react_sparkline` to plot the sparklines. 
 ```{r}
 
 reactable(
@@ -322,7 +335,9 @@ reactable(
 )
 
 ```
+## Changing the page size 
 
+By default the pagesize is 10. As such, in the earlier sparkline chart, we have 2 pages for 13 rows of products. To have all 13 rows in 1 page, we use the arguments `defaultPageSize` to change the default setting.
 
 ```{r}
 reactable(
@@ -338,6 +353,9 @@ reactable(
 
 ```
 
+## Adding Points and Labels 
+
+We can also add `highlight_points` argument to show the maximum and minimum value points and `label` argument to label the first and last values. 
 ```{r}
 reactable(
   report,
@@ -358,7 +376,9 @@ reactable(
 ```
 
 
+## Adding reference line
 
+We can also use `statline` argument to show the meanline. 
 
 ````{r}
 
@@ -379,6 +399,8 @@ reactable(
 )
 ```
 
+## Adding Bandline
+Instead adding reference line, bandline can be added using the `bandline` argument.
 ```{r}
 reactable(
   report,
@@ -400,7 +422,9 @@ reactable(
 
 ```
 
+## Changing from Sparkline to Sparkbar 
 
+Instead of displaying the values as sparklines, we can display them as sparkbars as shown below. 
 ```{r}
 reactable(
   report,
