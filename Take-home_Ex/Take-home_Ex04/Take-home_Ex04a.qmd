@@ -31,29 +31,29 @@ Before we start, let us ensure that the required R packages have been installed 
 
 For this exercise, we will be using the following packages:
 
--   tidyverse
+-   tidyverse: to manipulate and wrangle data
 
--   xts
+-   xts: provides an extensible time series class, enabling uniform handling of many R time series classes by extending zoo, which is the package that is the creator for an S3 class of indexed totally ordered observations which includes irregular time series.
 
--   lubridate
+-   lubridate: to manipulate and handle date-times.
 
--   tsbox
+-   tsbox: to allow us to handle time series as plain data frames, thus making it easy to deal with time series in a dplyr or data.table workflow.
 
--   imputeTS
+-   imputeTS: to allow us to impute missing values in our time series objects
 
--   DT
+-   DT: to provide an R interface to the JavaScript Library DataTables. R data objects can be displayed as tables on HTML pages and DataTables provides filtering, pagination, sorting and many other features in the tables.
 
--   ggplot2
+-   ggplot2: to plot charts in order to visualise our data
 
--   plotly
+-   plotly: to create interactive charts to explore our data
 
--   ggthemes
+-   ggthemes: additional themes to complete ggplot2
 
--   hrbrthemes
+-   hrbrthemes: additional themes to complete ggplot2
 
--   forecast
+-   forecast: to display and analyse univariate time series forecasts including exponential smoothing via state space models and automatic ARIMA modelling.
 
--   MLmetrics
+-   MLmetrics: a collection of evaluation metrics, including loss, score and utility functions, that measure regression, classification and ranking performance.
 
 The code chunk below uses `p_load()` of pacman package to check if the packages are installed in the computer. If they are, they will be launched in R. Otherwise, pacman will install the relevant packages before launching them.
 
