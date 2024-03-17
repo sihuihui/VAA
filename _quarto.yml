@@ -76,6 +76,8 @@ website:
         - text: Post-Lesson Thoughts 1
           href: "Extra/Post-Lesson_01/Post-Lesson_01.qmd"
         - text: Post-Lesson Thoughts 2 (coming soon!)
+        - text: Post-Lesson Thoughts 3
+          href: "Extra/Post-Lesson_03/Post-Lesson_03.qmd"
     right:
       - icon: linkedin 
         href: https://www.linkedin.com/in/gohsihui/ 
@@ -124,6 +126,7 @@ website:
       - section: "Extra Stuff"
         contents: 
           - Extra/Post-Lesson_01/Post-Lesson_01.qmd
+          - Extra/Post-Lesson_03/Post-Lesson_03.qmd
 
   page-footer:
     background: light

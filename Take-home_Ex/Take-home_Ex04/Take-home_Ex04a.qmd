@@ -1107,7 +1107,7 @@ str(rain)
     -   `daily_rainfall_total`: refers to the total amount of rainfall observed by this weather station in a day. The unit of measurement is in mm.
 :::
 
-Let us save the dataframe into an RDS file for future usage using write_rds().
+Let us save the dataframe into an RDS file for future usage using `write_rds()`.
 
 ```{r}
 #| code-fold: true

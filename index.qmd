@@ -40,6 +40,7 @@ listing:
   - id: extra
     contents:
     - "Extra/Post-Lesson_01/*.qmd"
+    - "Extra/Post-Lesson_03/*.qmd"
   
     type: grid
     sort: "date"
