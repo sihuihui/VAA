@@ -1,10 +1,14 @@
 pacman::p_load(shiny,tidyverse, lubridate, knitr, DT, ggplot2, plotly, ggthemes, 
                ggfortify, forecast, MLmetrics, tsbox, xts, imputeTS, tseries, hrbrthemes)
 
-temp <-read_rds("data/monthly_temp.rds")
+temp <-read_rds("data/weather_data_imputed.rds")
 
 ui <- fluidPage(
-    titlePanel("Prototype for Forecasting Module"),
+    #titlePanel("Prototype for Forecasting Module"),
+  navbarPage("Forecasting Modules"),
+  tabPanel("Exponential Smoothing"),
+  tabPanel("ARIMA"), 
+  
     sidebarLayout(
         sidebarPanel(
           selectInput(inputId = "shstation",
@@ -33,17 +37,7 @@ ui <- fluidPage(
           hr(),
           actionButton(inputId = "temp_plot",
                        label = "Show my Temperature Data!"),
-          hr(),
-          radioButtons("shdataimpute", 
-                        "Select a Missing Data Imputation Method",
-                       c("Moving Average (Exponential)" = "exponential",
-                         "Moving Average (Linear)" = "linear",
-                         "Moving Average (Simple)" = "simple",
-                         "Kalman Smoothing (ARIMA)" = "auto.arima",
-                         "Kalman Smoothing (StrucTS)" = "StructTS")),
-          hr(),
-          actionButton(inputId = "temp_imputed",
-                       label = "Show my Temperature Data Again!"),
+
           hr(),
           radioButtons("shforecast", 
                        "Select a Forecasting Method",
