@@ -26,10 +26,13 @@ vbs <- list(
   
   #2nd value box 
   value_box(
-    title = "Coolest Monthly Temperature Experienced",
+    title = "Coolest Monthly Temp",
     value = textOutput("coolyear"),
     showcase = bs_icon("thermometer-low"),
-    theme = "lightgoldenrod1"
+    showcase_layout = "top right",
+    theme = "lightgoldenrod1",
+    max_height = "125px",
+    p("At XX station on MM YYYY")
   ),
   
   #3rd value box 
