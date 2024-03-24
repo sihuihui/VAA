@@ -52,9 +52,9 @@ glimpse(data)
 #| code-summary: "Show the code"
 
 
-data$tdate <- paste(data$year, "-", data$month, "-", data$day)
+data$DATE <- paste(data$year, "-", data$month, "-", data$day)
 data <- data %>%
-  mutate(tdate = ymd(tdate))
+  mutate(DATE = ymd(DATE))
 
 glimpse(data)
 ```
@@ -64,8 +64,8 @@ glimpse(data)
 #| code-summary: "Show the code"
 
 datacleaned <- data %>%
-  select(station, tdate, mean_temperature, maximum_temperature, minimum_temperature, daily_rainfall_total) %>%
-  drop_na(tdate)
+  select(station, DATE, mean_temperature, maximum_temperature, minimum_temperature, daily_rainfall_total) %>%
+  drop_na(DATE)
 
 str(datacleaned)
 ```
@@ -91,7 +91,7 @@ glimpse(datacleaned)
 mean_monthly_temp <- datacleaned %>%
   group_by(station) %>%
   summarise_by_time(
-    tdate,
+    DATE,
     .by = "month", 
     value = mean(mean_temperature),
     .type = "ceiling"
@@ -104,7 +104,7 @@ mean_monthly_temp
 min_monthly_temp <- datacleaned %>%
   group_by(station) %>%
   summarise_by_time(
-    tdate,
+    DATE,
     .by = "month", 
     value = min(minimum_temperature),
     .type = "ceiling"
@@ -117,7 +117,7 @@ min_monthly_temp
 max_monthly_temp <- datacleaned %>%
   group_by(station) %>%
   summarise_by_time(
-    tdate,
+    DATE,
     .by = "month", 
     value = max(minimum_temperature),
     .type      = "ceiling"
@@ -130,7 +130,7 @@ max_monthly_temp
 monthly_rf <- datacleaned %>%
   group_by(station) %>%
   summarise_by_time(
-    tdate,
+    DATE,
     .by = "month", 
     value = sum(daily_rainfall_total)
   ) %>% rename(monthly_rainfall = value)
@@ -160,7 +160,8 @@ summary(weatherdata)
 
 ```{r}
 weatherdata <- weatherdata %>%
-  filter_by_time(tdate, .start_date = "2014-01", .end_date = "2023-12")
+  filter_by_time(DATE, .start_date = "2014-01", .end_date = "2023-12")
+
 
 summary(weatherdata)
 ```
@@ -173,7 +174,7 @@ write_rds(weatherdata, "data/weather_data.rds")
 ## Missing value imputation
 
 ```{r}
-unique(weatherdata$tdate)
+unique(weatherdata$DATE)
 ```
 
 ```{r}
@@ -187,7 +188,7 @@ summary(weatherdata)
 
 weatherdata %>%
   group_by(station) %>%
-  plot_time_series(tdate, mean_monthly_temperature, .facet_ncol = 3)
+  plot_time_series(DATE, mean_monthly_temperature, .facet_ncol = 3)
 ```
 
 ```{r}
@@ -201,7 +202,7 @@ summary(weatherdata)
 
 weatherdata %>%
   group_by(station) %>%
-  plot_time_series(tdate, min_monthly_temperature, .facet_ncol = 3)
+  plot_time_series(DATE, min_monthly_temperature, .facet_ncol = 3)
 ```
 
 ```{r}
@@ -215,7 +216,7 @@ summary(weatherdata)
 
 weatherdata %>%
   group_by(station) %>%
-  plot_time_series(tdate, max_monthly_temperature, .facet_ncol = 3)
+  plot_time_series(DATE, max_monthly_temperature, .facet_ncol = 3)
 ```
 
 ```{r}
@@ -229,7 +230,7 @@ summary(weatherdata)
 
 weatherdata %>%
   group_by(station) %>%
-  plot_time_series(tdate, monthly_rainfall, .facet_ncol = 3)
+  plot_time_series(DATE, monthly_rainfall, .facet_ncol = 3)
 ```
 
 ```{r}
@@ -247,21 +248,21 @@ weatherdata <- read_rds("data/weather_data_imputed.rds")
 ```{r}
 weatherdata %>%
   filter(station == "Admiralty") %>%
-  plot_seasonal_diagnostics(tdate, mean_monthly_temperature)
+  plot_seasonal_diagnostics(DATE, mean_monthly_temperature)
 
 ```
 
 ```{r}
 weatherdata %>%
   filter(station == "Admiralty") %>%
-  plot_seasonal_diagnostics(tdate, monthly_rainfall)
+  plot_seasonal_diagnostics(DATE, monthly_rainfall)
 
 ```
 
 ```{r}
 weatherdata %>%
   filter(station == "Admiralty") %>%
-  plot_stl_diagnostics(tdate, mean_monthly_temperature,
+  plot_stl_diagnostics(DATE, mean_monthly_temperature,
                        .frequency = "auto", .trend = "auto",
                         .feature_set = c("observed", "season", "trend", "remainder"))
 
@@ -270,7 +271,7 @@ weatherdata %>%
 ```{r}
 weatherdata %>%
   filter(station == "Admiralty") %>%
-  plot_stl_diagnostics(tdate, min_monthly_temperature,
+  plot_stl_diagnostics(DATE, min_monthly_temperature,
                        .frequency = "auto", .trend = "auto",
                         .feature_set = c("observed", "season", "trend", "remainder"))
 
@@ -279,7 +280,7 @@ weatherdata %>%
 ```{r}
 weatherdata %>%
   filter(station == "Admiralty") %>%
-  plot_stl_diagnostics(tdate, max_monthly_temperature,
+  plot_stl_diagnostics(DATE, max_monthly_temperature,
                        .frequency = "auto", .trend = "auto",
                         .feature_set = c("observed", "season", "trend", "remainder"))
 
@@ -288,7 +289,7 @@ weatherdata %>%
 ```{r}
 weatherdata %>%
   filter(station == "Admiralty") %>%
-  plot_stl_diagnostics(tdate, monthly_rainfall,
+  plot_stl_diagnostics(DATE, monthly_rainfall,
                        .frequency = "auto", .trend = "auto",
                         .feature_set = c("observed", "season", "trend", "remainder"))
 
@@ -312,7 +313,7 @@ glimpse(weatherdata)
 ```{r}
 weatherdata_meantemp <- weatherdata %>%
   filter(station == "Admiralty") %>%
-  select(date = tdate, value = mean_monthly_temperature)
+  select(date = DATE, value = mean_monthly_temperature)
 
 weatherdata_meantemp 
 ```
@@ -539,7 +540,7 @@ First we will select the relevant data column
 ```{r}
 weatherdata_rf <- weatherdata %>%
   filter(station == "Admiralty") %>%
-  select(date = tdate, value = monthly_rainfall)
+  select(date = DATE, value = monthly_rainfall)
 
 weatherdata_rf 
 ```
@@ -707,7 +708,7 @@ refit_tbl %>%
 anomalize_tbl <- weatherdata %>%
   group_by(station) %>%
   anomalize(
-    .date_var = tdate,
+    .date_var = DATE,
     .value = monthly_rainfall,
     .iqr_alpha = 0.05,
     .max_anomalies = 0.20,
@@ -723,7 +724,7 @@ anomalize_tbl %>%
   group_by(station) %>%
   filter(station == c("Admiralty", "Ang Mo Kio", "Changi")) %>%
     plot_anomalies_decomp(
-        .date_var = tdate
+        .date_var = DATE
     )
 
 ```
@@ -733,7 +734,7 @@ anomalize_tbl %>%
   group_by(station) %>%
   filter(station == c("Clementi", "Ang Mo Kio", "Changi")) %>%
   plot_anomalies(
-        tdate,
+        DATE,
         .facet_ncol = 3
     )
 
@@ -744,7 +745,7 @@ anomalize_tbl %>%
     group_by(station) %>%
    filter(station == c("Admiralty", "Ang Mo Kio", "Changi")) %>%
     plot_anomalies_cleaned(
-        tdate,
+        DATE,
         .facet_ncol = 2
     )
 
