@@ -6,7 +6,7 @@ weatherdata <-read_rds("data/weather_data_imputed.rds")
 
 # Builds theme object to be supplied to ui
 my_theme <- bs_theme(
-  bootswatch = "flatly",
+  bslib = "shiny",
   base_font = font_google("Roboto")
 ) 
 
@@ -14,44 +14,69 @@ my_theme <- bs_theme(
 thematic_shiny(font = "auto")
 
 
+vbs <- list(
+  fill = FALSE, 
+  #1st value box 
+  value_box(
+    title = "Highest Monthly Temperature Experienced",
+    value = textOutput("hotyear"),
+    showcase = bs_icon("thermometer-high"),
+    theme = "orangered"
+  ),
+  
+  #2nd value box 
+  value_box(
+    title = "Coolest Monthly Temperature Experienced",
+    value = textOutput("coolyear"),
+    showcase = bs_icon("thermometer-low"),
+    theme = "lightgoldenrod1"
+  ),
+  
+  #3rd value box 
+  value_box(
+    title = "Average Monthly Temperature from 2014 to 2023",
+    value = textOutput("avgtemp"),
+    showcase = bs_icon("thermometer-sun"),
+    theme = "orange"
+  ),
+  
+  #4th value box 
+  value_box(
+    title = "Lowest Monthly Rainfall",
+    value = textOutput("lowrain"),
+    showcase = bs_icon("cloud-drizzle"),
+    theme = "lightsteelblue1"
+  ),
+  
+  #5th value box 
+  value_box(
+    title = "Highest Monthly Rainfall",
+    value = textOutput("highrain"),
+    showcase = bs_icon("cloud-rain-heavy"),
+    theme = "steelblue3"
+  ),
+  
+  #6th value box 
+  value_box(
+    title = "Average Monthly Rainfall",
+    value = textOutput("avgrain"),
+    showcase = bs_icon("umbrella-fill"),
+    theme = "lightskyblue"
+  )
+)
+
+
 ui <- page_navbar(
   title = "Rain or Shine: Exploring the mysteries of Singapore Weather",
   nav_spacer(),
-  nav_panel(title = "Dashboard", #p(
-    
-    layout_columns(
-      fill = FALSE, 
-      value_box(
-        title = "1st value",
-        value = "123",
-        showcase = bs_icon("bar-chart"),
-        theme = "purple"
-      ),
-      value_box(
-        title = "2nd value",
-        value = "456",
-        showcase = bs_icon("graph-up"),
-        theme = "teal"
-      ),
-      value_box(
-        title = "3rd value",
-        value = "789",
-        showcase = bs_icon("pie-chart"),
-        theme = "pink"
-      ),
-      value_box(
-        title = "4th value",
-        value = "789",
-        showcase = bs_icon("pie-chart"),
-        theme = "pink"
-      )
-    ),
-    #layout_columns(
-      #cards[[1]], cards[[2]]
-    #),
-    #cards[[3]],
-  
-    
+  nav_panel(title = "Dashboard", 
+            
+            card(
+              layout_column_wrap(
+                width = "250px",
+                !!!vbs)
+              ),
+
     card(
       height = 350,
       card_header("Use this to toggle the map"),
@@ -81,6 +106,30 @@ ui <- page_navbar(
     )
   
 server <- function(input, output){
+  
+  output$hotyear <- renderText({
+    max(weatherdata$max_monthly_temperature)
+  })
+  
+  output$coolyear <- renderText({
+    min(weatherdata$min_monthly_temperature)
+  })
+  
+  output$avgtemp <- renderText({
+    round(mean(weatherdata$mean_monthly_temperature),1)
+  })
+  
+  output$lowrain <- renderText({
+    min(weatherdata$monthly_rainfall)
+  })
+  
+  output$highrain <- renderText({
+    max(weatherdata$monthly_rainfall)
+  })
+  
+  output$avgrain <- renderText({
+    round(mean(weatherdata$monthly_rainfall),0)
+  })
   
 }
 
