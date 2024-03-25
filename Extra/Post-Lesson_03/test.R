@@ -1,8 +1,17 @@
 pacman::p_load(tidyverse, shiny, bslib, 
                lubridate, DT, ggplot2, plotly, ggthemes, hrbrthemes, timetk, modeltime, tidymodels, 
-               xgboost, recipes, parsnip, workflows, patchwork, thematic, showtext, glue, bsicons)
+               xgboost, recipes, parsnip, workflows, patchwork, thematic, showtext, glue, bsicons,
+               tmap
+               )
 
 weatherdata <-read_rds("data/weather_data_imputed.rds")
+
+weatherdata_summary <-  weatherdata %>%
+  group_by(station)%>%
+  summarise(average_temperature = round(mean(mean_monthly_temperature),1),
+            max_temperature = max(max_monthly_temperature),
+            min_monthly_temperature = min(min_monthly_temperature),
+            total_rainfall = round(sum(monthly_rainfall), 0)) 
 
 # Builds theme object to be supplied to ui
 my_theme <- bs_theme(
@@ -18,10 +27,12 @@ vbs <- list(
   fill = FALSE, 
   #1st value box 
   value_box(
-    title = "Highest Monthly Temperature Experienced",
+    title = "Highest Monthly Temp",
     value = textOutput("hotyear"),
     showcase = bs_icon("thermometer-high"),
-    theme = "orangered"
+    showcase_layout = "top right",
+    theme = value_box_theme(bg = "#fa2e05", fg = "#f0f2f5"),
+    max_height = "130px"
   ),
   
   #2nd value box 
@@ -30,17 +41,19 @@ vbs <- list(
     value = textOutput("coolyear"),
     showcase = bs_icon("thermometer-low"),
     showcase_layout = "top right",
-    theme = "lightgoldenrod1",
-    max_height = "125px",
-    p("At XX station on MM YYYY")
+    theme = value_box_theme(bg = "#e7ebbc", fg ="#1a1818"),
+    max_height = "130px"
+    #p("At XX station on MM YYYY")
   ),
   
   #3rd value box 
   value_box(
-    title = "Average Monthly Temperature from 2014 to 2023",
+    title = "Average Monthly Temp",
     value = textOutput("avgtemp"),
     showcase = bs_icon("thermometer-sun"),
-    theme = "orange"
+    showcase_layout = "top right",
+    theme = "orange",
+    max_height = "130px"
   ),
   
   #4th value box 
@@ -48,7 +61,9 @@ vbs <- list(
     title = "Lowest Monthly Rainfall",
     value = textOutput("lowrain"),
     showcase = bs_icon("cloud-drizzle"),
-    theme = "lightsteelblue1"
+    showcase_layout = "top right",
+    theme = value_box_theme(bg = "#a1d5f0", fg = "#1a1818"),
+    max_height = "130px"
   ),
   
   #5th value box 
@@ -56,7 +71,9 @@ vbs <- list(
     title = "Highest Monthly Rainfall",
     value = textOutput("highrain"),
     showcase = bs_icon("cloud-rain-heavy"),
-    theme = "steelblue3"
+    showcase_layout = "top right",
+    theme = value_box_theme(bg = "#065299", fg = "#f0f2f5"),
+    max_height = "130px"
   ),
   
   #6th value box 
@@ -64,7 +81,9 @@ vbs <- list(
     title = "Average Monthly Rainfall",
     value = textOutput("avgrain"),
     showcase = bs_icon("umbrella-fill"),
-    theme = "lightskyblue"
+    showcase_layout = "top right",
+    theme = value_box_theme(bg = "#6dc2a3",fg = "#1a1818"),
+    max_height = "130px"
   )
 )
 
@@ -72,30 +91,47 @@ vbs <- list(
 ui <- page_navbar(
   title = "Rain or Shine: Exploring the mysteries of Singapore Weather",
   nav_spacer(),
-  nav_panel(title = "Dashboard", 
-            
-            card(
-              layout_column_wrap(
-                width = "250px",
-                !!!vbs)
+  nav_panel(title = "Dashboard",
+            layout_columns(
+              col_widths = c(5,7,8,4),
+              row_heights = c(2,3), 
+              
+              #value boxes 
+              card(
+                layout_column_wrap(
+                  #width = "250px",
+                  !!!vbs)
               ),
-
-    card(
-      height = 350,
-      card_header("Use this to toggle the map"),
-      layout_sidebar(
-        sidebar = sidebar(
-          selectInput(
-            inputId = "map_input",
-            label = "Indicate the variable to display",
-            choices = c("Mean Temperature" = "mean_monthly_temperature",
-                        "Maximum Temperature" = "max_monthly_temperature",
-                        "Minimum Temperature" = "min_monthly_temperature",
-                        "Total Rainfall" = "monthly_rainfall"),
-            selected = "mean_monthly_temperature")
-        )
-      )
-  )
+              
+              # datatable 
+              card(
+                card_body(DT::dataTableOutput(outputId = "dtTable"))
+              ),
+              
+              #map 
+              card(
+                height = 350,
+                card_header("Use this to toggle the map"),
+                layout_sidebar(
+                  sidebar = sidebar(
+                    selectInput(
+                      inputId = "map_input",
+                      label = "Indicate the variable to display",
+                      choices = c("Mean Temperature" = "mean_monthly_temperature",
+                                  "Maximum Temperature" = "max_monthly_temperature",
+                                  "Minimum Temperature" = "min_monthly_temperature",
+                                  "Total Rainfall" = "monthly_rainfall"),
+                      selected = "mean_monthly_temperature"),
+                    card_body(tmapOutput("mapplot"))
+                  ))
+              ), 
+              
+              #plot 
+              card(
+                card_body(plotOutput(outputId = "stationplot"))
+              )
+              
+            )
   ),
   
   nav_panel(title = "Comparison Sandbox", p("Second page content.")),
@@ -111,27 +147,36 @@ ui <- page_navbar(
 server <- function(input, output){
   
   output$hotyear <- renderText({
-    max(weatherdata$max_monthly_temperature)
+    paste(max(weatherdata$max_monthly_temperature),"°C")
   })
   
   output$coolyear <- renderText({
-    min(weatherdata$min_monthly_temperature)
+    paste(min(weatherdata$min_monthly_temperature),"°C")
   })
   
   output$avgtemp <- renderText({
-    round(mean(weatherdata$mean_monthly_temperature),1)
+    paste(round(mean(weatherdata$mean_monthly_temperature),1),"°C")
   })
   
   output$lowrain <- renderText({
-    min(weatherdata$monthly_rainfall)
+    paste(min(weatherdata$monthly_rainfall),"mm")
   })
   
   output$highrain <- renderText({
-    max(weatherdata$monthly_rainfall)
+    paste(max(weatherdata$monthly_rainfall),"mm")
   })
   
   output$avgrain <- renderText({
-    round(mean(weatherdata$monthly_rainfall),0)
+    paste(round(mean(weatherdata$monthly_rainfall),0),"mm")
+  })
+  
+  output$dtTable <- DT::renderDataTable({
+    DT::datatable(data = weatherdata_summary,
+                  options = list(pageLength = 3),
+                  rownames = FALSE,
+                  colnames = c('Station', 'Mean Temp', 'Max Temp', 'Min Temp', 'Total Rainfall'),
+                  DT:::DT2BSClass(c('compact', 'cell-border')))
+
   })
   
 }
