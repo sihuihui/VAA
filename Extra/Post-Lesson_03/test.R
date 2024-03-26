@@ -298,10 +298,12 @@ ui <- page_navbar(
                           ))
                                       
                           ))
-              )
-
-              ),# end of ETS
-    nav_panel(title = "ARIMA", p("Arima.")),
+              )),# end of ETS
+    nav_panel(title = "ARIMA",
+              
+              
+              
+              ), #end of ARIMA nav_panel 
     align = "left"
       )
     )
@@ -387,10 +389,9 @@ server <- function(input, output){
                          .feature_set = input$sh_decompose,
                          .interactive = FALSE)
   })
-  
 ############# Decomposition Page Server ########################
   
-############# Validation and Forecast Page Server ########################
+############# Start of Validation and Forecast Page Server ########################
   ## split the data based on the training proportion chosen 
   splits <- eventReactive(input$sh_forecast,{
     req(selectedData())
@@ -443,7 +444,7 @@ server <- function(input, output){
   output$sh_ValidationPlot <- renderPlot({
     req(calibration_results())
     calibration_results() %>%
-      plot_modeltime_forecast(.interactive = FALSE)
+      plot_modeltime_forecast(.interactive = FALSE, .title = "Plot using Test Data")
   })
   
   ## refit to full dataset & forecast forward 
@@ -485,7 +486,7 @@ server <- function(input, output){
   output$rmse <- renderText({
     round(forecast_table()$rmse,2)
   })
-############# Validation and Forecast Page Server ########################
+############# End of Validation and Forecast Page Server ########################
   
 }
 
