@@ -117,98 +117,13 @@ ui <- fluidPage(
              )
            )),
   
-##### ARIMA ######
+##### ARIMA START ######
   tabPanel("ARIMA",
-           sidebarLayout(
-             sidebarPanel(
-               selectInput(inputId = "sh_stationA",
-                           label = "Select a weather station",
-                           choices = c("Admiralty" = "Admiralty",
-                                       "Ang Mo Kio" = "Ang Mo Kio",
-                                       "Changi" = "Changi", 
-                                       "Choa Chu Kang (South)" = "Choa Chu Kang (South)",
-                                       "Clementi" = "Clementi",
-                                       "East Coast Parkway" = "East Coast Parkway",
-                                       "Jurong Island" = "Jurong Island",
-                                       "Jurong (West)" = "Jurong (West)",
-                                       "Newton" = "Newton",
-                                       "Pasir Panjang" = "Pasir Panjang", 
-                                       "Sentosa Island"  = "Sentosa Island",
-                                       "Tai Seng" = "Tai Seng",
-                                       "Tuas South" = "Tuas South"),
-                           selected = "Admiralty"),
-               hr(),
-               selectInput(inputId = "sh_variableA",
-                           label = "Select the variable to forecast",
-                           choices = c("Mean Temperature" = "mean_monthly_temperature",
-                                       "Maximum Temperature" = "max_monthly_temperature",
-                                       "Minimum Temperature" = "min_monthly_temperature",
-                                       "Total Rainfall" = "monthly_rainfall"),
-                           selected = "mean_monthly_temperature"),
-               
-               hr(), 
-               sliderInput(inputId = "sh_lagsA",
-                                  label = "Specify the lags",
-                           min = 1,
-                           max = 1000,
-                           value = 1000,
-                           step = 1)),
-             hr(),
-             radioButtons(inputId = "sh_ccfA",
-                          label = "Show CCF Vars only?",
-                          choices = c("Yes" = "TRUE",
-                                      "No" = "FALSE"),
-                          selected = "FALSE"), 
-               
-               hr(),
-               actionButton(inputId = "sh_plotdata",
-                            label = "Show my Data!"),
-               
-               hr(),
-               sliderInput("sh_traindataA",
-                           label = "Select the amount of Training Data to use", 
-                           min = 0.6,
-                           max = 1,
-                           value = 0.8,
-                           step = 0.05),
-               
-               hr(),
-               sliderInput("sh_forecasthorizonA",
-                           label = "Select the Forecast Horizon", 
-                           min = 1,
-                           max = 120,
-                           value = 36,
-                           step = 1),
-               
-               hr(), 
-               selectInput(inputId = "sh_seasonalperiodA",
-                           label = "Select a seasonal frequency",
-                           choices = c("Auto" = "auto",
-                                       "1 month" = "1",
-                                       "3 months" = "3",
-                                       "12 months" = "12"),
-                           selected = "auto"),
-             
-             hr(),
-             selectInput(
-               inputId = "sh_non_seasonal_ar",
-               label = "Select the order of the non-seasonal auto-regressive terms",
-               choices = c("Auto" = "auto",
-                           "0" = "NULL",
-                           "1" = "1",
-                           "2" = "2",
-                           "3" = "3")),
-             
-             ), 
-             mainPanel(
-               plotOutput("sh_SelectedDataPlot"),
-               plotOutput("sh_DecompositionPlot"),
-               plotOutput("sh_ValidationPlot"),
-               DT::dataTableOutput("sh_AccuracyTable"),
-               plotOutput("sh_ForecastPlot")
-             ))
+           )
+
+##### ARIMA END ######
   )
-))
+)
 
 
 server <- function(input, output) {
