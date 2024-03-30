@@ -1,7 +1,7 @@
 pacman::p_load(tidyverse, shiny, bslib, 
                lubridate, DT, ggplot2, plotly, ggthemes, hrbrthemes, timetk, modeltime, tidymodels, 
                xgboost, recipes, parsnip, workflows, patchwork, thematic, showtext, glue, bsicons,
-               tmap, sf,terra, gstat, automap
+               tmap, sf,terra, gstat, automap, ggstatsplot
                )
 
 weatherdata <-read_rds("data/weather_data_imputed.rds")
@@ -12,6 +12,10 @@ weatherdata_summary <-  weatherdata %>%
             max_temperature = max(max_monthly_temperature),
             min_monthly_temperature = min(min_monthly_temperature),
             total_rainfall = round(sum(monthly_rainfall), 0)) 
+
+weatherdata_cda <- weatherdata %>%
+  mutate(MONTH = month(tdate),
+         YEAR = year(tdate))
 
 ##### Geospatial data #######
 wdata_sf <- read_rds("data/weatherdata_wstations.rds")
@@ -171,7 +175,52 @@ ui <- page_navbar(
   ))),
   
   nav_panel(title = "Comparison Sandbox", p("Second page content.")),
-  nav_panel(title = "Comparison Analysis", p("Third page content.")),
+  
+# comparsion analysis
+  nav_panel(title = "Comparison Analysis", 
+            navset_card_tab(
+              sidebar = sidebar("Please make the following selections",
+                                selectInput(inputId = "cda_variable",
+                                            label = "Variable to compare",
+                                            choices = c("Mean Temperature" = "mean_monthly_temperature",
+                                                        "Maximum Temperature" = "max_monthly_temperature",
+                                                        "Minimum Temperature" = "min_monthly_temperature",
+                                                        "Total Rainfall" = "monthly_rainfall"),
+                                            selected = "MEAN_TEMP"), 
+                                
+                                selectInput(inputId = "cda_testtype",
+                                            label = "Type of Statisitcal Approach",
+                                            choices = c("Parametric" = "p",
+                                                        "Nonparametric" = "np",
+                                                        "Robust" = "robust",
+                                                        "Bayes" = "bayes"),
+                                            selected = "np"),
+                                
+                                
+                                sliderInput(inputId = "cda_conflevel",
+                                            label = "Confidence Level",
+                                            min = 0.95,
+                                            max = 0.99,
+                                            value = 0.95,
+                                            step = 0.01), 
+                                
+                                selectInput(inputId = "cda_pairwise",
+                                            label = "Pairwise Display",
+                                            choices = list("significant" = "s", "non-significant" = "ns"),
+                                            selected = "s"),
+                                
+                                actionButton(inputId = "cda_plotdata",
+                                             label = "Start Comparing!")),
+              
+              nav_panel("Comparison Between Years",
+                        card_body(plotOutput("cda_YearsPlot"))),
+              nav_panel("Comparison Between Months", 
+                        card_body(plotOutput("cda_MonthsPlot"))), 
+              nav_panel("Comparison Between Stations",
+                        card_body(plotOutput("cda_StationsPlot")))
+
+            
+            )), # End of Comparison Analysis 
   nav_menu(
     title = "Forecasting",
     nav_panel(title = "Exponential Smoothing",
@@ -202,8 +251,7 @@ ui <- page_navbar(
                                               selected = "mean_monthly_temperature"), 
                                   actionButton(inputId = "sh_plotdata",
                                                label = "Start!")),
-                nav_panel("Decomposition",
-                          "Seasonal-Trend-Loess (STL) Decomposition",
+                nav_panel("Seasonal-Trend-Loess (STL) Decomposition",
                             layout_sidebar(
                               sidebar = sidebar(
                                 checkboxGroupInput(inputId = "sh_decompose",
@@ -372,9 +420,68 @@ server <- function(input, output){
            aes_string(x = "date", y = "value")) +
       geom_line()
   })
-  ##### Plot in Overview Page Server ######  
+############# Plot in Overview Page Server End #######################
   
-############# Decomposition Page Server ########################
+############# Comparison Analysis Server Start ########################
+  weatherdata_cda_comparison <- eventReactive(input$cda_plotdata, {
+    weatherdata_cda 
+  })
+  
+  output$cda_YearsPlot <- renderPlot({
+    ggbetweenstats(
+      data = weatherdata_cda_comparison(),
+      x = YEAR, 
+      y = !!input$cda_variable,
+      type = input$cda_testtype,
+      pairwise.display = input$cda_pairwise,
+      conf.level = input$cda_conflevel,
+      results.subtitle = TRUE,
+      messages = FALSE
+      #title="Distribution of Rainfall across 10 years (2014 to 2023)",
+      #ylab = "Rainfall volume (mm)",
+      #xlab = "Year",
+      #ggsignif.args = list(textsize = 5)
+    ) 
+  })
+
+  
+  output$cda_MonthsPlot <- renderPlot({
+    ggbetweenstats(
+      data = weatherdata_cda_comparison(),
+      x = MONTH, 
+      y = !!input$cda_variable,
+      type = input$cda_testtype,
+      pairwise.display = input$cda_pairwise,
+      conf.level = input$cda_conflevel,
+      results.subtitle = TRUE,
+      messages = FALSE
+      #title="Distribution of Rainfall across 10 years (2014 to 2023)",
+      #ylab = "Rainfall volume (mm)",
+      #xlab = "Year",
+      #ggsignif.args = list(textsize = 5)
+    ) 
+  })
+  
+  output$cda_StationsPlot <- renderPlot({
+    ggbetweenstats(
+      data = weatherdata_cda_comparison(),
+      x = station, 
+      y = !!input$cda_variable,
+      type = input$cda_testtype,
+      pairwise.display = input$cda_pairwise,
+      conf.level = input$cda_conflevel,
+      results.subtitle = TRUE,
+      messages = FALSE
+      #title="Distribution of Rainfall across 10 years (2014 to 2023)",
+      #ylab = "Rainfall volume (mm)",
+      #xlab = "Year",
+      #ggsignif.args = list(textsize = 5)
+    ) 
+  })
+  
+############# Compare Between Years Server End ########################
+  
+############# Decomposition Page Server Start ########################
   
   ## Filter Data based on selected station and weather variable 
   selectedData <- eventReactive(input$sh_plotdata, {

@@ -1,0 +1,77 @@
+---
+title: "workings"
+---
+
+```{r}
+
+pacman::p_load(tidyverse, lubridate)
+
+weatherdata <-read_rds("data/weather_data_imputed.rds")
+
+weatherdata_cda <- weatherdata %>%
+  mutate(MONTH = month(tdate),
+         YEAR = year(tdate))
+
+glimpse(weatherdata_cda)
+```
+
+```{r}
+weatherdata_allstations <- weatherdata %>%
+  group_by(tdate) %>%
+        summarise(MEAN_TEMP = mean(mean_monthly_temperature),
+                MAX_TEMP = max(max_monthly_temperature),
+                MIN_TEMP = min(min_monthly_temperature),
+                TOTAL_RF = sum(monthly_rainfall))
+
+glimpse(weatherdata_allstations)
+```
+
+```{r}
+head(weatherdata_allstations)
+
+
+```
+
+```{r}
+weatherdata_all <- weatherdata_allstations %>%
+  add_column(station = "All")
+
+weatherdata_all$mean_monthly_temperature <- weatherdata_all$MEAN_TEMP
+weatherdata_all$min_monthly_temperature <- weatherdata_all$MIN_TEMP
+weatherdata_all$max_monthly_temperature <- weatherdata_all$MAX_TEMP
+weatherdata_all$monthly_rainfall <- weatherdata_all$TOTAL_RF
+  
+head(weatherdata_all)
+
+```
+
+```{r}
+
+weatherdata2 <- weatherdata %>%
+  full_join(weatherdata_all) %>%
+  select(station, tdate, mean_monthly_temperature, min_monthly_temperature, max_monthly_temperature, monthly_rainfall)
+
+summary(weatherdata2)
+
+```
+
+```{r}
+glimpse(weatherdata2)
+unique(weatherdata2$station)
+```
+```{r}
+write_rds(weatherdata2, "data/weatherdata2.rds")
+
+```
+
+
+```{r}
+ weatherdata_cda %>%
+      group_by(YEAR) %>%
+      summarise(MEAN_TEMP = mean(mean_monthly_temperature),
+                MAX_TEMP = max(max_monthly_temperature),
+                MIN_TEMP = min(min_monthly_temperature),
+                TOTAL_RF = sum(monthly_rainfall))
+
+
+```

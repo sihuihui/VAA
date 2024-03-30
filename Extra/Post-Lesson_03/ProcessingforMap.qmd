@@ -51,7 +51,7 @@ For this exercise, other than tidyverse, we will be using the following packages
 
 ```{r}
 
-pacman::p_load(sf,terra, gstat, tmap, viridis, tidyverse, automap)
+pacman::p_load(sf, terra, gstat, tmap, viridis, tidyverse, automap)
 
 ```
 
@@ -207,123 +207,6 @@ head(coop)
 
 ```
 
-## Inverse Distance Weighted (IDW) Method
-
-In the IDW interpolation method, the sample points are weighted during interpolation such that the influence of one point relative to another declines with distance from the unknown point you want to create.
-
-Weighting is assigned to sample points through the use of a weighting coefficient that controls how the weighting influence will drop off as the distance from new point increases. The greater the weighting coefficient, the less the effect points will have if they are far from the unknown point during the interpolation process. As the coefficient increases, the value of the unknown point approaches the value of the nearest observational point.
-
-It is important to notice that the IDW interpolation method also has some disadvantages: the quality of the interpolation result can decrease, if the distribution of sample data points is uneven. Furthermore, maximum and minimum values in the interpolated surface can only occur at sample data points. This often results in small peaks and pits around the sample data points.
-
-### Building the models
-
-For the next few steps, we will try building different models with nmax =5, 10 and 15 to see the differences.
-
-::: panel-tabset
-## nmax = 5
-
-```{r}
-res5 <- gstat(formula = MONTHSUM ~ 1, 
-             locations = rfdata_sf, 
-             nmax = 5,
-             set = list(idp = 0))
-
-```
-
-## nmax = 10
-
-```{r}
-res10 <- gstat(formula = MONTHSUM ~ 1, 
-             locations = rfdata_sf, 
-             nmax = 10,
-             set = list(idp = 0))
-
-```
-
-## nmax = 15
-
-```{r}
-res15 <- gstat(formula = MONTHSUM ~ 1, 
-             locations = rfdata_sf, 
-             nmax = 15,
-             set = list(idp = 0))
-
-```
-:::
-
-### Doing interpolation
-
-Now that our model is defined, we can use predict() to actually interpolate, i.e., to calculate predicted values. The predict function accepts:
-
--   A raster—stars object, such as dem
--   A model—gstat object, such as g.
-
-The raster serves for two purposes: - Specifying the locations where we want to make predictions (in all methods), and - Specifying covariate values (in Universal Kriging only).
-
-::: panel-tabset
-## nmax = 5
-
-```{r}
-resp <- predict(res5, coop)
-
-resp$x <- st_coordinates(resp)[,1]
-resp$y <- st_coordinates(resp)[,2]
-resp$pred <- resp$var1.pred
-
-pred5 <- terra::rasterize(resp, grid, 
-                         field = "pred", 
-                         fun = "mean")
-
-tmap_options(check.and.fix = TRUE)
-tmap_mode("plot")
-tm_shape(pred5) + 
-  tm_raster(alpha = 0.6, 
-            palette = "viridis")
-
-```
-
-## nmax = 10
-
-```{r}
-resp <- predict(res10, coop)
-
-resp$x <- st_coordinates(resp)[,1]
-resp$y <- st_coordinates(resp)[,2]
-resp$pred <- resp$var1.pred
-
-pred10 <- terra::rasterize(resp, grid, 
-                         field = "pred", 
-                         fun = "mean")
-
-tmap_options(check.and.fix = TRUE)
-tmap_mode("plot")
-tm_shape(pred10) + 
-  tm_raster(alpha = 0.6, 
-            palette = "viridis")
-
-```
-
-## nmax = 15
-
-```{r}
-resp <- predict(res15, coop)
-
-resp$x <- st_coordinates(resp)[,1]
-resp$y <- st_coordinates(resp)[,2]
-resp$pred <- resp$var1.pred
-
-pred15 <- terra::rasterize(resp, grid, 
-                         field = "pred", 
-                         fun = "mean")
-
-tmap_options(check.and.fix = TRUE)
-tmap_mode("plot")
-tm_shape(pred15) + 
-  tm_raster(alpha = 0.6, 
-            palette = "viridis")
-
-```
-:::
 
 ## Kriging Method
 
@@ -335,8 +218,8 @@ First, we will calculate and examine the empirical variogram using `variogram()`
 -   data, a point layer with the dependent variable and covariates as attributes.
 
 ```{r}
-v <- variogram(MONTHSUM ~ 1, 
-               data = rfdata_sf)
+v <- variogram(total_rainfall ~ 1, 
+               data = wdata_sf)
 plot(v)
 
 ```
@@ -364,8 +247,8 @@ plot(v, fv)
 The plot above reveals that the empirical model fits rather well. In view of this, we will go ahead to perform spatial interpolation by using the newly derived model as shown in the code chunk below.
 
 ```{r}
-k <- gstat(formula = MONTHSUM ~ 1, 
-           data = rfdata_sf, 
+k <- gstat(formula = total_rainfall ~ 1, 
+           data = wdata_sf, 
            model = fv)
 k
 
@@ -375,7 +258,7 @@ Now we can use `predict()` of gstat package to estimate the unknown grids using 
 
 ```{r}
 resp <- predict(k, coop)
-
+resp
 ```
 
 ```{r}
